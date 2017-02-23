@@ -1,0 +1,25 @@
+body {
+	padding-top: 50px;
+}
+
+/*h1 {
+	color: #c00;
+}*/
+
+h1, h2, h3, h4, h5, h6 {
+	font-variant: small-caps;
+	text-align: center;
+}
+
+.navbar {
+	background-image: none;
+	background-color: white;
+}
+
+.navbar-inverse {
+	background-color: black;
+}
+
+.navbar .logo {
+	height: 50px;
+}
