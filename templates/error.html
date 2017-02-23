@@ -1,9 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="content">
+<div class="container">
     <h1>{{ title }}</h1>
-    {% for line in message %}
-    <p>{{ line }}</p>
-    {% endfor %}
+    <p class="alert alert-danger">{{ message }}</p>
 </div>
 {% endblock %}

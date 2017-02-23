@@ -89,9 +89,10 @@ def four_oh_three(e):
     r"""
     403 (forbidden) error page
     """
-    error(e, [
+    return error(
+        e,
         "You don't have access to this page."
-    ]), 403
+    ), 403
 
 
 @app.errorhandler(404)
@@ -99,9 +100,10 @@ def four_oh_four(e):
     r"""
     404 (page not found) error page
     """
-    return error(e, [
-        "We couldn't find the page you were looking for.",
-    ]), 404
+    return error(
+        e,
+        "We couldn't find the page you were looking for."
+    ), 404
 
 
 @app.errorhandler(500)
@@ -110,10 +112,10 @@ def five_hundred(e):
     500 (internal server) error page
     Will have to be changed for production version
     """
-    return error('500: '+str(e), [
-        'Whoops, looks like something went wrong!',
-        "We'll try to fix this a quickly as possible."
-    ]), 500
+    return error(
+        '500: '+str(e),
+        "Whoops, looks like something went wrong!",
+    ), 500
 
 
 def get_user():
@@ -202,7 +204,7 @@ def close_ticket(ticket):
     """
     user = get_user()
     if not user:
-        abort(403)
+        return abort(403)
     
     html = render_template(
         'close_ticket.html',
@@ -241,7 +243,7 @@ def json_status():
     """
     user = get_user()
     if not user:
-        abort(403)
+        return abort(403)
     
     data = m.Tickets.query.filter(
         m.Tickets.status.in_((None, m.Status.Open))
