@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% set title = 'Status' %}
+
+{% block meta %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='status.css') }}">
+<script src="{{ url_for('static', filename='messages.js') }}"></script>
+<script src="{{ url_for('static', filename='availability.js') }}"></script>
+{% if user %}
+<script src="{{ url_for('static', filename='tickets.js') }}"></script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Welcome to the Computer Science Learning Center</h1>
+    <h2>Messages</h2>
+    <div id="messages"></div>
+    <h2>Course Availability</h2>
+    <div class="table-responsive">
+        <table id="course-availability">
+            <thead>
+                <tr>
+                    <th>Course</th>
+                    <th># Tutors</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    {% if user %}
+    <h2>Open Tickets</h2>
+    <ul id="tickets"></ul>
+    {% endif %}
+</div>
+{% endblock %}

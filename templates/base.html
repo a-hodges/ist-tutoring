@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+        {% if title %}{{ title }} - {% endif %}
+        Computer Science Learning Center
+    </title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='cslc_theme.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='plugins.js') }}"></script>
+    {% block meta %}{% endblock %}
+    {% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-left" href="{{ url_for('status' if home else 'index') }}">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Computer Science Learning Center" title="UNO logo" class="logo">
+                </a>
+            </div>
+            <div id="navbar-collapse" class="collapse navbar-collapse navbar-pills">
+                <ul class="nav navbar-nav navbar-right">
+                    {% if user %}
+                    <li><a type="button" id="logout" href="{{ url_for('logout') }}">Logout</a></li>
+                    {% else %}
+                    <li><a type="button" id="login" href="{{ url_for('login') }}">Tutor Login</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {% block content %}{{ content|safe }}{% endblock %}
+</body>
+</html>
