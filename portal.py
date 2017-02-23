@@ -235,6 +235,23 @@ def logout():
     return html
 
 
+@app.route('/admin/index.html')
+@app.route('/admin/')
+def admin():
+    r"""
+    The admin configutration page
+    Can add professors, semesters, courses, sections, tutors, and more
+    """
+    user = get_user()
+    if not user or not user.is_superuser:
+        return abort(403)
+    
+    html = render_template(
+        'admin.html',
+    )
+    return html
+
+
 # ----#-   JSON
 @app.route('/tickets.json')
 def json_status():
