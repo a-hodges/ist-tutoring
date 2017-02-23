@@ -203,9 +203,6 @@ class Tutors (Base):
     lname = Column(
         'tutor_lname', String,
         doc="The tutor's last name")
-    password_hash = Column(
-        'tutor_password_hash', String,
-        doc="The hash of the tutor's password")
     is_active = Column(
         'tutor_is_active', Boolean,
         doc='If the tutor is currently employed')

@@ -10,6 +10,7 @@ from flask import (
     render_template,
     url_for,
     redirect,
+    send_from_directory,
     session,
     abort,
     json,
@@ -52,8 +53,8 @@ def create_app(args):
     # setup config values
     with app.app_context():
         config = {
-            'secret_key': os.urandom(24),
-            'permanent_session_lifetime': '30',
+            'SECRET_KEY': os.urandom(24),
+            'PERMANENT_SESSION_LIFETIME': '30',
         }
         # get Config values from database
         for name in config:
@@ -65,8 +66,8 @@ def create_app(args):
                 db.session.add(key)
                 db.session.commit()
         
-        config['permanent_session_lifetime'] = datetime.timedelta(
-            minutes=int(config['permanent_session_lifetime']))
+        config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(
+            minutes=int(config['PERMANENT_SESSION_LIFETIME']))
         app.config.update(config)
 
 
@@ -127,12 +128,13 @@ def get_user():
     user = None
     if id:
         try:
-            user = m.Tutor.query.filter_by(id)
-            if not user.is_active:
-                session.clear()
-                user = None
+            user = m.Tutors.query.filter_by(email=id).one()
         except NoResultFound:
-            session['session'] = None
+            session.clear()
+        
+        if user and not user.is_active:
+            session.clear()
+            user = None
     return user
 
 
@@ -220,7 +222,9 @@ def login():
     Redirects the user to the UNO Single Sign On page
     """
     session.clear()
-    html = redirect('https://google.com')
+    session['username'] = 'test@unomaha.edu'
+    html = redirect('https://auth.unomaha.edu/idp/Authn/UserPassword')
+    html = redirect(url_for('index'))
     return html
 
 
