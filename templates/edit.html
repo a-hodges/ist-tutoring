@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block meta %}
+<script>
+let deleteurl = "{{ formurl }}";
+</script>
+<script src="{{ url_for('static', filename='js/safe_delete.js') }}"></script>
+{% endblock %}
+
+{% macro input(name, value='', type='text', required=True) %}
+<div class="formgroup">
+    <label for="{{ name }}">{{ name.title() }}</label>
+    <input type="{{ type }}" id="{{ name }}" name="{{ name }}" class="form-control" value="{{ value }}" {% for arg in kwargs %} {{ arg }}={{ kwargs[arg] }} {% endfor %} {% if required %}required{% endif %}>
+</div>
+{% endmacro %}
+
+{% macro enum(name, enum, value='', required=True) %}
+<div class="formgroup">
+    <label for="{{ name }}">{{ name.title() }}</label>
+    <select id="{{ name }}" name="{{ name }}" class="form-control" {% if required %}required{% endif %}>
+        {% if required %}
+        <option value="">-</option>
+        {% endif %}
+        {% for item in enum %}
+            <option value="{{ item.value }}" {{ 'selected' if value and value == item else '' }}>
+                {{ item.name }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
+{% endmacro %}
+
+{% block content %}
+<div class="container">
+    <form action="{{ formurl }}" method="post">
+        {% block form %}
+        {% endblock %}
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    {% if obj %}
+    <button type="submit" id="delete" class="btn btn-danger">Delete</button>
+    {% endif %}
+</div>
+{% endblock %}

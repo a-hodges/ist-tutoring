@@ -1,44 +1,12 @@
-{% extends "base.html" %}
+{% extends "edit.html" %}
 
 {% set formurl = url_for('edited_' + type.__tablename__) %}
-{% block meta %}
-<script>
-let deleteurl = "{{ formurl }}";
-</script>
-<script src="{{ url_for('static', filename='js/safe_delete.js') }}"></script>
-{% endblock %}
+{% set seasons = type.season.comparator.type.enum_class %}
 
-{% block content %}
-<div class="container">
-    <form action="{{ formurl }}" method="post">
-        <input type="hidden" id="id" name="id" value="{{ obj.id if obj else '' }}">
-        <div class="formgroup">
-            <label for="year">Year</label>
-            <input type="number" id="year" name="year" class="form-control" min="1980" value="{{ obj.year if obj else '' }}" required>
-        </div>
-        <div class="formgroup">
-            <label for="season">Season</label>
-            <select id="season" name="season" class="form-control" required>
-                <option value="">-</option>
-                {% for item in type.season.comparator.type.enum_class %}
-                    <option value="{{ item.value }}" {{ 'selected' if obj and obj.season == item else '' }}>
-                        {{ item.name }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="formgroup">
-            <label for="start_date">Start Date</label>
-            <input type="date" id="start_date" name="start_date" class="form-control" value="{{ obj.start_date if obj else '' }}" required>
-        </div>
-        <div class="formgroup">
-            <label for="end_date">End Date</label>
-            <input type="date" id="end_date" name="end_date" class="form-control" value="{{ obj.end_date if obj else '' }}" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-    {% if obj %}
-    <button type="submit" id="delete" class="btn btn-danger">Delete</button>
-    {% endif %}
-</div>
+{% block form %}
+<input type="hidden" id="id" name="id" value="{{ obj.id if obj else '' }}">
+{{ input('year', value=obj.year if obj else '', type='number', min=1980) }}
+{{ enum('season', enum=seasons, value=obj.season if obj else '') }}
+{{ input('start_date', value=obj.start_date if obj else '', type='date') }}
+{{ input('end_date', value=obj.end_date if obj else '', type='date') }}
 {% endblock %}

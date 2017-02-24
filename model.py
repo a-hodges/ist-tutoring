@@ -45,7 +45,7 @@ class Config (Base):
     Stores the configuration values for the application in key value pairs
     """
     __tablename__ = 'configuration'
-    
+
     name = Column(
         String,
         primary_key=True,
@@ -70,7 +70,7 @@ class Tickets (Base):
     Records the details of a tutoring session
     """
     __tablename__ = 'tickets'
-    
+
     id = Column(
         'ticket_id', Integer,
         primary_key=True,
@@ -129,7 +129,7 @@ class Tickets (Base):
             onupdate=onupdate, ondelete=ondelete),
         doc='The type of problem the student is having')
     student_fullname = column_property(student_fname + " " + student_lname)
-    
+
     tutor = relationship(
         'Tutors',
         foreign_keys=[tutor_id],
@@ -144,7 +144,7 @@ class Tickets (Base):
     problem_type = relationship(
         'ProblemTypes',
         back_populates='tickets')
-    
+
     def dict(self):
         return {
             "id": self.id,
@@ -156,7 +156,7 @@ class Tickets (Base):
             'assignment': self.assignment,
             'question': self.question,
         }
-    
+
     def __str__(self):
         template = '{0[name]} | {0[course]} | {0[assignment]} | {0[question]}'
         return template.format(self.dict())
@@ -167,7 +167,7 @@ class ProblemTypes (Base):
     The types of problems that students can specify when creating a ticket
     """
     __tablename__ = 'problem_types'
-    
+
     id = Column(
         'problem_type_id', Integer,
         primary_key=True,
@@ -176,12 +176,12 @@ class ProblemTypes (Base):
         'problem_type_description', String,
         nullable=False,
         doc='The description of the problem type')
-    
+
     tickets = relationship(
         'Tickets',
         order_by='Tickets.id',
         back_populates='problem_type')
-    
+
     def __str__(self):
         return self.description
 
@@ -192,7 +192,7 @@ class Tutors (Base):
     Also allows tickets to specify a tutor and assisting tutor
     """
     __tablename__ = 'tutors'
-    
+
     email = Column(
         'tutor_email', String,
         primary_key=True,
@@ -210,7 +210,7 @@ class Tutors (Base):
         'tutor_is_superuser', Boolean,
         doc='If the tutor has administrator privileges')
     fullname = column_property(fname + " " + lname)
-    
+
     tickets = relationship(
         'Tickets',
         foreign_keys=[Tickets.tutor_id],
@@ -226,7 +226,7 @@ class Tutors (Base):
         secondary=can_tutor_table,
         order_by='Courses.number',
         back_populates='tutors')
-    
+
     def __str__(self):
         return '{}: {}'.format(self.fullname, self.id)
 
@@ -236,7 +236,7 @@ class Courses (Base):
     The courses available for tutoring
     """
     __tablename__ = 'courses'
-    
+
     id = Column(
         'course_id', Integer,
         primary_key=True,
@@ -251,7 +251,7 @@ class Courses (Base):
     on_display = Column(
         'course_on_display', Boolean,
         doc='If the course should appear on the status list')
-    
+
     sections = relationship(
         'Sections',
         order_by='Sections.number',
@@ -261,7 +261,7 @@ class Courses (Base):
         secondary=can_tutor_table,
         order_by='Tutors.fullname',
         back_populates='courses')
-    
+
     def __str__(self):
         return '{}: {}'.format(self.number, self.name)
 
@@ -271,7 +271,7 @@ class Sections (Base):
     The sections of the various courses offered during a given semester
     """
     __tablename__ = 'sections'
-    
+
     id = Column(
         'section_id', Integer,
         primary_key=True,
@@ -300,7 +300,7 @@ class Sections (Base):
             'professors.professor_id',
             onupdate=onupdate, ondelete=ondelete),
         doc='The professor that teaches a section')
-    
+
     tickets = relationship(
         'Tickets',
         order_by='Tickets.id',
@@ -314,7 +314,7 @@ class Sections (Base):
     professor = relationship(
         'Professors',
         back_populates='sections')
-    
+
     def __str__(self):
         s = []
         if self.number:
@@ -323,12 +323,12 @@ class Sections (Base):
             s.append(self.time)
         if self.professor and self.professor.lname:
             s.append(self.professor.lname)
-        
+
         if s:
             s = ', '.join(s)
         else:
             s = '{:08}'.format(self.id)
-        
+
         return s
 
 
@@ -337,7 +337,7 @@ class Professors (Base):
     The professors teaching various class sections
     """
     __tablename__ = 'professors'
-    
+
     id = Column(
         'professor_id', Integer,
         primary_key=True,
@@ -351,12 +351,12 @@ class Professors (Base):
         nullable=False,
         doc="The professor's last name")
     fullname = column_property(fname + " " + lname)
-    
+
     sections = relationship(
         'Sections',
         order_by='Sections.number',
         back_populates='professor')
-    
+
     def __str__(self):
         return self.fullname
 
@@ -375,7 +375,7 @@ class Semesters (Base):
     The semesters that course sections can occur during
     """
     __tablename__ = 'semesters'
-    
+
     id = Column(
         'semester_id', Integer,
         primary_key=True,
@@ -396,19 +396,19 @@ class Semesters (Base):
         'semester_end_date', Date,
         nullable=False,
         doc='The last day of the semester')
-    
+
     sections = relationship(
         'Sections',
         order_by='Sections.number',
         back_populates='semester')
-    
+
     def __str__(self):
         return '{} {:04}'.format(self.season.name, self.year)
 
 
 if __name__ == '__main__':
     from operator import attrgetter
-    
+
     for table in sorted(Base.metadata.tables.values(), key=attrgetter('name')):
         print(table.name)
         for column in table.columns:
