@@ -241,6 +241,140 @@ def admin():
     return html
 
 
+def edit_object(obj, values, id):
+    if id:
+        obj = obj.query.filter_by(id=id).one()
+        for key, value in values:
+            if getattr(obj, key) != value:
+                setattr(obj, key, value)
+    else:
+        s = obj(**values)
+        db.session.add(s)
+    db.session.commit()
+    return obj
+
+
+@app.route('/admin/semesters/index.html')
+@app.route('/admin/semesters/')
+def semesters():
+    r"""
+    Displays and allows editing of the available semesters
+    """
+    user = get_user()
+    if not user or not user.is_superuser:
+        return abort(403)
+
+    html = render_template(
+        'semesters.html',
+        user=user,
+        semesters=m.Semesters.query.all(),
+    )
+    return html
+
+
+@app.route('/admin/semesters/new')
+@app.route('/admin/semesters/<int:id>')
+def edit_semester(id=None):
+    r"""
+    Allows editing of an existing semester
+    """
+    user = get_user()
+    if not user or not user.is_superuser:
+        return abort(403)
+
+    if id is None:
+        semester = None
+    else:
+        semester = m.Semesters.query.filter_by(id=id).one()
+
+    html = render_template(
+        'edit_semester.html',
+        user=user,
+        semester=semester,
+        seasons=m.Seasons,
+    )
+    return html
+
+
+@app.route('/admin/semesters/', methods=['POST'])
+def edited_semester():
+    if request.form.get('action') == 'delete':
+        m.Semesters.query.filter_by(id=request.form.get('id')).delete()
+        db.session.commit()
+    else:
+        form = {
+            'year': int(request.form['year']),
+            'season': m.Seasons(int(request.form['season'])),
+            'start_date': datetime.datetime.strptime(
+                request.form['start_date'],
+                '%Y-%m-%d',
+            ).date(),
+            'end_date': datetime.datetime.strptime(
+                request.form['end_date'],
+                '%Y-%m-%d',
+            ).date(),
+        }
+        edit_object(m.Semesters, form, request.form.get('id'))
+    return redirect(url_for('semesters'))
+
+
+@app.route('/admin/professors/index.html')
+@app.route('/admin/professors/')
+def professors():
+    r"""
+    Displays and allows editing of the available professors
+    """
+    user = get_user()
+    if not user or not user.is_superuser:
+        return abort(403)
+
+    html = redirect(url_for('admin'))
+    return html
+
+
+@app.route('/admin/courses/index.html')
+@app.route('/admin/courses/')
+def courses():
+    r"""
+    Displays and allows editing of the available courses
+    """
+    user = get_user()
+    if not user or not user.is_superuser:
+        return abort(403)
+
+    html = redirect(url_for('admin'))
+    return html
+
+
+@app.route('/admin/sections/index.html')
+@app.route('/admin/sections/')
+def sections():
+    r"""
+    Displays and allows editing of the available course sections
+    """
+    user = get_user()
+    if not user or not user.is_superuser:
+        return abort(403)
+
+    html = redirect(url_for('admin'))
+    return html
+
+
+@app.route('/admin/tutors/index.html')
+@app.route('/admin/tutors/')
+def tutors():
+    r"""
+    Displays and allows editing of the tutors
+    """
+    user = get_user()
+    if not user or not user.is_superuser:
+        return abort(403)
+
+    html = redirect(url_for('admin'))
+    return html
+
+
+# ----#-   Login/Logout
 @app.route('/login/index.html')
 @app.route('/login/')
 def login():

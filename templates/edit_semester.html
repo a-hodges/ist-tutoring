@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block meta %}
+<script>
+let deleteurl = "{{ url_for('edited_semester') }}";
+</script>
+<script src="{{ url_for('static', filename='js/safe_delete.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <form action="{{ url_for('edited_semester') }}" method="post">
+        <input type="hidden" id="id" name="id" value="{{ semester.id if semester else '' }}">
+        <div class="formgroup">
+            <label for="year">Year</label>
+            <input type="number" id="year" name="year" class="form-control" min="1980" value="{{ semester.year if semester else '' }}" required>
+        </div>
+        <div class="formgroup">
+            <label for="season">Season</label>
+            <select id="season" name="season" class="form-control" required>
+                <option value="">-</option>
+                {% for season in seasons %}
+                    <option value="{{ season.value }}" {{ 'selected' if semester and semester.season == season else '' }}>
+                        {{ season.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="formgroup">
+            <label for="start_date">Start Date</label>
+            <input type="date" id="start_date" name="start_date" class="form-control" value="{{ semester.start_date if semester else '' }}" required>
+        </div>
+        <div class="formgroup">
+            <label for="end_date">End Date</label>
+            <input type="date" id="end_date" name="end_date" class="form-control" value="{{ semester.end_date if semester else '' }}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    {% if semester %}
+    <button type="submit" id="delete" class="btn btn-danger">Delete</button>
+    {% endif %}
+</div>
+{% endblock %}
