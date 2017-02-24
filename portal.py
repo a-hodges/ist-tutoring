@@ -42,9 +42,9 @@ def create_app(args):
     app.jinja_env.lstrip_blocks = True
 
     # setup Logging
-    log = logging.getLogger('FlaskApp')
-    log.setLevel(logging.ERROR)
-    app.logger.addHandler(log)
+    # log = logging.getLogger('FlaskApp')
+    # log.setLevel(logging.ERROR)
+    # app.logger.addHandler(log)
 
     # setup Database
     app.config['SQLALCHEMY_DATABASE_URI'] = '{}:///{}'.format(
@@ -242,9 +242,12 @@ def admin():
 
 
 def edit_object(obj, values, id):
+    r"""
+    Basic object diff handler for editing most ORM objects
+    """
     if id:
         obj = obj.query.filter_by(id=id).one()
-        for key, value in values:
+        for key, value in values.items():
             if getattr(obj, key) != value:
                 setattr(obj, key, value)
     else:
@@ -276,7 +279,7 @@ def semesters():
 @app.route('/admin/semesters/<int:id>')
 def edit_semester(id=None):
     r"""
-    Allows editing of an existing semester
+    Allows editing of an existing semester and creation of new ones
     """
     user = get_user()
     if not user or not user.is_superuser:
@@ -290,14 +293,17 @@ def edit_semester(id=None):
     html = render_template(
         'edit_semester.html',
         user=user,
-        semester=semester,
-        seasons=m.Seasons,
+        obj=semester,
+        type=m.Semesters,
     )
     return html
 
 
 @app.route('/admin/semesters/', methods=['POST'])
-def edited_semester():
+def edited_semesters():
+    r"""
+    Handles changes to semester objects
+    """
     if request.form.get('action') == 'delete':
         m.Semesters.query.filter_by(id=request.form.get('id')).delete()
         db.session.commit()
