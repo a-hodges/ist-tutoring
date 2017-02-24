@@ -34,6 +34,9 @@
             </div>
             <div id="navbar-collapse" class="collapse navbar-collapse navbar-pills">
                 <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_superuser %}
+                    <li><a type="button" id="admin" href="{{ url_for('admin') }}">Administrative Tools</a></li>
+                    {% endif %}
                     {% if user %}
                     <li><a type="button" id="logout" href="{{ url_for('logout') }}">Logout</a></li>
                     {% else %}

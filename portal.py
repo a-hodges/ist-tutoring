@@ -222,6 +222,25 @@ def close_ticket(ticket):
     return redirect(url_for('index'))
 
 
+# ----#-   Administration tools
+@app.route('/admin/index.html')
+@app.route('/admin/')
+def admin():
+    r"""
+    The admin configutration page
+    Can add professors, semesters, courses, sections, tutors, and more
+    """
+    user = get_user()
+    if not user or not user.is_superuser:
+        return abort(403)
+
+    html = render_template(
+        'admin.html',
+        user=user,
+    )
+    return html
+
+
 @app.route('/login/index.html')
 @app.route('/login/')
 def login():
@@ -243,23 +262,6 @@ def logout():
     """
     session.clear()
     html = redirect(url_for('index'))
-    return html
-
-
-@app.route('/admin/index.html')
-@app.route('/admin/')
-def admin():
-    r"""
-    The admin configutration page
-    Can add professors, semesters, courses, sections, tutors, and more
-    """
-    user = get_user()
-    if not user or not user.is_superuser:
-        return abort(403)
-    
-    html = render_template(
-        'admin.html',
-    )
     return html
 
 
