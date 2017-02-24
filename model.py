@@ -403,7 +403,7 @@ class Semesters (Base):
         back_populates='semester')
     
     def __str__(self):
-        return '{} {:04}'.format(self.season, self.year)
+        return '{} {:04}'.format(self.season.name, self.year)
 
 
 if __name__ == '__main__':
