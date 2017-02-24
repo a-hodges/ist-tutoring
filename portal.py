@@ -12,10 +12,11 @@ from flask import (
     redirect,
     send_from_directory,
     session,
+    request,
     abort,
     json,
 )
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from flask_sqlalchemy import SQLAlchemy, _QueryProperty
 
 import model as m
@@ -39,17 +40,17 @@ def create_app(args):
     global app, db
     app.jinja_env.trim_blocks = True
     app.jinja_env.lstrip_blocks = True
-    
+
     # setup Logging
     log = logging.getLogger('FlaskApp')
     log.setLevel(logging.ERROR)
     app.logger.addHandler(log)
-    
+
     # setup Database
     app.config['SQLALCHEMY_DATABASE_URI'] = '{}:///{}'.format(
         args.type, args.database)
     db.create_all()
-    
+
     # setup config values
     with app.app_context():
         config = {
@@ -65,7 +66,7 @@ def create_app(args):
                 key = m.Config(name=name, value=config[name])
                 db.session.add(key)
                 db.session.commit()
-        
+
         config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(
             minutes=int(config['PERMANENT_SESSION_LIFETIME']))
         app.config.update(config)
@@ -113,9 +114,15 @@ def five_hundred(e):
     500 (internal server) error page
     Will have to be changed for production version
     """
+    if isinstance(e, NoResultFound):
+        message = 'Could not find the requested item in the database.'
+    elif isinstance(e, MultipleResultsFound):
+        message = 'Found too many results for the requested resource.'
+    else:
+        message = 'Whoops, looks like something went wrong!'
     return error(
         '500: '+str(e),
-        "Whoops, looks like something went wrong!",
+        message,
     ), 500
 
 
@@ -131,7 +138,7 @@ def get_user():
             user = m.Tutors.query.filter_by(email=id).one()
         except NoResultFound:
             session.clear()
-        
+
         if user and not user.is_active:
             session.clear()
             user = None
@@ -169,11 +176,11 @@ def index():
 def status():
     r"""
     A status page for the CSLC
-    
+
     For students displays:
         Annoucements
         Course Availability
-    
+
     For tutors, also displays:
         Open Tickets
     """
@@ -207,7 +214,7 @@ def close_ticket(ticket):
     user = get_user()
     if not user:
         return abort(403)
-    
+
     html = render_template(
         'close_ticket.html',
         user=user,
@@ -265,7 +272,7 @@ def json_status():
     user = get_user()
     if not user:
         return abort(403)
-    
+
     data = m.Tickets.query.filter(
         m.Tickets.status.in_((None, m.Status.Open))
     ).all()
@@ -303,9 +310,6 @@ def main():
         epilog='The server runs locally on port %d if PORT is not specified.'
         % port)
     parser.add_argument(
-        '--debug', dest='debug', action='store_true',
-        help='run the server in debug mode')
-    parser.add_argument(
         '-p, --port', dest='port', type=int,
         help='The port where the server will run')
     parser.add_argument(
@@ -314,17 +318,25 @@ def main():
     parser.add_argument(
         '-t, --type', dest='type', default='sqlite',
         help='The type of database engine to be used')
+    parser.add_argument(
+        '--debug', dest='debug', action='store_true',
+        help='run the server in debug mode')
+    parser.add_argument(
+        '--reload', dest='reload', action='store_true',
+        help='reload on source update without restarting server, automatically specifies the debug flag')
     args = parser.parse_args()
+    if args.reload:
+        args.debug = True
 
     if args.port is None:  # Private System
         args.port = port
         host = '127.0.0.1'
     else:  # Public System
         host = '0.0.0.0'
-        
+
     create_app(args)
 
-    app.run(host=host, port=args.port, debug=args.debug, use_reloader=False)
+    app.run(host=host, port=args.port, debug=args.debug, use_reloader=args.reload)
 
 if __name__ == '__main__':
     main()
