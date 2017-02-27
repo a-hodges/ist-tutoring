@@ -38,6 +38,7 @@
                     <li><a type="button" id="admin" href="{{ url_for('admin') }}">Administrative Tools</a></li>
                     {% endif %}
                     {% if user %}
+                    <li><a type="button" id="user" href="{{ url_for('edit_tutors', email=user.email) }}">Edit User</a></li>
                     <li><a type="button" id="logout" href="{{ url_for('logout') }}">Logout</a></li>
                     {% else %}
                     <li><a type="button" id="login" href="{{ url_for('login') }}">Tutor Login</a></li>
