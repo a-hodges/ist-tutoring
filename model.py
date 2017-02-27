@@ -210,6 +210,7 @@ class Tutors (Base):
         'tutor_is_superuser', Boolean,
         doc='If the tutor has administrator privileges')
     fullname = column_property(fname + " " + lname)
+    last_first = column_property(lname + ", " + fname)
 
     tickets = relationship(
         'Tickets',
@@ -228,7 +229,7 @@ class Tutors (Base):
         back_populates='tutors')
 
     def __str__(self):
-        return '{}: {}'.format(self.fullname, self.id)
+        return '{}: {}'.format(self.last_first, self.email)
 
 
 class Courses (Base):
@@ -351,6 +352,7 @@ class Professors (Base):
         nullable=False,
         doc="The professor's last name")
     fullname = column_property(fname + " " + lname)
+    last_first = column_property(lname + ", " + fname)
 
     sections = relationship(
         'Sections',
@@ -358,7 +360,7 @@ class Professors (Base):
         back_populates='professor')
 
     def __str__(self):
-        return self.fullname
+        return self.last_first
 
 
 class Seasons (enum.Enum):
