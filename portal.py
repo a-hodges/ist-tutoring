@@ -191,7 +191,6 @@ def favicon():
     )
 
 
-@app.route('/index.html')
 @app.route('/')
 def index():
     r"""
@@ -226,7 +225,6 @@ def status():
     return html
 
 
-@app.route('/open_ticket/index.html')
 @app.route('/open_ticket/')
 def open_ticket():
     r"""
@@ -237,7 +235,7 @@ def open_ticket():
         'open_ticket.html',
         user=user,
     )
-    return redirect(url_for('index'))
+    return html
 
 
 @app.route('/close_ticket/<ticket>')
@@ -253,11 +251,10 @@ def close_ticket(ticket):
         'close_ticket.html',
         user=user,
     )
-    return redirect(url_for('index'))
+    return html
 
 
 # ----#-   Administration tools
-@app.route('/admin/index.html')
 @app.route('/admin/')
 def admin():
     r"""
@@ -275,134 +272,143 @@ def admin():
     return html
 
 
-def edit_object(obj, values, id):
+@app.route('/admin/semesters/', defaults={'type': m.Semesters})
+@app.route('/admin/professors/', defaults={'type': m.Professors})
+@app.route('/admin/courses/', defaults={'type': m.Courses})
+@app.route('/admin/sections/', defaults={'type': m.Sections})
+@app.route('/admin/problems/', defaults={'type': m.ProblemTypes})
+def list_admin(type):
     r"""
-    Basic object diff handler for editing most ORM objects
-    """
-    if id:
-        obj = obj.query.filter_by(id=id).one()
-        for key, value in values.items():
-            if getattr(obj, key) != value:
-                setattr(obj, key, value)
-    else:
-        s = obj(**values)
-        db.session.add(s)
-    db.session.commit()
-    return obj
-
-
-@app.route('/admin/semesters/index.html')
-@app.route('/admin/semesters/')
-def semesters():
-    r"""
-    Displays and allows editing of the available semesters
+    Displays and allows editing of the available admin objects
     """
     user = get_user()
     if not user or not user.is_superuser:
         return abort(403)
 
+    header = {
+        m.Semesters: 'Semesters',
+        m.Professors: 'Professors',
+        m.Courses: 'Courses',
+        m.Sections: 'Course Sections',
+        m.ProblemTypes: 'Problem Types',
+    }.get(type)
+
     html = render_template(
-        'semesters.html',
+        'list_admin.html',
         user=user,
-        semesters=m.Semesters.query.all(),
+        header=header,
+        type=type,
+        items=type.query.order_by(type.order_by).all(),
     )
     return html
 
 
-@app.route('/admin/semesters/new')
-@app.route('/admin/semesters/<int:id>')
-def edit_semester(id=None):
+@app.route('/admin/semesters/new', defaults={'type': m.Semesters})
+@app.route('/admin/professors/new', defaults={'type': m.Professors})
+@app.route('/admin/courses/new', defaults={'type': m.Courses})
+@app.route('/admin/sections/new', defaults={'type': m.Sections})
+@app.route('/admin/problems/new', defaults={'type': m.ProblemTypes})
+@app.route('/admin/semesters/<int:id>', defaults={'type': m.Semesters})
+@app.route('/admin/professors/<int:id>', defaults={'type': m.Professors})
+@app.route('/admin/courses/<int:id>', defaults={'type': m.Courses})
+@app.route('/admin/sections/<int:id>', defaults={'type': m.Sections})
+@app.route('/admin/problems/<int:id>', defaults={'type': m.ProblemTypes})
+def edit_admin(type, id=None):
     r"""
-    Allows editing of an existing semester and creation of new ones
+    Allows editing and creation of admin objects
     """
     user = get_user()
     if not user or not user.is_superuser:
         return abort(403)
 
     if id is None:
-        semester = None
+        obj = None
     else:
-        semester = m.Semesters.query.filter_by(id=id).one()
+        obj = type.query.filter_by(id=id).one()
 
     html = render_template(
-        'edit_semester.html',
+        'edit_%s.html' % type.__tablename__,
         user=user,
-        obj=semester,
-        type=m.Semesters,
+        type=type,
+        obj=obj,
     )
     return html
 
 
-@app.route('/admin/semesters/', methods=['POST'])
-def edited_semesters():
+semester_form = {
+    'year': get_int,
+    'season': lambda a: m.Seasons(int(a)),
+    'start_date': date,
+    'end_date': date,
+}
+professor_form = {
+    'fname': str,
+    'lname': str,
+}
+course_form = {
+    'number': str,
+    'name': str,
+    'on_display': bool,
+}
+section_form = {
+    'number': str,
+    'time': str,
+    'course_id': get_int,
+    'semester_id': get_int,
+    'professor_id': get_int,
+}
+problem_form = {
+    'description': str,
+}
+
+
+@app.route(
+    '/admin/semesters/', methods=['POST'], defaults={'type': m.Semesters})
+@app.route(
+    '/admin/professors/', methods=['POST'], defaults={'type': m.Professors})
+@app.route(
+    '/admin/courses/', methods=['POST'], defaults={'type': m.Courses})
+@app.route(
+    '/admin/sections/', methods=['POST'], defaults={'type': m.Sections})
+@app.route(
+    '/admin/problems/', methods=['POST'], defaults={'type': m.ProblemTypes})
+def edited_admin(type):
     r"""
-    Handles changes to semester objects
+    Handles changes to administrative objects
     """
+    user = get_user()
+    if not user or not user.is_superuser:
+        return abort(403)
+    
     if request.form.get('action') == 'delete':
-        m.Semesters.query.filter_by(id=request.form.get('id')).delete()
-        db.session.commit()
+        obj = type.query.filter_by(id=request.form.get('id')).one()
+        db.session.delete(obj)
     else:
         form = {
-            'year': int(request.form['year']),
-            'season': m.Seasons(int(request.form['season'])),
-            'start_date': datetime.datetime.strptime(
-                request.form['start_date'],
-                '%Y-%m-%d',
-            ).date(),
-            'end_date': datetime.datetime.strptime(
-                request.form['end_date'],
-                '%Y-%m-%d',
-            ).date(),
-        }
-        edit_object(m.Semesters, form, request.form.get('id'))
-    return redirect(url_for('semesters'))
+            m.Semesters: semester_form,
+            m.Professors: professor_form,
+            m.Courses: course_form,
+            m.Sections: section_form,
+            m.ProblemTypes: problem_form,
+        }.get(type).copy()
+        for key, value in form.items():
+            form[key] = value(request.form.get(key))
+        
+        id = request.form.get('id')
+        if id:
+            obj = type.query.filter_by(id=id).one()
+            for key, value in form.items():
+                if getattr(obj, key) != value:
+                    setattr(obj, key, value)
+        else:
+            obj = type(**form)
+            db.session.add(obj)
+    db.session.commit()
+    return redirect(url_for('list_admin', type=type))
 
 
-@app.route('/admin/professors/index.html')
-@app.route('/admin/professors/')
-def professors():
-    r"""
-    Displays and allows editing of the available professors
-    """
-    user = get_user()
-    if not user or not user.is_superuser:
-        return abort(403)
-
-    html = redirect(url_for('admin'))
-    return html
-
-
-@app.route('/admin/courses/index.html')
-@app.route('/admin/courses/')
-def courses():
-    r"""
-    Displays and allows editing of the available courses
-    """
-    user = get_user()
-    if not user or not user.is_superuser:
-        return abort(403)
-
-    html = redirect(url_for('admin'))
-    return html
-
-
-@app.route('/admin/sections/index.html')
-@app.route('/admin/sections/')
-def sections():
-    r"""
-    Displays and allows editing of the available course sections
-    """
-    user = get_user()
-    if not user or not user.is_superuser:
-        return abort(403)
-
-    html = redirect(url_for('admin'))
-    return html
-
-
-@app.route('/admin/tutors/index.html')
 @app.route('/admin/tutors/')
-def tutors():
+def list_tutors():
     r"""
     Displays and allows editing of the tutors
     """
@@ -410,7 +416,87 @@ def tutors():
     if not user or not user.is_superuser:
         return abort(403)
 
-    html = redirect(url_for('admin'))
+    html = render_template(
+        'list_tutors.html',
+        user=user,
+        items=m.Tutors.query.order_by(m.Tutors.last_first).all(),
+    )
+    return html
+
+
+@app.route('/admin/tutors/new')
+@app.route('/admin/tutors/<email>')
+def edit_tutors(email=None):
+    r"""
+    Allows editing and creation of tutor objects
+    """
+    user = get_user()
+    if not user or not (user.is_superuser or user.email == email):
+        return abort(403)
+
+    if email is None:
+        tutor = None
+    else:
+        tutor = m.Tutors.query.filter_by(email=email).one()
+    
+    html = render_template(
+        'edit_tutors.html',
+        user=user,
+        type=m.Tutors,
+        obj=tutor,
+        courses=m.Courses.query.order_by(m.Courses.number).all(),
+    )
+    return html
+
+
+@app.route('/admin/tutors/', methods=['POST'])
+def edited_tutors():
+    r"""
+    Handles changes to tutor objects
+    """
+    user = get_user()
+    email = request.form.get('email')
+    if not user or not (user.is_superuser or user.email == email):
+        return abort(403)
+    
+    if request.form.get('action') == 'delete':
+        obj = type.query.filter_by(email=email).one()
+        db.session.delete(obj)
+    else:
+        form = {
+            'fname': str,
+            'lname': str,
+        }
+        if user.is_superuser:
+            form.update({
+                'is_active': bool,
+                'is_superuser': bool,
+            })
+        for key, value in form.items():
+            form[key] = value(request.form.get(key))
+
+        if not request.form.get('new'):
+            obj = m.Tutors.query.filter_by(email=email).one()
+            for key, value in form.items():
+                if getattr(obj, key) != value:
+                    setattr(obj, key, value)
+        else:
+            obj = m.Tutors(email=email, **form)
+            db.session.add(obj)
+        
+        for course in m.Courses.query.all():
+            if request.form.get(course.number):
+                if course not in obj.courses:
+                    obj.courses.append(course)
+            else:
+                if course in obj.courses:
+                    obj.courses.remove(course)
+        
+    db.session.commit()
+    if user.is_superuser:
+        html = redirect(url_for('list_tutors'))
+    else:
+        html = redirect(url_for('index'))
     return html
 
 
