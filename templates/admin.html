@@ -3,11 +3,12 @@
 {% block content %}
 <div class="container">
     <ul>
-        <p><a class="btn btn-default" href="{{ url_for('semesters') }}">Semesters</a></p>
-        <p><a class="btn btn-default" href="{{ url_for('professors') }}">Professors</a></p>
-        <p><a class="btn btn-default" href="{{ url_for('courses') }}">Courses</a></p>
-        <p><a class="btn btn-default" href="{{ url_for('sections') }}">Course Sections</a></p>
-        <p><a class="btn btn-default" href="{{ url_for('tutors') }}">Tutors</a></p>
+        <p><a class="btn btn-default" href="{{ url_for('list_admin', type=m.Semesters) }}">Semesters</a></p>
+        <p><a class="btn btn-default" href="{{ url_for('list_admin', type=m.Professors) }}">Professors</a></p>
+        <p><a class="btn btn-default" href="{{ url_for('list_admin', type=m.Courses) }}">Courses</a></p>
+        <p><a class="btn btn-default" href="{{ url_for('list_admin', type=m.Sections) }}">Course Sections</a></p>
+        <p><a class="btn btn-default" href="{{ url_for('list_admin', type=m.ProblemTypes) }}">Problem Types</a></p>
+        <p><a class="btn btn-default" href="{{ url_for('list_tutors') }}">Tutors</a></p>
     </ul>
 </div>
 {% endblock %}
