@@ -3,7 +3,7 @@
 import os
 import datetime
 import argparse
-import logging
+# import logging
 
 from flask import (
     Flask,
@@ -20,6 +20,12 @@ from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from flask_sqlalchemy import SQLAlchemy, _QueryProperty
 
 import model as m
+# Default ordering for admin types
+m.Semesters.order_by = m.Semesters.title
+m.Professors.order_by = m.Professors.last_first
+m.Courses.order_by = m.Courses.number
+m.Sections.order_by = m.Sections.number
+m.ProblemTypes.order_by = m.ProblemTypes.description
 
 # Create App
 app = Flask(__name__)
@@ -70,6 +76,31 @@ def create_app(args):
         config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(
             minutes=int(config['PERMANENT_SESSION_LIFETIME']))
         app.config.update(config)
+
+
+def date(string):
+    r"""
+    Convert a date formated string to a date object
+    """
+    return datetime.datetime.strptime(string, '%Y-%m-%d').date()
+
+
+def get_int(string):
+    r"""
+    Convert a string to int returning none for invalid strings
+    """
+    ret = None
+    if string is not None:
+        try:
+            ret = int(string)
+        except ValueError:
+            pass
+    return ret
+
+
+@app.context_processor
+def context():
+    return dict(m=m)
 
 
 def error(e, message):
@@ -134,10 +165,13 @@ def get_user():
     id = session.get('username')
     user = None
     if id:
-        try:
-            user = m.Tutors.query.filter_by(email=id).one()
-        except NoResultFound:
-            session.clear()
+        if app.config['DEBUG']:
+            user = m.Tutors(email=id, is_active=True, is_superuser=True)
+        else:
+            try:
+                user = m.Tutors.query.filter_by(email=id).one()
+            except NoResultFound:
+                session.clear()
 
         if user and not user.is_active:
             session.clear()
@@ -381,20 +415,20 @@ def tutors():
 
 
 # ----#-   Login/Logout
-@app.route('/login/index.html')
 @app.route('/login/')
 def login():
     r"""
     Redirects the user to the UNO Single Sign On page
     """
     session.clear()
-    session['username'] = 'test@unomaha.edu'
-    html = redirect('https://auth.unomaha.edu/idp/Authn/UserPassword')
-    html = redirect(url_for('index'))
+    if app.config['DEBUG']:
+        session['username'] = 'test@unomaha.edu'
+        html = redirect(url_for('index'))
+    else:
+        html = redirect('https://auth.unomaha.edu/idp/Authn/UserPassword')
     return html
 
 
-@app.route('/logout/index.html')
 @app.route('/logout/')
 def logout():
     r"""
@@ -432,7 +466,7 @@ def json_availability():
     data = m.Courses.query.\
         join(m.can_tutor_table).join(m.Tutors).\
         join(m.Sections).join(m.Tickets).join(m.Semesters).\
-        filter(m.Courses.on_display == True).\
+        filter(m.Courses.on_display is True).\
         filter(m.Tickets.in_((None, m.Status.Open, m.Status.Claimed))).\
         filter(m.Semesters.start_date <= today).\
         filter(m.Semesters.end_date >= today).\
@@ -465,7 +499,7 @@ def main():
         help='run the server in debug mode')
     parser.add_argument(
         '--reload', dest='reload', action='store_true',
-        help='reload on source update without restarting server, automatically specifies the debug flag')
+        help='reload on source update without restarting server (also debug)')
     args = parser.parse_args()
     if args.reload:
         args.debug = True
@@ -478,7 +512,12 @@ def main():
 
     create_app(args)
 
-    app.run(host=host, port=args.port, debug=args.debug, use_reloader=args.reload)
+    app.run(
+        host=host,
+        port=args.port,
+        debug=args.debug,
+        use_reloader=args.reload,
+    )
 
 if __name__ == '__main__':
     main()
