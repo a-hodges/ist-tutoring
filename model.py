@@ -285,7 +285,7 @@ class Sections (Base):
         'section_time', String,
         doc="The course's time eg. MW 9:00AM")
     course_id = Column(
-        String,
+        Integer,
         ForeignKey('courses.course_id', onupdate=onupdate, ondelete=ondelete),
         nullable=False,
         doc='The course the section belongs to')
@@ -318,6 +318,8 @@ class Sections (Base):
 
     def __str__(self):
         s = []
+        if self.course:
+            s.append(self.course.number)
         if self.number:
             s.append('{:03}'.format(self.number))
         if self.time:
@@ -328,7 +330,7 @@ class Sections (Base):
         if s:
             s = ', '.join(s)
         else:
-            s = '{:08}'.format(self.id)
+            s = str(self.id)
 
         return s
 
@@ -398,6 +400,7 @@ class Semesters (Base):
         'semester_end_date', Date,
         nullable=False,
         doc='The last day of the semester')
+    title = column_property(year + ' ' + season)
 
     sections = relationship(
         'Sections',
