@@ -158,8 +158,12 @@ class Tickets (Base):
         }
 
     def __str__(self):
-        template = '{0[name]} | {0[course]} | {0[assignment]} | {0[question]}'
-        return template.format(self.dict())
+        return '{0[name]} | {0[course]} | {0[assignment]} | {0[question]}'.format(
+            self.student_fullname,
+            self.course,
+            self.assignment,
+            self.question,
+        )
 
 
 class ProblemTypes (Base):

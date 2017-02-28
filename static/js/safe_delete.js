@@ -12,6 +12,6 @@ function del(){
     }
 }
 
-$(document).ready(function(){
+$(function(){
     $('#delete').click(del);
 });

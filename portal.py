@@ -7,14 +7,15 @@ import argparse
 
 from flask import (
     Flask,
-    render_template,
-    url_for,
+    abort,
+    flash,
+    json,
     redirect,
+    render_template,
+    request,
     send_from_directory,
     session,
-    request,
-    abort,
-    json,
+    url_for,
 )
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from flask_sqlalchemy import SQLAlchemy, _QueryProperty
@@ -379,7 +380,7 @@ def edited_admin(type):
     user = get_user()
     if not user or not user.is_superuser:
         return abort(403)
-    
+
     if request.form.get('action') == 'delete':
         obj = type.query.filter_by(id=request.form.get('id')).one()
         db.session.delete(obj)
@@ -393,7 +394,7 @@ def edited_admin(type):
         }.get(type).copy()
         for key, value in form.items():
             form[key] = value(request.form.get(key))
-        
+
         id = request.form.get('id')
         if id:
             obj = type.query.filter_by(id=id).one()
@@ -438,7 +439,7 @@ def edit_tutors(email=None):
         tutor = None
     else:
         tutor = m.Tutors.query.filter_by(email=email).one()
-    
+
     html = render_template(
         'edit_tutors.html',
         user=user,
@@ -458,7 +459,7 @@ def edited_tutors():
     email = request.form.get('email')
     if not user or not (user.is_superuser or user.email == email):
         return abort(403)
-    
+
     if request.form.get('action') == 'delete':
         obj = type.query.filter_by(email=email).one()
         db.session.delete(obj)
@@ -483,7 +484,7 @@ def edited_tutors():
         else:
             obj = m.Tutors(email=email, **form)
             db.session.add(obj)
-        
+
         for course in m.Courses.query.all():
             if request.form.get(course.number):
                 if course not in obj.courses:
@@ -491,7 +492,7 @@ def edited_tutors():
             else:
                 if course in obj.courses:
                     obj.courses.remove(course)
-        
+
     db.session.commit()
     if user.is_superuser:
         html = redirect(url_for('list_tutors'))

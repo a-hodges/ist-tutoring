@@ -14,6 +14,13 @@ let deleteurl = "{{ formurl }}";
 </div>
 {% endmacro %}
 
+{% macro textarea(name, title=None, value='', required=True) %}
+<div class="formgroup">
+    <label for="{{ name }}">{{ title if title else name.title() }}</label>
+    <textarea id="{{ name }}" name="{{ name }}" class="form-control" {% for arg in kwargs %} {{ arg }}={{ kwargs[arg] }} {% endfor %} {% if required %}required{% endif %}>{{ value }}</textarea>
+</div>
+{% endmacro %}
+
 {% macro checkbox(name, title=None, value=False) %}
 <div class="formgroup">
     <label for="{{ name }}">{{ title if title else name.title() }}</label>
