@@ -239,8 +239,8 @@ def open_ticket():
     return html
 
 
-@app.route('/close_ticket/<ticket>')
-def close_ticket(ticket):
+@app.route('/tickets/close/<id>')
+def close_ticket(id):
     r"""
     The tutor page for claiming and closing tickets
     """
@@ -286,7 +286,7 @@ def list_admin(type):
     if not user or not user.is_superuser:
         return abort(403)
 
-    header = {
+    title = {
         m.Semesters: 'Semesters',
         m.Professors: 'Professors',
         m.Courses: 'Courses',
@@ -297,7 +297,7 @@ def list_admin(type):
     html = render_template(
         'list_admin.html',
         user=user,
-        header=header,
+        title=title,
         type=type,
         items=type.query.order_by(type.order_by).all(),
     )
