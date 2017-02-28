@@ -322,9 +322,11 @@ class Sections (Base):
 
     def __str__(self):
         s = []
-        if self.course:
+        if self.course and self.number:
+            s.append('{}-{:03}'.format(self.course.number, self.number))
+        elif self.course:
             s.append(self.course.number)
-        if self.number:
+        elif self.number:
             s.append('{:03}'.format(self.number))
         if self.time:
             s.append(self.time)
