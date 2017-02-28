@@ -232,9 +232,79 @@ def open_ticket():
     The student page for opening a ticket
     """
     user = get_user()
+
+    today = datetime.date.today()
+    courses = m.Courses.query.join(m.Sections).join(m.Semesters).\
+        order_by(m.Courses.number).\
+        order_by(m.Sections.number).\
+        filter(m.Semesters.start_date <= today).\
+        filter(m.Semesters.end_date >= today).\
+        all()
+    problems = m.ProblemTypes.query.order_by(m.ProblemTypes.description).all()
+
     html = render_template(
         'open_ticket.html',
         user=user,
+        courses=courses,
+        problems=problems,
+    )
+    return html
+
+
+@app.route('/open_ticket/', methods=['POST'])
+def save_open_ticket():
+    r"""
+    Saves changes to a ticket
+    """
+    user = get_user()
+
+    get = request.form.get
+    ticket = m.Tickets(
+        student_email=get('student_email'),
+        student_fname=get('student_fname'),
+        student_lname=get('student_lname'),
+        section_id=int(get('section_id')),
+        assignment=get('assignment'),
+        question=get('question'),
+        problem_type_id=int(get('problem_type_id')),
+        status=m.Status.Open,
+        time_created=datetime.datetime.now(),
+    )
+    db.session.add(ticket)
+    db.session.commit()
+
+    html = redirect(url_for('index'))
+    flash('&#10004; Ticket successfully opened')
+    return html
+
+
+@app.route('/tickets/')
+def view_tickets():
+    r"""
+    View/Claim/Close tickets
+    """
+    user = get_user()
+    if not user:
+        return redirect(url_for('login'))
+
+    tickets = m.Tickets.query.order_by(m.Tickets.time_created).\
+        join(m.Sections).\
+        join(m.Semesters).\
+        join(m.Courses).\
+        filter((m.Tickets.time_created > datetime.datetime.now()) |
+            (m.Tickets.status.in_((None, m.Status.Open, m.Status.Claimed)))).\
+        all()
+
+    open = filter(lambda a: a.status in (None, m.Status.Open), tickets)
+    claimed = filter(lambda a: a.status == m.Status.Claimed, tickets)
+    closed = filter(lambda a: a.status == m.Status.Closed, tickets)
+
+    html = render_template(
+        'tickets.html',
+        user=user,
+        open=open,
+        claimed=claimed,
+        closed=closed,
     )
     return html
 
@@ -253,6 +323,22 @@ def close_ticket(id):
         user=user,
     )
     return html
+
+
+@app.route('/tickets/reopen/<id>')
+def reopen_ticket(id):
+    r"""
+    Moves a ticket from closed to claimed
+    """
+    user = get_user()
+    if not user:
+        return abort(403)
+
+    ticket = m.Tickets.query.filter_by(id=id).one()
+    ticket.status = m.Status.claimed
+    db.session.commit()
+
+    return redirect(url_for('view_tickets'))
 
 
 # ----#-   Administration tools

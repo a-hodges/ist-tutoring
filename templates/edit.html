@@ -24,7 +24,7 @@ let deleteurl = "{{ formurl }}";
 {% macro checkbox(name, title=None, value=False) %}
 <div class="formgroup">
     <label for="{{ name }}">{{ title if title else name.title() }}</label>
-    <input type="checkbox" id="{{ name }}" name="{{ name }}" class="form-control" value="True" {% for arg in kwargs %} {{ arg }}={{ kwargs[arg] }} {% endfor %} {% if value %}checked{% endif %}>
+    <input type="checkbox" id="{{ name }}" name="{{ name }}" class="form-control" value="True" {% for arg in kwargs %} {{ arg }}="{{ kwargs[arg] }}" {% endfor %} {% if value %}checked{% endif %}>
 </div>
 {% endmacro %}
 
@@ -34,9 +34,9 @@ let deleteurl = "{{ formurl }}";
     <select id="{{ name }}" name="{{ name }}" class="form-control" {% if required %}required{% endif %}>
         <option value="">-</option>
         {% for item in options %}
-            <option value="{{ item.value }}" {{ 'selected' if value and value == item else '' }}>
-                {{ item.name }}
-            </option>
+        <option value="{{ item.value }}" {{ 'selected' if value and value == item else '' }}>
+            {{ item.name }}
+        </option>
         {% endfor %}
     </select>
 </div>
@@ -48,9 +48,9 @@ let deleteurl = "{{ formurl }}";
     <select id="{{ name }}" name="{{ name }}" class="form-control" {% if required %}required{% endif %}>
         <option value="">-</option>
         {% for item in options %}
-            <option value="{{ item.id }}" {{ 'selected' if value and value == item.id else '' }}>
-                {{ item }}
-            </option>
+        <option value="{{ item.id }}" {{ 'selected' if value and value == item.id else '' }}>
+            {{ item }}
+        </option>
         {% endfor %}
     </select>
 </div>
