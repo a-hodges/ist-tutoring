@@ -147,7 +147,7 @@ class Tickets (Base):
 
     def dict(self):
         return {
-            "id": self.id,
+            'id': self.id,
             'name': self.fname,
             'course': '{}-{:03}'.format(
                 self.section.course.number,
@@ -158,12 +158,16 @@ class Tickets (Base):
         }
 
     def __str__(self):
-        return '{0[name]} | {0[course]} | {0[assignment]} | {0[question]}'.format(
+        return ' | '.join(map(str, [
             self.student_fullname,
             self.course,
             self.assignment,
             self.question,
-        )
+        ]))
+
+    @property
+    def course_number(self):
+        return '{}-{:03}'.format(self.section.course.number, self.section.number)
 
 
 class ProblemTypes (Base):
