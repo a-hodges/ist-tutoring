@@ -62,10 +62,15 @@ let deleteurl = "{{ formurl }}";
         {% block form %}
         {% endblock %}
         <br>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="row">
+            <div class="btn-group-submit col-xs-4 col-sm-3 col-md-2">
+                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                {% if obj and user.is_superuser %}
+                <br>
+                <button type="button" id="delete" class="btn btn-danger btn-block">Delete</button>
+                {% endif %}
+            </div>
+        </div>
     </form>
-    {% if obj and user.is_superuser %}
-    <button type="submit" id="delete" class="btn btn-danger">Delete</button>
-    {% endif %}
 </div>
 {% endblock %}
