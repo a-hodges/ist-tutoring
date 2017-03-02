@@ -55,6 +55,30 @@ class Config (Base):
         doc="The setting's value")
 
 
+class Messages (Base):
+    r"""
+    Stores the messages to be displayed on the status screen
+    """
+    __tablename__ = 'messages'
+
+    id = Column(
+        'message_id', Integer,
+        primary_key=True,
+        doc='An autonumber id')
+    message = Column(
+        'message_text', String,
+        doc='The text to display on the status screen')
+    start_date = Column(
+        Date,
+        doc='The beginning of when the message should be displayed')
+    end_date = Column(
+        Date,
+        doc='The end of when the message should be displayed')
+
+    def __str__(self):
+        return self.message
+
+
 class Status (enum.Enum):
     r"""
     The status of a ticket
@@ -167,7 +191,10 @@ class Tickets (Base):
 
     @property
     def course_number(self):
-        return '{}-{:03}'.format(self.section.course.number, self.section.number)
+        return '{}-{:03}'.format(
+            self.section.course.number,
+            self.section.number,
+        )
 
 
 class ProblemTypes (Base):
