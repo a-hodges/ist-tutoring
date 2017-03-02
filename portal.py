@@ -101,7 +101,12 @@ def get_int(string):
 
 @app.context_processor
 def context():
-    return dict(m=m)
+    return dict(
+        m=m,
+        str=str,
+        int=get_int,
+        date=date,
+    )
 
 
 def error(e, message):
@@ -256,7 +261,7 @@ def save_open_ticket():
     r"""
     Saves changes to a ticket
     """
-    user = get_user()
+    # user = get_user()
 
     get = request.form.get
     ticket = m.Tickets(
@@ -291,8 +296,10 @@ def view_tickets():
         join(m.Sections).\
         join(m.Semesters).\
         join(m.Courses).\
-        filter((m.Tickets.time_created > datetime.datetime.now()) |
-            (m.Tickets.status.in_((None, m.Status.Open, m.Status.Claimed)))).\
+        filter(
+            (m.Tickets.time_created > datetime.datetime.now()) |
+            (m.Tickets.status.in_((None, m.Status.Open, m.Status.Claimed)))
+        ).\
         all()
 
     open = filter(lambda a: a.status in (None, m.Status.Open), tickets)
