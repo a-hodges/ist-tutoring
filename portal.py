@@ -349,6 +349,52 @@ def reopen_ticket(id):
 
 
 # ----#-   Administration tools
+def filter_report(args, page=True):
+    r"""
+    Filters reports by query arguments
+    """
+    tickets = m.Tickets.query.order_by(m.Tickets.time_created)
+
+    if args.get('min_date', ''):
+        min_date = date(args['min_date'])
+        tickets = tickets.filter(m.Tickets.time_created >= min_date)
+    if args.get('max_date', ''):
+        max_date = date(args['max_date'])
+        tickets = tickets.filter(m.Tickets.time_created <= max_date)
+
+    return tickets.all()
+
+
+@app.route('/reports/')
+def reports():
+    r"""
+    The report page for the administrator
+    """
+    user = get_user()
+    if not user or not user.is_superuser:
+        return abort(403)
+
+    tickets = filter_report(request.args)
+    semesters = m.Semesters.query.order_by(m.Semesters.order_by).all()
+    courses = m.Courses.query.order_by(m.Courses.order_by).all()
+
+    html = render_template(
+        'report.html',
+        user=user,
+        tickets=tickets,
+        semesters=semesters,
+        courses=courses,
+    )
+    return html
+
+
+@app.route('/reports/ticket/<int:id>')
+def ticket_details(id):
+    r"""
+    Allows the administrator to view the details of a specific ticket
+    """
+
+
 @app.route('/admin/')
 def admin():
     r"""

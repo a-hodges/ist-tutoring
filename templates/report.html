@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% set title = 'Reports' %}
+
+{% block meta %}
+<style>
+.question {
+    overflow: hidden;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Tickets</h1>
+    <form class="well" action="" method="get">
+        <h2>Filters</h2>
+        <div class="form-group">
+            <label for="min_date">Start Date</label>
+            <input type="date" id="min_date" name="min_date" class="form-control" value="{{ request.args.get('min_date', '') }}">
+            <label for="max_date">End Date</label>
+            <input type="date" id="max_date" name="max_date" class="form-control" value="{{ request.args.get('max_date', '') }}">
+        </div>
+        <div class="form-group">
+            <label for="semester">Semester</label>
+            <select id="semester" name="semester" class="form-control">
+                <option value="">All</option>
+                {% for semester in semesters %}
+                <option value="{{ semester.id }}" {{ 'selected' if request.args.get('semester', '') == str(semester.id) }}>
+                    {{ semester }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="course">Course</label>
+            <select id="course" name="course" class="form-control">
+                <option value="">All</option>
+                {% for course in courses %}
+                <option value="{{ course.id }}" {{ 'selected' if request.args.get('course', '') == str(course.id) }}>
+                    {{ course }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="row">
+            <div class="btn-group-submit col-xs-4 col-sm-3 col-md-2">
+                <button type="submit" class="btn btn-primary btn-block">Filter</button>
+            </div>
+        </div>
+    </form>
+    <ul class="list-group">
+        {% for ticket in tickets %}
+        <li class="list-group-item row">
+            <div class="col-xs-4 col-sm-2 col-md-2 date">{{ ticket.time_created.date() }}</div>
+            <div class="col-xs-8 col-sm-4 col-md-3 email">{{ ticket.student_email }}</div>
+            <div class="col-xs-10 col-sm-4 col-md-3 section">{{ ticket.course_number }}</div>
+            <div class="col-xs-10 col-sm-10 col-md-10 question">{{ ticket.question }}</div>
+            <a type="button" class="badge" href="{{ url_for('ticket_details', id=ticket.id) }}">Details</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
