@@ -362,6 +362,14 @@ def filter_report(args, page=True):
         max_date = date(args['max_date'])
         tickets = tickets.filter(m.Tickets.time_created <= max_date)
 
+    if args.get('semester', ''):
+        semester = get_int(args['semester'])
+        tickets = tickets.filter(m.Tickets.semester_id == semester)
+
+    if args.get('course', ''):
+        course = get_int(args['course'])
+        tickets = tickets.filter(m.Tickets.course_id == course)
+
     return tickets.all()
 
 
@@ -544,7 +552,9 @@ def edited_admin(type):
             obj = type(**form)
             db.session.add(obj)
     db.session.commit()
-    return redirect(url_for('list_admin', type=type))
+
+    html = redirect(url_for('list_admin', type=type))
+    return html
 
 
 @app.route('/admin/tutors/')
@@ -633,6 +643,7 @@ def edited_tutors():
                     obj.courses.remove(course)
 
     db.session.commit()
+
     if user.is_superuser:
         html = redirect(url_for('list_tutors'))
     else:
