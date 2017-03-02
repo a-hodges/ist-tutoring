@@ -5,15 +5,16 @@
 
 {% block form %}
 <script>
+let options;
 function get_sections(){
     let course = $('#course_id').val();
-    $('#section_id optgroup[parent]').hide();
-    console.log('#section_id optgroup[parent="{0}"]'.format(course));
-    $('#section_id optgroup[parent="{0}"]'.format(course)).show();
     $('#section_id').val('');
+    $('#section_id optgroup').remove();
+    $('#section_id').append(options.filter('[parent="{0}"]'.format(course)));
 }
 
 $(function(){
+    options = $('#section_id optgroup');
     $('#course_id').change(get_sections);
     get_sections();
 });
@@ -30,7 +31,7 @@ $(function(){
     <select id="section_id" name="section_id" class="form-control" required>
         <option value="">-</option>
         {% for course in courses %}
-        <optgroup parent="{{ course.id }}">
+        <optgroup parent="{{ course.id }}" label="{{ course }}">
             {% for section in course.sections %}
             <option value="{{ section.id }}">
                 {{ section }}
