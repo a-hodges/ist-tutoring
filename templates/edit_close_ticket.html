@@ -1,28 +1,16 @@
 {% extends "edit.html" %}
 
-{% set title = 'Open Ticket' %}
-{% set formurl = url_for('save_open_ticket') %}
+{% set title = 'Claim/Close Ticket' %}
+{% set formurl = url_for('save_close_ticket') %}
 
 {% block form %}
-<script>
-let options;
-function get_sections(){
-    let course = $('#course_id').val();
-    $('#section_id').val('');
-    $('#section_id optgroup').remove();
-    $('#section_id').append(options.filter('[parent="{0}"]'.format(course)));
-}
+<script src="{{ url_for('static', filename='js/course_picker.js') }}"></script>
 
-$(function(){
-    options = $('#section_id optgroup');
-    $('#course_id').change(get_sections);
-    get_sections();
-});
-</script>
-
-{{ input('student_email', title='Email', type='email') }}
-{{ input('student_fname', title='First Name') }}
-{{ input('student_lname', title='Last Name') }}
+<div class="formgroup">
+    <label for="name">Name</label>
+    <p id="name">{{ ticket.student_fullname }}</p>
+    <label for="email">Email</label>
+</div>
 
 {{ select('course_id', courses, title='Course') }}
 

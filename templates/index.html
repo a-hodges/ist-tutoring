@@ -4,7 +4,7 @@
 
 {% block meta %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
-<script src="{{ url_for('static', filename='js/self_destruct.js') }}"></script>
+<script src="{{ url_for('static', filename='js/temporary.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -14,7 +14,7 @@
     {% if messages %}
     <div class=flashes>
         {% for message in messages %}
-        <p class="alert {{ 'alert-success' if message.startswith('&#10004;') else 'alert-danger' if message.startswith('&#10006;') else 'alert-info' }} self-destruct">{{ message|safe }}</p>
+        <p class="alert {{ 'alert-success' if message.startswith('&#10004;') else 'alert-danger' if message.startswith('&#10006;') else 'alert-info' }} temporary">{{ message|safe }}</p>
         {% endfor %}
     </div>
     {% endif %}

@@ -1,7 +1,7 @@
 {% extends "edit.html" %}
 
 {% set title = 'Edit Section' %}
-{% set formurl = url_for('edited_admin', type=type) %}
+{% set formurl = url_for('save_edit_admin', type=type) %}
 {% set courses = m.Courses.query.order_by(m.Courses.order_by).all() %}
 {% set semesters = m.Semesters.query.order_by(m.Semesters.order_by).all() %}
 {% set professors = m.Professors.query.order_by(m.Professors.order_by).all() %}

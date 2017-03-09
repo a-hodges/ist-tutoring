@@ -1,7 +1,7 @@
 {% extends "edit.html" %}
 
 {% set title = 'Edit Course' %}
-{% set formurl = url_for('edited_admin', type=type) %}
+{% set formurl = url_for('save_edit_admin', type=type) %}
 
 {% block form %}
 <input type="hidden" id="id" name="id" value="{{ obj.id if obj else '' }}">

@@ -248,7 +248,7 @@ def open_ticket():
     problems = m.ProblemTypes.query.order_by(m.ProblemTypes.description).all()
 
     html = render_template(
-        'open_ticket.html',
+        'edit_open_ticket.html',
         user=user,
         courses=courses,
         problems=problems,
@@ -259,7 +259,7 @@ def open_ticket():
 @app.route('/open_ticket/', methods=['POST'])
 def save_open_ticket():
     r"""
-    Saves changes to a ticket
+    Creates a new ticket
     """
     # user = get_user()
 
@@ -268,10 +268,10 @@ def save_open_ticket():
         student_email=get('student_email'),
         student_fname=get('student_fname'),
         student_lname=get('student_lname'),
-        section_id=int(get('section_id')),
+        section_id=get_int(get('section_id')),
         assignment=get('assignment'),
         question=get('question'),
-        problem_type_id=int(get('problem_type_id')),
+        problem_type_id=get_int(get('problem_type_id')),
         status=m.Status.Open,
         time_created=datetime.datetime.now(),
     )
@@ -307,7 +307,7 @@ def view_tickets():
     closed = filter(lambda a: a.status == m.Status.Closed, tickets)
 
     html = render_template(
-        'tickets.html',
+        'list_tickets.html',
         user=user,
         open=open,
         claimed=claimed,
@@ -325,9 +325,12 @@ def close_ticket(id):
     if not user:
         return abort(403)
 
+    ticket = m.Tickets.query.filter_by(id=id).one()
+
     html = render_template(
-        'close_ticket.html',
+        'edit_close_ticket.html',
         user=user,
+        ticket=ticket,
     )
     return html
 
@@ -349,7 +352,7 @@ def reopen_ticket(id):
 
 
 # ----#-   Administration tools
-def filter_report(args, page=True):
+def filter_report(args):
     r"""
     Filters reports by query arguments
     """
@@ -370,7 +373,7 @@ def filter_report(args, page=True):
         course = get_int(args['course'])
         tickets = tickets.filter(m.Tickets.course_id == course)
 
-    return tickets.all()
+    return tickets
 
 
 @app.route('/reports/')
@@ -382,7 +385,7 @@ def reports():
     if not user or not user.is_superuser:
         return abort(403)
 
-    tickets = filter_report(request.args)
+    tickets = filter_report(request.args).all()
     semesters = m.Semesters.query.order_by(m.Semesters.order_by).all()
     courses = m.Courses.query.order_by(m.Courses.order_by).all()
 
@@ -520,7 +523,7 @@ problem_form = {
     '/admin/sections/', methods=['POST'], defaults={'type': m.Sections})
 @app.route(
     '/admin/problems/', methods=['POST'], defaults={'type': m.ProblemTypes})
-def edited_admin(type):
+def save_edit_admin(type):
     r"""
     Handles changes to administrative objects
     """
@@ -600,7 +603,7 @@ def edit_tutors(email=None):
 
 
 @app.route('/admin/tutors/', methods=['POST'])
-def edited_tutors():
+def save_edit_tutors():
     r"""
     Handles changes to tutor objects
     """

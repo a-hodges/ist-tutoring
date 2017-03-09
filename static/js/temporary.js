@@ -1,6 +1,6 @@
 $(function(){
     window.setTimeout(function(){
-        $('.self-destruct').remove();
+        $('.temporary').remove();
     },
     15000);
 });
