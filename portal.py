@@ -638,6 +638,7 @@ def save_edit_tutors():
         form = {
             'fname': str,
             'lname': str,
+            'is_working': bool,
         }
         if user.is_superuser:
             form.update({
