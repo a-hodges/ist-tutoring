@@ -49,6 +49,11 @@
             </div>
         </div>
     </form>
+    <div class="row">
+        <div class="btn-group-submit col-xs-4 col-sm-3 col-md-2">
+            <a href="{{ url_for('report_download', **request.args) }}" class="btn btn-primary btn-block">Download Report</a>
+        </div>
+    </div>
     <ul class="list-group">
         {% for ticket in tickets %}
         <li class="list-group-item row">

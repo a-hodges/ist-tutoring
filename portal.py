@@ -409,7 +409,9 @@ def filter_report(args):
     r"""
     Filters reports by query arguments
     """
-    tickets = m.Tickets.query.order_by(m.Tickets.time_created)
+    tickets = m.Tickets.query.\
+        order_by(m.Tickets.time_created.desc()).\
+        join(m.Sections)
 
     if args.get('min_date', ''):
         min_date = date(args['min_date'])
@@ -420,11 +422,11 @@ def filter_report(args):
 
     if args.get('semester', ''):
         semester = get_int(args['semester'])
-        tickets = tickets.filter(m.Tickets.semester_id == semester)
+        tickets = tickets.filter(m.Sections.semester_id == semester)
 
     if args.get('course', ''):
         course = get_int(args['course'])
-        tickets = tickets.filter(m.Tickets.course_id == course)
+        tickets = tickets.filter(m.Sections.course_id == course)
 
     return tickets
 
@@ -450,6 +452,71 @@ def reports():
         courses=courses,
     )
     return html
+
+
+@app.route('/report/file/')
+def report_download():
+    r"""
+    Allows a report to be downloaded as a CSV
+    """
+    user = get_user()
+    if not user or not user.is_superuser:
+        return abort(403)
+
+    tickets = filter_report(request.args).\
+        join(m.ProblemTypes).\
+        join(m.Courses).\
+        join(m.Semesters).\
+        join(m.Professors).\
+        all()
+    
+    headers = [
+        'URL',
+        'Student Email',
+        'Student First Name',
+        'Student Last Name',
+        'Assignment',
+        'Question',
+        'Problem Type',
+        'Status',
+        'Time Created',
+        'Time Closed',
+        'Was Successful',
+        'Primary Tutor',
+        'Assistant Tutor',
+        'Semester',
+        'Course Number',
+        'Section Number',
+        'Professor',
+    ]
+    report = [headers]
+    for ticket in tickets:
+        elem = [
+            os.path.join('', url_for('ticket_details', id=ticket.id)),
+            ticket.student_email,
+            ticket.student_fname,
+            ticket.student_lname,
+            ticket.assignment,
+            ticket.question,
+            ticket.problem_type.description,
+            ticket.status,
+            ticket.time_created,
+            ticket.time_closed,
+            ticket.was_successful,
+            ticket.tutor_id,
+            ticket.assistant_tutor_id,
+            ticket.section.semester.title,
+            ticket.section.course.number,
+            ticket.section.number,
+            ticket.section.professor.last_first,
+        ]
+        report.append(elem)
+
+    html = io.StringIO()
+    writer = csv.writer(html)
+    for line in report:
+        writer.writerow(line)
+    return html.getvalue()
 
 
 @app.route('/reports/ticket/<int:id>')
