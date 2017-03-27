@@ -231,6 +231,16 @@ def status():
     return html
 
 
+def get_open_courses():
+    today = datetime.date.today()
+    return m.Courses.query.join(m.Sections).join(m.Semesters).\
+        order_by(m.Courses.number).\
+        order_by(m.Sections.number).\
+        filter(m.Semesters.start_date <= today).\
+        filter(m.Semesters.end_date >= today).\
+        all()
+
+
 @app.route('/open_ticket/')
 def open_ticket():
     r"""
@@ -238,13 +248,7 @@ def open_ticket():
     """
     user = get_user()
 
-    today = datetime.date.today()
-    courses = m.Courses.query.join(m.Sections).join(m.Semesters).\
-        order_by(m.Courses.number).\
-        order_by(m.Sections.number).\
-        filter(m.Semesters.start_date <= today).\
-        filter(m.Semesters.end_date >= today).\
-        all()
+    courses = get_open_courses()
     problems = m.ProblemTypes.query.order_by(m.ProblemTypes.description).all()
 
     html = render_template(
@@ -263,18 +267,24 @@ def save_open_ticket():
     """
     # user = get_user()
 
-    get = request.form.get
-    ticket = m.Tickets(
-        student_email=get('student_email'),
-        student_fname=get('student_fname'),
-        student_lname=get('student_lname'),
-        section_id=get_int(get('section_id')),
-        assignment=get('assignment'),
-        question=get('question'),
-        problem_type_id=get_int(get('problem_type_id')),
-        status=m.Status.Open,
-        time_created=datetime.datetime.now(),
-    )
+    ticket_form = {
+        'student_email': str,
+        'student_fname': str,
+        'student_lname': str,
+        'section_id': get_int,
+        'assignment': str,
+        'question': str,
+        'problem_type_id': get_int,
+    }
+
+    form = {}
+    for key, value in ticket_form.items():
+        form[key] = value(request.form.get(key))
+
+    form['status'] = m.Status.Open
+    form['time_created'] = datetime.datetime.now()
+
+    ticket = m.Tickets(**form)
     db.session.add(ticket)
     db.session.commit()
 
@@ -326,12 +336,55 @@ def close_ticket(id):
         return abort(403)
 
     ticket = m.Tickets.query.filter_by(id=id).one()
+    courses = get_open_courses()
+    problems = m.ProblemTypes.query.order_by(m.ProblemTypes.description).all()
+    tutors = m.Tutors.query.order_by(m.Tutors.last_first).all()
 
     html = render_template(
         'edit_close_ticket.html',
         user=user,
         ticket=ticket,
+        courses=courses,
+        problems=problems,
+        tutors=tutors,
     )
+    return html
+
+
+@app.route('/tickets/close/', methods=['POST'])
+def save_close_ticket():
+    r"""
+    Saves changes to a ticket
+    """
+    user = get_user()
+    if not user:
+        return abort(403)
+
+    close_ticket_form = {
+        'assignment': str,
+        'question': str,
+        'was_successful': bool,
+        'tutor_id': int,
+        'assistant_tutor_id': int,
+        'section_id': int,
+        'problem_type_id': int,
+    }
+
+    form = {}
+    for key, value in close_ticket_form.items():
+        form[key] = value(request.form.get(key))
+    form['status'] = m.Status[request.form.get('status')]
+    form['time_closed'] = datetime.datetime.now()
+
+    id = get_int(request.form.get('id'))
+    ticket = m.Tickets.query.filter_by(id=id).one()
+
+    for key, value in form.items():
+        if getattr(ticket, key) != value:
+            setattr(ticket, key, value)
+    db.session.commit()
+
+    html = redirect(url_for('view_tickets'))
     return html
 
 
