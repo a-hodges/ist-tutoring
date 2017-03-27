@@ -3,7 +3,8 @@
 import os
 import datetime
 import argparse
-# import logging
+import csv
+import io
 
 from flask import (
     Flask,
@@ -22,11 +23,12 @@ from flask_sqlalchemy import SQLAlchemy, _QueryProperty
 
 import model as m
 # Default ordering for admin types
-m.Semesters.order_by = m.Semesters.title
+m.Semesters.order_by = m.Semesters.start_date
 m.Professors.order_by = m.Professors.last_first
 m.Courses.order_by = m.Courses.number
 m.Sections.order_by = m.Sections.number
 m.ProblemTypes.order_by = m.ProblemTypes.description
+m.Messages.order_by = m.Messages.end_date.desc()
 
 # Create App
 app = Flask(__name__)
@@ -47,11 +49,6 @@ def create_app(args):
     global app, db
     app.jinja_env.trim_blocks = True
     app.jinja_env.lstrip_blocks = True
-
-    # setup Logging
-    # log = logging.getLogger('FlaskApp')
-    # log.setLevel(logging.ERROR)
-    # app.logger.addHandler(log)
 
     # setup Database
     app.config['SQLALCHEMY_DATABASE_URI'] = '{}:///{}'.format(
@@ -83,7 +80,10 @@ def date(string):
     r"""
     Convert a date formated string to a date object
     """
-    return datetime.datetime.strptime(string, '%Y-%m-%d').date()
+    if string == '':
+        return None
+    else:
+        return datetime.datetime.strptime(string, '%Y-%m-%d').date()
 
 
 def get_int(string):
@@ -428,6 +428,7 @@ def admin():
 @app.route('/admin/courses/', defaults={'type': m.Courses})
 @app.route('/admin/sections/', defaults={'type': m.Sections})
 @app.route('/admin/problems/', defaults={'type': m.ProblemTypes})
+@app.route('/admin/messages/', defaults={'type': m.Messages})
 def list_admin(type):
     r"""
     Displays and allows editing of the available admin objects
@@ -442,14 +443,22 @@ def list_admin(type):
         m.Courses: 'Courses',
         m.Sections: 'Course Sections',
         m.ProblemTypes: 'Problem Types',
+        m.Messages: 'Messages',
     }.get(type)
+
+    items = type.query.order_by(type.order_by)
+    if type == m.Sections:
+        items = items.join(m.Semesters).all()
+        items = sorted(items, key=lambda a: a.semester.start_date)
+    else:
+        items = items.all()
 
     html = render_template(
         'list_admin.html',
         user=user,
         title=title,
         type=type,
-        items=type.query.order_by(type.order_by).all(),
+        items=items,
     )
     return html
 
@@ -459,11 +468,13 @@ def list_admin(type):
 @app.route('/admin/courses/new', defaults={'type': m.Courses})
 @app.route('/admin/sections/new', defaults={'type': m.Sections})
 @app.route('/admin/problems/new', defaults={'type': m.ProblemTypes})
+@app.route('/admin/messages/new', defaults={'type': m.Messages})
 @app.route('/admin/semesters/<int:id>', defaults={'type': m.Semesters})
 @app.route('/admin/professors/<int:id>', defaults={'type': m.Professors})
 @app.route('/admin/courses/<int:id>', defaults={'type': m.Courses})
 @app.route('/admin/sections/<int:id>', defaults={'type': m.Sections})
 @app.route('/admin/problems/<int:id>', defaults={'type': m.ProblemTypes})
+@app.route('/admin/problems/<int:id>', defaults={'type': m.Messages})
 def edit_admin(type, id=None):
     r"""
     Allows editing and creation of admin objects
@@ -511,6 +522,11 @@ section_form = {
 problem_form = {
     'description': str,
 }
+message_form = {
+    'message': str,
+    'start_date': date,
+    'end_date': date,
+}
 
 
 @app.route(
@@ -523,6 +539,8 @@ problem_form = {
     '/admin/sections/', methods=['POST'], defaults={'type': m.Sections})
 @app.route(
     '/admin/problems/', methods=['POST'], defaults={'type': m.ProblemTypes})
+@app.route(
+    '/admin/messages/', methods=['POST'], defaults={'type': m.Messages})
 def save_edit_admin(type):
     r"""
     Handles changes to administrative objects
@@ -541,6 +559,7 @@ def save_edit_admin(type):
             m.Courses: course_form,
             m.Sections: section_form,
             m.ProblemTypes: problem_form,
+            m.Messages: message_form,
         }.get(type).copy()
         for key, value in form.items():
             form[key] = value(request.form.get(key))
