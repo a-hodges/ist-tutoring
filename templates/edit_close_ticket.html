@@ -6,13 +6,16 @@
 {% block form %}
 <script src="{{ url_for('static', filename='js/course_picker.js') }}"></script>
 
+<input type="hidden" id="id" name="id" value="{{ ticket.id }}">
+
 <div class="formgroup">
     <label for="name">Name</label>
-    <p id="name">{{ ticket.student_fullname }}</p>
+    <p id="name">{{ ticket.student_last_first }}</p>
     <label for="email">Email</label>
+    <p id="email">{{ ticket.student_email }}</p>
 </div>
 
-{{ select('course_id', courses, title='Course') }}
+{{ select('course_id', courses, title='Course', value=ticket.section.course_id) }}
 
 <div class="formgroup">
     <label for="section_id">Section</label>
@@ -21,7 +24,7 @@
         {% for course in courses %}
         <optgroup parent="{{ course.id }}" label="{{ course }}">
             {% for section in course.sections %}
-            <option value="{{ section.id }}">
+            <option value="{{ section.id }}" {{ 'selected' if ticket.section_id == section.id else '' }}>
                 {{ section }}
             </option>
             {% endfor %}
@@ -30,8 +33,18 @@
     </select>
 </div>
 
-{{ input('assignment', title='Assignment Description', minlength='10') }}
-{{ textarea('question', title='Specific Question', minlength='30') }}
-{{ select('problem_type_id', problems, title='Problem Type') }}
+{{ input('assignment', title='Assignment Description', minlength='10', value=ticket.assignment) }}
+{{ textarea('question', title='Specific Question', minlength='30', value=ticket.question) }}
+{{ select('problem_type_id', problems, title='Problem Type', value=ticket.problem_type_id) }}
 
+{{ select('tutor_id', tutors, title='Primary Tutor', value=ticket.tutor_id) }}
+{{ select('assistant_tutor_id', tutors, title='Assistant Tutor', value=ticket.tutor_id) }}
+
+{{ checkbox('was_successful', title='Was Successful', value=ticket.was_successful) }}
+
+{% endblock %}
+
+{% block submit %}
+<input type="submit" class="btn btn-primary btn-block" id="claim" name="submit" value="Claim">
+<input type="submit" class="btn btn-primary btn-block" id="close" name="submit" value="Close">
 {% endblock %}
