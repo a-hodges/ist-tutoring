@@ -76,7 +76,7 @@ class Messages (Base):
         doc='The end of when the message should be displayed')
 
     def __str__(self):
-        return self.message
+        return self.message[:self.message.find('\n')]
 
 
 class Status (enum.Enum):
@@ -112,6 +112,8 @@ class Tickets (Base):
     student_lname = Column(
         String,
         doc='The last name of the student requesting tutoring')
+    student_fullname = column_property(student_fname + " " + student_lname)
+    student_last_first = column_property(student_lname + " " + student_fname)
     assignment = Column(
         'ticket_assignment', String,
         doc='The assignment number the student needs help with')
@@ -152,7 +154,6 @@ class Tickets (Base):
             'problem_types.problem_type_id',
             onupdate=onupdate, ondelete=ondelete),
         doc='The type of problem the student is having')
-    student_fullname = column_property(student_fname + " " + student_lname)
 
     tutor = relationship(
         'Tutors',
@@ -244,6 +245,9 @@ class Tutors (Base):
     is_superuser = Column(
         'tutor_is_superuser', Boolean,
         doc='If the tutor has administrator privileges')
+    is_working = Column(
+        'tutor_is_working', Boolean,
+        doc='If the tutor is currently working')
     fullname = column_property(fname + " " + lname)
     last_first = column_property(lname + ", " + fname)
 
