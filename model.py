@@ -347,6 +347,7 @@ class Sections (Base):
         back_populates='section')
     course = relationship(
         'Courses',
+        lazy="joined",
         back_populates='sections')
     semester = relationship(
         'Semesters',

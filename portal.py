@@ -579,6 +579,18 @@ def ticket_details(id):
     r"""
     Allows the administrator to view the details of a specific ticket
     """
+    user = get_user()
+    if not user or not user.is_superuser:
+        return abort(403)
+
+    ticket = m.Tickets.query.filter_by(id=id).one()
+
+    html = render_template(
+        'ticket_details.html',
+        user=user,
+        ticket=ticket,
+    )
+    return html
 
 
 @app.route('/admin/')
