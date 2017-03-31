@@ -18,6 +18,7 @@ from flask import (
     session,
     url_for,
 )
+from sqlalchemy.orm import contains_eager, joinedload, subqueryload
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from flask_sqlalchemy import SQLAlchemy, _QueryProperty
 
@@ -106,6 +107,7 @@ def context():
         str=str,
         int=get_int,
         date=date,
+        len=len,
     )
 
 
@@ -197,6 +199,7 @@ def favicon():
     )
 
 
+# ----#-   Pages
 @app.route('/')
 def index():
     r"""
@@ -224,9 +227,61 @@ def status():
         Open Tickets
     """
     user = get_user()
+
+    today = datetime.date.today()
+
+    sections = m.Sections.query.\
+        join(m.Courses).filter(m.Courses.on_display.is_(True)).\
+        join(m.Semesters).filter(
+            (m.Semesters.start_date <= today) &
+            (m.Semesters.end_date >= today)
+        ).\
+        join(m.Tickets).filter(
+            m.Tickets.status.in_((None, m.Status.Open, m.Status.Claimed))
+        ).\
+        all()
+
+    courses = m.Courses.query.\
+        order_by(m.Courses.order_by).\
+        filter(m.Courses.on_display.is_(True)).\
+        options(subqueryload(m.Courses.tutors)).\
+        all()
+
+    tickets = m.Tickets.query.filter(
+        m.Tickets.status.in_((None, m.Status.Open))
+    ).options(
+        joinedload(m.Tickets.section),
+    ).order_by(m.Tickets.time_created).all()
+
+    messages = m.Messages.query.filter(
+        (
+            (m.Messages.start_date < today) |
+            (m.Messages.start_date.is_(None))
+        ) &
+        (
+            (m.Messages.end_date > today) |
+            (m.Messages.end_date.is_(None))
+        )
+    )
+
+    for course in courses:
+        course.current_sections = []
+        for section in sections:
+            if course == section.course:
+                course.current_sections.append(section)
+        course.current_tickets = sum(
+            len(section.tickets) for section in course.current_sections)
+        course.current_tutors = []
+        for tutor in course.tutors:
+            if tutor.is_working:
+                course.current_tutors.append(tutor)
+
     html = render_template(
         'status.html',
         user=user,
+        messages=messages,
+        courses=courses,
+        tickets=tickets,
     )
     return html
 
@@ -817,46 +872,6 @@ def logout():
     session.clear()
     html = redirect(url_for('index'))
     return html
-
-
-# ----#-   JSON
-@app.route('/tickets.json')
-def json_status():
-    r"""
-    Query needs checking
-    """
-    user = get_user()
-    if not user:
-        return abort(403)
-
-    data = m.Tickets.query.filter(
-        m.Tickets.status.in_((None, m.Status.Open))
-    ).all()
-    data = list(map(lambda a: a.dict(), data))
-    return json.jsonify(d=data)
-
-
-@app.route('/availability.json')
-def json_availability():
-    r"""
-    Query needs checking
-    Output needs checking
-    """
-    today = datetime.date.today()
-    data = m.Courses.query.\
-        join(m.can_tutor_table).join(m.Tutors).\
-        join(m.Sections).join(m.Tickets).join(m.Semesters).\
-        filter(m.Courses.on_display is True).\
-        filter(m.Tickets.in_((None, m.Status.Open, m.Status.Claimed))).\
-        filter(m.Semesters.start_date <= today).\
-        filter(m.Semesters.end_date >= today).\
-        all()
-    lst = []
-    for course in data:
-        tickets = sum(len(section.tickets) for section in course.sections)
-        tutors = len(course.tutors)
-        lst.append({'course': course, 'tickets': tickets, 'tutors': tutors})
-    return json.jsonify(d=data)
 
 
 def main():

@@ -5,33 +5,53 @@
 {% block meta %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/status.css') }}">
-<script src="{{ url_for('static', filename='js/messages.js') }}"></script>
-<script src="{{ url_for('static', filename='js/availability.js') }}"></script>
-{% if user %}
-<script src="{{ url_for('static', filename='js/tickets.js') }}"></script>
-{% endif %}
+<meta reload="50000?">
 {% endblock %}
 
 {% block content %}
 <div class="container">
     <h1>Welcome to the Computer Science Learning Center</h1>
     <h2>Messages</h2>
-    <div id="messages"></div>
+    <ul id="messages" class="list-group">
+        {% for message in messages %}
+        <li class="list-group-item row">
+            {{ message.message }}
+        </li>
+        {% endfor %}
+    </ul>
     <h2>Course Availability</h2>
     <div class="table-responsive">
         <table id="course-availability">
             <thead>
                 <tr>
                     <th>Course</th>
+                    <th># Tickets</th>
                     <th># Tutors</th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+                {% for course in courses %}
+                <tr>
+                    <td>{{ course }}</td>
+                    <td>{{ course.current_tickets }}</td>
+                    <td>{{ len(course.current_tutors) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </div>
     {% if user %}
     <h2>Open Tickets</h2>
-    <ul id="tickets"></ul>
+    <ul id="tickets" class="list-group">
+        {% for ticket in tickets %}
+        <li class="list-group-item row">
+            <div class="col-xs-4 col-sm-2 col-md-2 name">{{ ticket.student_fullname }}</div>
+            <div class="col-xs-8 col-sm-4 col-md-3 course">{{ ticket.section.course }}</div>
+            <div class="col-xs-10 col-sm-4 col-md-3 assignment">{{ ticket.assignment }}</div>
+            <div class="col-xs-10 col-sm-10 col-md-10 question">{{ ticket.question }}</div>
+        </li>
+        {% endfor %}
+    </ul>
     {% endif %}
 </div>
 {% endblock %}

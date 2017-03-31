@@ -1,5 +1,5 @@
 #course-availability {
-    width: 100%;
+    min-width: 100%;
 }
 
 #course-availability thead {
@@ -28,4 +28,8 @@ tr.busy-tutors {
 tr.availabile-tutors {
     background-color: lawngreen;
     color: black;
+}
+
+ul.list-group > li:nth-child(odd) {
+    background-color: #eee;
 }
