@@ -357,19 +357,30 @@ def view_tickets():
     if not user:
         return redirect(url_for('login'))
 
+    today = datetime.date.today()
     tickets = m.Tickets.query.order_by(m.Tickets.time_created).\
         join(m.Sections).\
         join(m.Semesters).\
         join(m.Courses).\
         filter(
-            (m.Tickets.time_created > datetime.datetime.now()) |
+            (m.Tickets.time_created > today) |
+            (m.Tickets.time_closed > today) |
             (m.Tickets.status.in_((None, m.Status.Open, m.Status.Claimed)))
         ).\
         all()
 
-    open = filter(lambda a: a.status in (None, m.Status.Open), tickets)
-    claimed = filter(lambda a: a.status == m.Status.Claimed, tickets)
-    closed = filter(lambda a: a.status == m.Status.Closed, tickets)
+    open = []
+    claimed = []
+    closed = []
+    for ticket in tickets:
+        if ticket.status in (None, m.Status.Open):
+            open.append(ticket)
+        elif ticket.status == m.Status.Claimed:
+            claimed.append(ticket)
+        elif ticket.status == m.Status.Closed:
+            closed.append(ticket)
+        else:
+            raise ValueError('Invalid ticket status: {}'.format(ticket.status))
 
     html = render_template(
         'list_tickets.html',

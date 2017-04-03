@@ -35,7 +35,7 @@
 
     <h2>Closed</h2>
     <ul class="list-group">
-        {% for item in claimed %}
+        {% for item in closed %}
         <li class="list-group-item row">
             {{ ticket(item) }}
             <a type="button" class="badge" href="{{ url_for('reopen_ticket', id=item.id) }}">Reopen</a>
