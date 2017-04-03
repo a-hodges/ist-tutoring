@@ -13,7 +13,7 @@ from sqlalchemy import (
     ForeignKey,
 )
 from sqlalchemy.schema import Table
-from sqlalchemy.orm import relationship, column_property
+from sqlalchemy.orm import relationship, column_property, synonym
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -233,6 +233,7 @@ class Tutors (Base):
         'tutor_email', String,
         primary_key=True,
         doc="The tutor's UNO email")
+    id = synonym('email')  # allows generic use of id property on tables
     fname = Column(
         'tutor_fname', String,
         doc="The tutor's first name")
