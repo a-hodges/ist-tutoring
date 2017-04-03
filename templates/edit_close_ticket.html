@@ -38,13 +38,13 @@
 {{ select('problem_type_id', problems, title='Problem Type', value=ticket.problem_type_id) }}
 
 {{ select('tutor_id', tutors, title='Primary Tutor', value=ticket.tutor_id) }}
-{{ select('assistant_tutor_id', tutors, title='Assistant Tutor', value=ticket.tutor_id) }}
+{{ select('assistant_tutor_id', tutors, title='Assistant Tutor', value=ticket.assistant_tutor_id, required=False) }}
 
 {{ checkbox('was_successful', title='Was Successful', value=ticket.was_successful) }}
 
 {% endblock %}
 
 {% block submit %}
-<input type="submit" class="btn btn-primary btn-block" id="claim" name="submit" value="Claim">
-<input type="submit" class="btn btn-primary btn-block" id="close" name="submit" value="Close">
+<button type="submit" class="btn btn-primary btn-block" id="claim" name="submit" value="claim">Claim</button>
+<button type="submit" class="btn btn-primary btn-block" id="close" name="submit" value="close">Close</button>
 {% endblock %}

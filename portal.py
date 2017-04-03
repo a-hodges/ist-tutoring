@@ -430,17 +430,23 @@ def save_close_ticket():
         'assignment': str,
         'question': str,
         'was_successful': bool,
-        'tutor_id': int,
-        'assistant_tutor_id': int,
-        'section_id': int,
-        'problem_type_id': int,
+        'tutor_id': str,
+        'assistant_tutor_id': str,
+        'section_id': get_int,
+        'problem_type_id': get_int,
     }
 
     form = {}
     for key, value in close_ticket_form.items():
         form[key] = value(request.form.get(key))
-    form['status'] = m.Status[request.form.get('status')]
-    form['time_closed'] = datetime.datetime.now()
+
+    if request.form.get('submit') == 'claim':
+        form['status'] = m.Status.Claimed
+    elif request.form.get('submit') == 'close':
+        form['status'] = m.Status.Closed
+        form['time_closed'] = datetime.datetime.now()
+    else:
+        raise ValueError('Invalid submit type: {}'.format(form.get('submit')))
 
     id = get_int(request.form.get('id'))
     ticket = m.Tickets.query.filter_by(id=id).one()
@@ -464,7 +470,7 @@ def reopen_ticket(id):
         return abort(403)
 
     ticket = m.Tickets.query.filter_by(id=id).one()
-    ticket.status = m.Status.claimed
+    ticket.status = m.Status.Claimed
     db.session.commit()
 
     return redirect(url_for('view_tickets'))
