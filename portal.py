@@ -45,7 +45,7 @@ m.Base.query = _QueryProperty(db)
 def create_app(args):
     r"""
     Sets up app for use
-    Adds logging, database configuration, and the secret key
+    Adds database configuration and the secret key
     """
     global app, db
     app.jinja_env.trim_blocks = True
@@ -89,7 +89,7 @@ def date(string):
 
 def get_int(string):
     r"""
-    Convert a string to int returning none for invalid strings
+    Convert a string to int, returning none for invalid strings
     """
     ret = None
     if string is not None:
@@ -102,6 +102,9 @@ def get_int(string):
 
 @app.context_processor
 def context():
+    r"""
+    Makes extra variables available to the template engine
+    """
     return dict(
         m=m,
         str=str,
@@ -287,6 +290,9 @@ def status():
 
 
 def get_open_courses():
+    r"""
+    Gets a list of courses and sections for the current semester
+    """
     today = datetime.date.today()
     return m.Courses.query.join(m.Sections).join(m.Semesters).\
         order_by(m.Courses.number).\
@@ -318,10 +324,8 @@ def open_ticket():
 @app.route('/open_ticket/', methods=['POST'])
 def save_open_ticket():
     r"""
-    Creates a new ticket
+    Creates a new ticket and stores it in the database
     """
-    # user = get_user()
-
     ticket_form = {
         'student_email': str,
         'student_fname': str,
@@ -420,7 +424,7 @@ def close_ticket(id):
 @app.route('/tickets/close/', methods=['POST'])
 def save_close_ticket():
     r"""
-    Saves changes to a ticket
+    Saves changes to a ticket into the database
     """
     user = get_user()
     if not user:
@@ -529,7 +533,7 @@ def reports():
 @app.route('/report/file/')
 def report_download():
     r"""
-    Allows a report to be downloaded as a CSV
+    Downloads a report as a CSV
     """
     user = get_user()
     if not user or not user.is_superuser:
