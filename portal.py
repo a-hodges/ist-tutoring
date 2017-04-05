@@ -18,6 +18,7 @@ from flask import (
     session,
     url_for,
 )
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import contains_eager, joinedload, subqueryload
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from flask_sqlalchemy import SQLAlchemy, _QueryProperty
@@ -133,10 +134,7 @@ def four_oh_three(e):
     r"""
     403 (forbidden) error page
     """
-    return error(
-        e,
-        "You don't have access to this page."
-    ), 403
+    return error(e, "You don't have access to this page."), 403
 
 
 @app.errorhandler(404)
@@ -144,28 +142,23 @@ def four_oh_four(e):
     r"""
     404 (page not found) error page
     """
-    return error(
-        e,
-        "We couldn't find the page you were looking for."
-    ), 404
+    return error(e, "We couldn't find the page you were looking for."), 404
 
 
 @app.errorhandler(500)
 def five_hundred(e):
     r"""
     500 (internal server) error page
-    Will have to be changed for production version
     """
     if isinstance(e, NoResultFound):
         message = 'Could not find the requested item in the database.'
     elif isinstance(e, MultipleResultsFound):
         message = 'Found too many results for the requested resource.'
+    elif isinstance(e, IntegrityError):
+        message = 'Invalid data entered. Go back and fill out all fields.'
     else:
         message = 'Whoops, looks like something went wrong!'
-    return error(
-        '500: '+str(e),
-        message,
-    ), 500
+    return error('500: '+type(e).__name__, message), 500
 
 
 def get_user():
@@ -657,7 +650,9 @@ def list_admin(type):
     items = type.query.order_by(type.order_by)
     if type == m.Sections:
         items = items.join(m.Semesters).all()
-        items = sorted(items, key=lambda a: a.semester.start_date)
+        items = sorted(items, key=lambda a: a.course.number)
+        items = sorted(
+            items, key=lambda a: a.semester.start_date, reverse=True)
     else:
         items = items.all()
 
