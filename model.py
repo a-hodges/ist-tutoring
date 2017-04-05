@@ -348,13 +348,15 @@ class Sections (Base):
         back_populates='section')
     course = relationship(
         'Courses',
-        lazy="joined",
+        lazy='joined',
         back_populates='sections')
     semester = relationship(
         'Semesters',
+        lazy='joined',
         back_populates='sections')
     professor = relationship(
         'Professors',
+        lazy='joined',
         back_populates='sections')
 
     def __str__(self):
@@ -369,6 +371,8 @@ class Sections (Base):
             s.append(self.time)
         if self.professor and self.professor.lname:
             s.append(self.professor.lname)
+        if self.semester:
+            s.append(str(self.semester))
 
         if s:
             s = ', '.join(s)
