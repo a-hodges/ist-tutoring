@@ -22,6 +22,7 @@ from sqlalchemy.orm import joinedload, subqueryload
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from flask_sqlalchemy import SQLAlchemy, _QueryProperty
 from flask_oauthlib.client import OAuth
+import oauth2client
 from oauth2client.client import GoogleCredentials
 from apiclient.discovery import build
 
@@ -938,6 +939,7 @@ def oauth_authorized():
         client_secret=app.config['GOOGLE_CONSUMER_SECRET'],
         refresh_token=session['google_token'][1],
         token_expiry=None,
+        token_uri=oauth2client.GOOGLE_TOKEN_URI,
         user_agent=None,
     )
     userinfo = build('plus', 'v1', credentials=credentials).people().get(
