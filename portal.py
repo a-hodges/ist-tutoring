@@ -932,6 +932,7 @@ def oauth_authorized():
         return redirect(next_url)
 
     email = google.get('userinfo')
+    print(email)
     email = resp.get('email')
 
     if m.Tutors.query.filter_by(email=email).count():
