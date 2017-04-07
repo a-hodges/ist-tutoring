@@ -953,6 +953,7 @@ def oauth_authorized():
 
     if not m.Tutors.query.filter_by(email=session.get('username', '')).count():
         session.clear()
+        flash('Invalid email used to login')
 
     return redirect(next_url)
 
