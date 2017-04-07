@@ -64,8 +64,7 @@ def create_app(args):
     app.jinja_env.lstrip_blocks = True
 
     # setup Database
-    app.config['SQLALCHEMY_DATABASE_URI'] = '{}:///{}'.format(
-        args.type, args.database)
+    app.config['SQLALCHEMY_DATABASE_URI'] = args.database
     db.create_all()
 
     # setup config values
@@ -89,6 +88,9 @@ def create_app(args):
         config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(
             minutes=int(config['PERMANENT_SESSION_LIFETIME']))
         app.config.update(config)
+
+    # Configure OAuth key/secret
+    ...
 
 
 def date(string):
@@ -551,7 +553,7 @@ def report_download():
         join(m.Semesters).\
         join(m.Professors).\
         all()
-    
+
     headers = [
         'URL',
         'Student Email',
@@ -961,10 +963,7 @@ def main():
         help='The port where the server will run')
     parser.add_argument(
         '-d, --database', dest='database', default=':memory:',
-        help='The database to be accessed')
-    parser.add_argument(
-        '-t, --type', dest='type', default='sqlite',
-        help='The type of database engine to be used')
+        help='The database url to be accessed')
     parser.add_argument(
         '--debug', dest='debug', action='store_true',
         help='run the server in debug mode')

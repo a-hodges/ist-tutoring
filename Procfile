@@ -1,1 +1,1 @@
-web: python portal.py -t postgresql -d $DATABASE_URL -p $PORT
+web: python portal.py -d $DATABASE_URL -p $PORT
