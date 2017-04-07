@@ -934,8 +934,8 @@ def oauth_authorized():
 
     credentials = GoogleCredentials(
         access_token=session['google_token'][0],
-        client_id=config['GOOGLE_CONSUMER_KEY'],
-        client_secret=config['GOOGLE_CONSUMER_SECRET'],
+        client_id=app.config['GOOGLE_CONSUMER_KEY'],
+        client_secret=app.config['GOOGLE_CONSUMER_SECRET'],
         refresh_token=session['google_token'][1],
         token_expiry=None,
         user_agent=None,
