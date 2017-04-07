@@ -72,8 +72,9 @@ def create_app(args):
         config = {
             'SECRET_KEY': os.urandom(24),
             'PERMANENT_SESSION_LIFETIME': '30',
-            'GOOGLE_CONSUMER_KEY': os.urandom(24),
-            'GOOGLE_CONSUMER_SECRET': os.urandom(24),
+            'GOOGLE_CONSUMER_KEY': None,
+            'GOOGLE_CONSUMER_SECRET': None,
+            'GOOGLE_API_KEY': None,
         }
         # get Config values from database
         for name in config:
@@ -935,7 +936,7 @@ def oauth_authorized():
 
     userinfo = google.get('userinfo')
     print(resp)
-    session['username'] = resp.get('email')  # ???
+    session['username'] = ''
 
     if not m.Tutors.query.filter_by(email=session['username']).count():
         session.clear()
