@@ -10,7 +10,6 @@ from flask import (
     Flask,
     abort,
     flash,
-    json,
     redirect,
     render_template,
     request,
@@ -19,9 +18,10 @@ from flask import (
     url_for,
 )
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import contains_eager, joinedload, subqueryload
+from sqlalchemy.orm import joinedload, subqueryload
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from flask_sqlalchemy import SQLAlchemy, _QueryProperty
+from flask_oauthlib.client import OAuth
 
 import model as m
 # Default ordering for admin types
@@ -41,6 +41,18 @@ db.Model = m.Base
 # Ugly code to make Base.query work
 m.Base.query_class = db.Query
 m.Base.query = _QueryProperty(db)
+# Configure Google OAuth
+oauth = OAuth()
+google = oauth.remote_app(
+    'google',
+    app_key='GOOGLE',
+    request_token_params={'scope': 'email'},
+    base_url='https://www.googleapis.com/oauth2/v1/',
+    request_token_url=None,
+    access_token_method='POST',
+    access_token_url='https://accounts.google.com/o/oauth2/token',
+    authorize_url='https://accounts.google.com/o/oauth2/auth',
+)
 
 
 def create_app(args):
@@ -48,7 +60,6 @@ def create_app(args):
     Sets up app for use
     Adds database configuration and the secret key
     """
-    global app, db
     app.jinja_env.trim_blocks = True
     app.jinja_env.lstrip_blocks = True
 
@@ -62,6 +73,8 @@ def create_app(args):
         config = {
             'SECRET_KEY': os.urandom(24),
             'PERMANENT_SESSION_LIFETIME': '30',
+            'GOOGLE_CONSUMER_KEY': os.urandom(24),
+            'GOOGLE_CONSUMER_SECRET': os.urandom(24),
         }
         # get Config values from database
         for name in config:
@@ -352,7 +365,7 @@ def view_tickets():
     """
     user = get_user()
     if not user:
-        return redirect(url_for('login'))
+        return redirect(url_for('login', next=url_for('view_tickets')))
 
     today = datetime.date.today()
     tickets = m.Tickets.query.order_by(m.Tickets.time_created).\
@@ -878,18 +891,52 @@ def save_edit_tutors():
 
 
 # ----#-   Login/Logout
+@google.tokengetter
+def get_google_token(token=None):
+    r"""
+    Returns a user's token from OAuth
+    """
+    return session.get('google_token')
+
+
 @app.route('/login/')
 def login():
     r"""
-    Redirects the user to the UNO Single Sign On page
+    Redirects the user to the Google/UNO Single Sign On page
+
+    Logs the user in as 'test@unomaha.edu' in debug mode
     """
     session.clear()
+    next = request.args.get('next') or request.referrer or None
     if app.config['DEBUG']:
         session['username'] = 'test@unomaha.edu'
-        html = redirect(url_for('index'))
+        session['google_token'] = (None, None)
+        html = redirect(next or url_for('index'))
     else:
-        html = redirect('https://auth.unomaha.edu/idp/Authn/UserPassword')
+        html = google.authorize(
+            callback=url_for('oauth_authorized', next=next))
     return html
+
+
+@app.route('/oauth-authorized')
+def oauth_authorized():
+    r"""
+    Logs the user in using the OAuth API
+    """
+    next_url = request.args.get('next') or url_for('index')
+
+    resp = google.authorized_response()
+    if resp is None:
+        return redirect(next_url)
+
+    email = google.get('userinfo')
+    email = resp.get('email')
+
+    if m.Tutors.query.filter_by(email=email).count():
+        session['google_token'] = (resp['access_token'], '')
+        session['username'] = email  # ???
+
+    return redirect(next_url)
 
 
 @app.route('/logout/')
@@ -900,6 +947,7 @@ def logout():
     session.clear()
     html = redirect(url_for('index'))
     return html
+# ----#-   End App
 
 
 def main():
