@@ -933,9 +933,9 @@ def oauth_authorized():
 
     session['google_token'] = (resp['access_token'], '')
 
-    email = google.get('userinfo')
-    print(email)
-    session['username'] = email.get('email')  # ???
+    userinfo = google.get('userinfo')
+    print(resp)
+    session['username'] = resp.get('email')  # ???
 
     if not m.Tutors.query.filter_by(email=session['username']).count():
         session.clear()
