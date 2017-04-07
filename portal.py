@@ -916,7 +916,7 @@ def login():
         html = redirect(next or url_for('index'))
     else:
         html = google.authorize(
-            callback=url_for('oauth_authorized', next=next, _external=True))
+            callback=url_for('oauth_authorized', _external=True))
     return html
 
 
