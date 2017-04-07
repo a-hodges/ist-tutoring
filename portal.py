@@ -54,7 +54,6 @@ google = oauth.remote_app(
     access_token_url='https://accounts.google.com/o/oauth2/token',
     authorize_url='https://accounts.google.com/o/oauth2/auth',
 )
-google_api = build('plus', 'v1')
 
 
 def create_app(args):
@@ -91,8 +90,8 @@ def create_app(args):
             minutes=int(config['PERMANENT_SESSION_LIFETIME']))
         app.config.update(config)
 
-    # Configure OAuth key/secret
-    ...
+    # Configure google API
+    app.config['GOOGLE_API'] = build('plus', 'v1')
 
 
 def date(string):
@@ -935,7 +934,7 @@ def oauth_authorized():
 
     session['google_token'] = (resp['access_token'], '')
 
-    userinfo = google_api.people().get(
+    userinfo = config['GOOGLE_API'].people().get(
         userId='me',
         access_token=session['google_token'][0],
     ).execute()
