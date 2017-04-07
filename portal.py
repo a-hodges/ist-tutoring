@@ -90,9 +90,6 @@ def create_app(args):
             minutes=int(config['PERMANENT_SESSION_LIFETIME']))
         app.config.update(config)
 
-    # Configure google API
-    app.config['GOOGLE_API'] = build('plus', 'v1')
-
 
 def date(string):
     r"""
@@ -934,7 +931,7 @@ def oauth_authorized():
 
     session['google_token'] = (resp['access_token'], '')
 
-    userinfo = config['GOOGLE_API'].people().get(
+    userinfo = build('plus', 'v1').people().get(
         userId='me',
         access_token=session['google_token'][0],
     ).execute()
