@@ -22,6 +22,7 @@ from sqlalchemy.orm import joinedload, subqueryload
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from flask_sqlalchemy import SQLAlchemy, _QueryProperty
 from flask_oauthlib.client import OAuth
+from apiclient.discovery import build
 
 import model as m
 # Default ordering for admin types
@@ -53,6 +54,7 @@ google = oauth.remote_app(
     access_token_url='https://accounts.google.com/o/oauth2/token',
     authorize_url='https://accounts.google.com/o/oauth2/auth',
 )
+google_api = build('plus', 'v1')
 
 
 def create_app(args):
@@ -74,7 +76,6 @@ def create_app(args):
             'PERMANENT_SESSION_LIFETIME': '30',
             'GOOGLE_CONSUMER_KEY': None,
             'GOOGLE_CONSUMER_SECRET': None,
-            'GOOGLE_API_KEY': None,
         }
         # get Config values from database
         for name in config:
@@ -934,11 +935,18 @@ def oauth_authorized():
 
     session['google_token'] = (resp['access_token'], '')
 
-    userinfo = google.get('userinfo')
-    print(resp)
-    session['username'] = ''
+    userinfo = google_api.people().get(
+        userId='me',
+        access_token=session['google_token'][0],
+    ).execute()
+    print(userinfo)
 
-    if not m.Tutors.query.filter_by(email=session['username']).count():
+    for email in userinfo.get('emails', []):
+        if email['type'] == 'account':
+            session['username'] = email['value']
+            break
+
+    if not m.Tutors.query.filter_by(email=session.get('username', '')).count():
         session.clear()
 
     return redirect(next_url)
