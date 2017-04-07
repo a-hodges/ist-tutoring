@@ -942,10 +942,8 @@ def oauth_authorized():
         token_uri=oauth2client.GOOGLE_TOKEN_URI,
         user_agent=None,
     )
-    userinfo = build('plus', 'v1', credentials=credentials).people().get(
-        userId='me',
-        access_token=session['google_token'][0],
-    ).execute()
+    service = build('plus', 'v1', credentials=credentials).people()
+    userinfo = service.get(userId='me').execute()
     print(userinfo)
 
     for email in userinfo.get('emails', []):
