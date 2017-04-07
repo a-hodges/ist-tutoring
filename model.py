@@ -447,7 +447,7 @@ class Semesters (Base):
         'semester_end_date', Date,
         nullable=False,
         doc='The last day of the semester')
-    title = column_property(year + ' ' + season)
+    title = column_property(str(year) + ' ' + season)
 
     sections = relationship(
         'Sections',
