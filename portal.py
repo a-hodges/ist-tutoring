@@ -105,7 +105,7 @@ def date(string):
 
 def get_int(string):
     r"""
-    Convert a string to int, returning none for invalid strings
+    Convert a string to int, returning None for invalid strings
     """
     ret = None
     if string is not None:
@@ -114,6 +114,13 @@ def get_int(string):
         except ValueError:
             pass
     return ret
+
+
+def get_str(string):
+    r"""
+    Converts a string to a string, returning None for empty strings
+    """
+    return None if string == '' else string
 
 
 @app.context_processor
@@ -335,12 +342,12 @@ def save_open_ticket():
     Creates a new ticket and stores it in the database
     """
     ticket_form = {
-        'student_email': str,
-        'student_fname': str,
-        'student_lname': str,
+        'student_email': get_str,
+        'student_fname': get_str,
+        'student_lname': get_str,
         'section_id': get_int,
-        'assignment': str,
-        'question': str,
+        'assignment': get_str,
+        'question': get_str,
         'problem_type_id': get_int,
     }
 
@@ -439,11 +446,11 @@ def save_close_ticket():
         return abort(403)
 
     close_ticket_form = {
-        'assignment': str,
-        'question': str,
+        'assignment': get_str,
+        'question': get_str,
         'was_successful': bool,
-        'tutor_id': str,
-        'assistant_tutor_id': str,
+        'tutor_id': get_str,
+        'assistant_tutor_id': get_str,
         'section_id': get_int,
         'problem_type_id': get_int,
     }
@@ -722,26 +729,26 @@ semester_form = {
     'end_date': date,
 }
 professor_form = {
-    'fname': str,
-    'lname': str,
+    'fname': get_str,
+    'lname': get_str,
 }
 course_form = {
-    'number': str,
-    'name': str,
+    'number': get_str,
+    'name': get_str,
     'on_display': bool,
 }
 section_form = {
-    'number': str,
-    'time': str,
+    'number': get_str,
+    'time': get_str,
     'course_id': get_int,
     'semester_id': get_int,
     'professor_id': get_int,
 }
 problem_form = {
-    'description': str,
+    'description': get_str,
 }
 message_form = {
-    'message': str,
+    'message': get_str,
     'start_date': date,
     'end_date': date,
 }
@@ -854,8 +861,8 @@ def save_edit_tutors():
         db.session.delete(obj)
     else:
         form = {
-            'fname': str,
-            'lname': str,
+            'fname': get_str,
+            'lname': get_str,
             'is_working': bool,
         }
         if user.is_superuser:
