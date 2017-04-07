@@ -931,13 +931,14 @@ def oauth_authorized():
     if resp is None:
         return redirect(next_url)
 
+    session['google_token'] = (resp['access_token'], '')
+
     email = google.get('userinfo')
     print(email)
-    email = resp.get('email')
+    session['username'] = email.get('email')  # ???
 
-    if m.Tutors.query.filter_by(email=email).count():
-        session['google_token'] = (resp['access_token'], '')
-        session['username'] = email  # ???
+    if not m.Tutors.query.filter_by(email=session['username']).count():
+        session.clear()
 
     return redirect(next_url)
 
