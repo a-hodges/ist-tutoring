@@ -45,7 +45,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_superuser %}
                     <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Admin <i class="caret"></i></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Admin <i class="caret"></i></a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ url_for('admin') }}">Admin Console</a></li>
                             <li><a href="{{ url_for('reports') }}">Reports</a></li>
@@ -54,7 +54,7 @@
                     {% endif %}
                     {% if user %}
                     <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Tutor <i class="caret"></i></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Tutor <i class="caret"></i></a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ url_for('edit_tutors', email=user.email) }}">Edit User</a></li>
                             <li><a href="{{ url_for('view_tickets') }}">Tickets</a></li>
