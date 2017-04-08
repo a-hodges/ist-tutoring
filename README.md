@@ -5,7 +5,7 @@ A web based interface to handle student help requests in the University of Nebra
 ## Setup
 
 1. Setup a Google API for the login system.
-    1. [https://console.developers.google.com/apis/credentials]
+    1. <https://console.developers.google.com/apis/credentials>
     2. Under credentials, create credentials for an OAuth Client ID
     3. Select Web application
     4. Provide the domain followed by '/oauth-authorized' (eg. 'www.example.com/oauth-authorized') as the authorized redirect URI.
