@@ -246,7 +246,7 @@ def status():
     """
     user = get_user()
 
-    today = datetime.date.today()
+    today = datetime.datetime.now().date()
     tomorrow = today + datetime.timedelta(days=1)
 
     sections = m.Sections.query.\
@@ -309,7 +309,7 @@ def get_open_courses():
     r"""
     Gets a list of courses and sections for the current semester
     """
-    today = datetime.date.today()
+    today = datetime.datetime.now().date()
     tomorrow = today + datetime.timedelta(days=1)
     return m.Courses.query.join(m.Sections).join(m.Semesters).\
         order_by(m.Courses.number).\
@@ -378,7 +378,7 @@ def view_tickets():
     if not user:
         return redirect(url_for('login', next=url_for('view_tickets')))
 
-    today = datetime.date.today()
+    today = datetime.datetime.now().date()
     tickets = m.Tickets.query.order_by(m.Tickets.time_created).\
         join(m.Sections).\
         join(m.Semesters).\
