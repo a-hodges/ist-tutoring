@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     {% block head %}
@@ -19,35 +20,59 @@
     {% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
+    <nav class="navbar navbar-inverse" role="navigation">
+        <div class="navbar-header">
+            <div class="container">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-left" href="{{ url_for('status' if home else 'index') }}">
-                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Computer Science Learning Center" title="UNO logo" class="logo">
+                <a class="navbar-left btn btn-lg logo" href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='images/logo-subsite-o-2.png') }}" alt="UNO logo" title="UNO logo">
+                    <span>&nbsp;Computer Science Learning Center</span>
                 </a>
             </div>
-            <div id="navbar-collapse" class="collapse navbar-collapse navbar-pills">
+        </div>
+        <div id="navbar-collapse" class="collapse navbar-collapse" style="background-image: url({{ url_for('static', filename='images/bg_main-nav.gif') }}) center bottom repeat-x;">
+            <div class="container">
+                <ul class="nav navbar-nav clearfix">
+                    <li class="navBtn">
+                        <a href="{{ url_for('status') }}"><span>Status</span></a>
+                    </li>
+                </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_superuser %}
-                    <li><a type="button" id="admin" href="{{ url_for('admin') }}">Administrative Tools</a></li>
-                    <li><a type="button" id="reports" href="{{ url_for('reports') }}">Reports</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Admin <i class="caret"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url_for('admin') }}">Admin Console</a></li>
+                            <li><a href="{{ url_for('reports') }}">Reports</a></li>
+                        </ul>
+                    </li>
                     {% endif %}
                     {% if user %}
-                    <li><a type="button" id="user" href="{{ url_for('edit_tutors', email=user.email) }}">Edit User</a></li>
-                    <li><a type="button" id="logout" href="{{ url_for('logout') }}">Logout</a></li>
-                    {% else %}
-                    <li><a type="button" id="login" href="{{ url_for('login') }}">Tutor Login</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Tutor <i class="caret"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url_for('edit_tutors', email=user.email) }}">Edit User</a></li>
+                            <li><a href="{{ url_for('view_tickets') }}">Tickets</a></li>
+                        </ul>
+                    </li>
                     {% endif %}
+                    <li class="navBtn">
+                        {% if user %}
+                        <a href="{{ url_for('logout') }}"><span>Logout</span></a>
+                        {% else %}
+                        <a href="{{ url_for('login') }}"><span>Tutor Login</span></a>
+                        {% endif %}
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
+
     {% block content %}{{ content|safe }}{% endblock %}
 </body>
 </html>

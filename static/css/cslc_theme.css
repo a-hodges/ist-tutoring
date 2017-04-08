@@ -1,7 +1,3 @@
-body {
-	padding-top: 60px;
-}
-
 h1 {
 	color: #D71920;
 }
@@ -18,13 +14,47 @@ textarea {
 
 .navbar {
 	background-image: none;
-	background-color: white;
+	background-color: #FFFFFF;
 }
 
 .navbar-inverse {
-	background-color: black;
+	background-color: #000000;
+}
+
+.navbar-header {
+	float: none;
 }
 
 .navbar .logo {
-	height: 50px;
+	white-space: normal;
+}
+
+.navbar .logo span {
+	color: #FFFFFF;
+	font-size: 1.5em;
+}
+
+#navbar-collapse {
+	background-color: #464446;
+}
+
+@media (max-width: 575px) {
+	#navbar-collapse {
+		background-image: none;
+	}
+	.navbar-inverse .navbar-nav > .open > a:hover,
+	.navbar-inverse .navbar-nav > .open > a,
+	.navbar-inverse .navbar-nav > .open {
+		background-color: #242224;
+	   	background-image: none;
+	}
+}
+
+.btn-default {
+	background-color: #BCBBBA;
+	background-image: linear-gradient(to bottom, #DEDDDC, #BCBBBA);
+}
+
+.btn-default:hover {
+	background-color: #BCBBBA;
 }
