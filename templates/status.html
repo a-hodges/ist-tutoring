@@ -15,7 +15,14 @@
     <ul id="messages" class="list-group">
         {% for message in messages %}
         <li class="list-group-item row">
-            {{ message.message }}
+            {{ md.convert(message.message, html4tags=True, extras=[
+                'fenced-code-blocks',
+                'footnotes',
+                'markdown-in-html',
+                'tables',
+                'tag-friendly',
+                'target-blank-links',
+            ])|safe }}
         </li>
         {% endfor %}
     </ul>

@@ -26,6 +26,7 @@ from flask_oauthlib.client import OAuth
 import oauth2client
 from oauth2client.client import GoogleCredentials
 from apiclient.discovery import build
+import markdown2
 
 import model as m
 # Default ordering for admin types
@@ -149,6 +150,7 @@ def context():
         int=get_int,
         date=date,
         len=len,
+        md=markdown2,
     )
 
 
@@ -440,7 +442,10 @@ def close_ticket(id):
     ticket = m.Tickets.query.filter_by(id=id).one()
     courses = get_open_courses()
     problems = m.ProblemTypes.query.order_by(m.ProblemTypes.description).all()
-    tutors = m.Tutors.query.order_by(m.Tutors.last_first).all()
+    tutors = m.Tutors.query.\
+        filter_by(is_active=True).\
+        order_by(m.Tutors.last_first).\
+        all()
 
     html = render_template(
         'edit_close_ticket.html',
