@@ -390,7 +390,7 @@ def view_tickets():
         )
     print(tickets)
     from sqlalchemy.sql import compiler
-    print(compiler(tickets.session.bind.dialect, tickets.statement).compile().params)
+    print(compiler.SQLCompiler(tickets.session.bind.dialect, tickets.statement).compile().params)
     tickets = tickets.all()
 
     open = []
