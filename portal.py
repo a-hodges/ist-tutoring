@@ -992,8 +992,8 @@ def logout():
     Logs the user out and returns them to the homepage
     """
     session.clear()
-    html = redirect(url_for('index'))
-    return html
+    flash('&#10004; Successfully logged out')
+    return redirect(url_for('index'))
 # ----#-   End App
 
 
