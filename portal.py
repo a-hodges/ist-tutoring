@@ -384,8 +384,8 @@ def view_tickets():
         join(m.Semesters).\
         join(m.Courses).\
         filter(
-            (m.Tickets.time_created > today) |
-            (m.Tickets.time_closed > today) |
+            (m.Tickets.time_created >= today) |
+            (m.Tickets.time_closed >= today) |
             (m.Tickets.status.in_((None, m.Status.Open, m.Status.Claimed)))
         ).\
         all()
