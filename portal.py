@@ -939,6 +939,7 @@ def login():
     if app.config['DEBUG']:
         session['username'] = 'test@unomaha.edu'
         session['google_token'] = (None, None)
+        flash('&#10004; Successfully logged in as {}'.format(session.get('username')))
         html = redirect(next or url_for('index'))
     else:
         html = google.authorize(
@@ -979,6 +980,8 @@ def oauth_authorized():
     if not m.Tutors.query.filter_by(email=session.get('username', '')).count():
         session.clear()
         flash('&#10006; Invalid email used to login')
+    else:
+        flash('&#10004; Successfully logged in as {}'.format(session.get('username')))
 
     return redirect(next_url)
 
@@ -1004,7 +1007,7 @@ def main():
         '-p, --port', dest='port', type=int,
         help='The port where the server will run')
     parser.add_argument(
-        '-d, --database', dest='database', default=':memory:',
+        '-d, --database', dest='database', default='sqlite:///:memory:',
         help='The database url to be accessed')
     parser.add_argument(
         '--debug', dest='debug', action='store_true',
@@ -1023,6 +1026,9 @@ def main():
         host = '0.0.0.0'
 
     create_app(args)
+
+    if args.reload:
+        app.config['TEMPLATES_AUTO_RELOAD'] = True
 
     app.run(
         host=host,
