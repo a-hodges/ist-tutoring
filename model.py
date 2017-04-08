@@ -8,6 +8,7 @@ from sqlalchemy import (
     Integer,
     Boolean,
     TIMESTAMP,
+    Date,
     Enum,
     ForeignKey,
 )
@@ -68,10 +69,10 @@ class Messages (Base):
         'message_text', String,
         doc='The text to display on the status screen')
     start_date = Column(
-        TIMESTAMP(True),
+        Date,
         doc='The beginning of when the message should be displayed')
     end_date = Column(
-        TIMESTAMP(True),
+        Date,
         doc='The end of when the message should be displayed')
 
     def __str__(self):
@@ -439,11 +440,11 @@ class Semesters (Base):
         nullable=False,
         doc='The season of a semester')
     start_date = Column(
-        'semester_start_date', TIMESTAMP(True),
+        'semester_start_date', Date,
         nullable=False,
         doc='The first day of the semester')
     end_date = Column(
-        'semester_end_date', TIMESTAMP(True),
+        'semester_end_date', Date,
         nullable=False,
         doc='The last day of the semester')
     title = column_property(str(year) + ' ' + season)
