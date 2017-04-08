@@ -389,6 +389,8 @@ def view_tickets():
             (m.Tickets.status.in_((None, m.Status.Open, m.Status.Claimed)))
         )
     print(tickets)
+    from sqlalchemy.sql import compiler
+    print(compiler(tickets.session.bind.dialect, tickets.statement).compile().params)
     tickets = tickets.all()
 
     open = []
