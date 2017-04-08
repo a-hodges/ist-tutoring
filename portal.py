@@ -388,9 +388,9 @@ def view_tickets():
             (m.Tickets.time_closed >= today) |
             (m.Tickets.status.in_((None, m.Status.Open, m.Status.Claimed)))
         )
-    print(tickets)
-    from sqlalchemy.dialects import postgresql
-    print(str(q.statement.compile(dialect=postgresql.dialect())))
+    #print(tickets)
+    #from sqlalchemy.dialects import postgresql
+    #print(str(tickets.statement.compile(dialect=postgresql.dialect())))
     tickets = tickets.all()
 
     open = []
