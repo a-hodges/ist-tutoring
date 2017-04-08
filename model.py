@@ -7,8 +7,7 @@ from sqlalchemy import (
     String,
     Integer,
     Boolean,
-    DateTime,
-    Date,
+    TIMESTAMP,
     Enum,
     ForeignKey,
 )
@@ -69,10 +68,10 @@ class Messages (Base):
         'message_text', String,
         doc='The text to display on the status screen')
     start_date = Column(
-        Date,
+        TIMESTAMP(True),
         doc='The beginning of when the message should be displayed')
     end_date = Column(
-        Date,
+        TIMESTAMP(True),
         doc='The end of when the message should be displayed')
 
     def __str__(self):
@@ -124,11 +123,11 @@ class Tickets (Base):
         'ticket_status', Enum(Status),
         doc='The ticket status')
     time_created = Column(
-        'ticket_time_created', DateTime,
+        'ticket_time_created', TIMESTAMP(True),
         nullable=False,
         doc='Time the student requested tutoring')
     time_closed = Column(
-        'ticket_time_closed', DateTime,
+        'ticket_time_closed', TIMESTAMP(True),
         doc='Time a tutor marked the ticket as closed')
     was_successful = Column(
         'ticket_was_successful', Boolean,
@@ -440,11 +439,11 @@ class Semesters (Base):
         nullable=False,
         doc='The season of a semester')
     start_date = Column(
-        'semester_start_date', Date,
+        'semester_start_date', TIMESTAMP(True),
         nullable=False,
         doc='The first day of the semester')
     end_date = Column(
-        'semester_end_date', Date,
+        'semester_end_date', TIMESTAMP(True),
         nullable=False,
         doc='The last day of the semester')
     title = column_property(str(year) + ' ' + season)
