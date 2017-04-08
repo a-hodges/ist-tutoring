@@ -113,6 +113,7 @@ def date(string):
     if string == '':
         return None
     else:
+        central_time = pytz.timezone('America/Chicago')
         date = datetime.datetime.strptime(
             string, '%Y-%m-%d').date()
         date = central_time.localize(date)
