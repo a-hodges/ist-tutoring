@@ -247,11 +247,12 @@ def status():
     user = get_user()
 
     today = datetime.date.today()
+    tomorrow = today + datetime.timedelta(days=1)
 
     sections = m.Sections.query.\
         join(m.Courses).filter(m.Courses.on_display.is_(True)).\
         join(m.Semesters).filter(
-            (m.Semesters.start_date <= today) &
+            (m.Semesters.start_date <= tomorrow) &
             (m.Semesters.end_date >= today)
         ).\
         join(m.Tickets).filter(
@@ -273,11 +274,11 @@ def status():
 
     messages = m.Messages.query.filter(
         (
-            (m.Messages.start_date < today) |
+            (m.Messages.start_date <= tomorrow) |
             (m.Messages.start_date.is_(None))
         ) &
         (
-            (m.Messages.end_date > today) |
+            (m.Messages.end_date >= today) |
             (m.Messages.end_date.is_(None))
         )
     )
@@ -309,10 +310,11 @@ def get_open_courses():
     Gets a list of courses and sections for the current semester
     """
     today = datetime.date.today()
+    tomorrow = today + datetime.timedelta(days=1)
     return m.Courses.query.join(m.Sections).join(m.Semesters).\
         order_by(m.Courses.number).\
         order_by(m.Sections.number).\
-        filter(m.Semesters.start_date <= today).\
+        filter(m.Semesters.start_date <= tomorrow).\
         filter(m.Semesters.end_date >= today).\
         all()
 
@@ -508,7 +510,7 @@ def filter_report(args):
         min_date = date(args['min_date'])
         tickets = tickets.filter(m.Tickets.time_created >= min_date)
     if args.get('max_date', ''):
-        max_date = date(args['max_date'])
+        max_date = date(args['max_date']) + datetime.timedelta(days=1)
         tickets = tickets.filter(m.Tickets.time_created <= max_date)
 
     if args.get('semester', ''):
