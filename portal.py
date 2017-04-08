@@ -387,8 +387,9 @@ def view_tickets():
             (m.Tickets.time_created >= today) |
             (m.Tickets.time_closed >= today) |
             (m.Tickets.status.in_((None, m.Status.Open, m.Status.Claimed)))
-        ).\
-        all()
+        )
+    print(tickets)
+    tickets = tickets.all()
 
     open = []
     claimed = []
@@ -953,7 +954,6 @@ def oauth_authorized():
     )
     service = build('plus', 'v1', credentials=credentials).people()
     userinfo = service.get(userId='me').execute()
-    print(userinfo)
 
     for email in userinfo.get('emails', []):
         if email['type'] == 'account':
