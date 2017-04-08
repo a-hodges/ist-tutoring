@@ -6,6 +6,7 @@ import argparse
 import csv
 import io
 
+import pytz
 from flask import (
     Flask,
     abort,
@@ -93,6 +94,17 @@ def create_app(args):
         app.config.update(config)
 
 
+def now():
+    r"""
+    Gets the current time in the America/Chicago timezone
+    """
+    central_time = pytz.timezone('America/Chicago')
+    UTC = datetime.timezone.utc
+    now = datetime.datetime.now(UTC)
+    now = now.astimezone(central_time)
+    return now
+
+
 def date(string):
     r"""
     Convert a date formated string to a date object
@@ -100,7 +112,10 @@ def date(string):
     if string == '':
         return None
     else:
-        return datetime.datetime.strptime(string, '%Y-%m-%d').date()
+        date = datetime.datetime.strptime(
+            string, '%Y-%m-%d').date()
+        date = central_time.localize(date)
+        return date
 
 
 def get_int(string):
@@ -246,7 +261,7 @@ def status():
     """
     user = get_user()
 
-    today = datetime.datetime.now().date()
+    today = now().date()
     tomorrow = today + datetime.timedelta(days=1)
 
     sections = m.Sections.query.\
@@ -309,7 +324,7 @@ def get_open_courses():
     r"""
     Gets a list of courses and sections for the current semester
     """
-    today = datetime.datetime.now().date()
+    today = now().date()
     tomorrow = today + datetime.timedelta(days=1)
     return m.Courses.query.join(m.Sections).join(m.Semesters).\
         order_by(m.Courses.number).\
@@ -358,7 +373,7 @@ def save_open_ticket():
         form[key] = value(request.form.get(key))
 
     form['status'] = m.Status.Open
-    form['time_created'] = datetime.datetime.now()
+    form['time_created'] = now()
 
     ticket = m.Tickets(**form)
     db.session.add(ticket)
@@ -378,7 +393,7 @@ def view_tickets():
     if not user:
         return redirect(url_for('login', next=url_for('view_tickets')))
 
-    today = datetime.datetime.now().date()
+    today = now().date()
     tickets = m.Tickets.query.order_by(m.Tickets.time_created).\
         join(m.Sections).\
         join(m.Semesters).\
@@ -387,11 +402,8 @@ def view_tickets():
             (m.Tickets.time_created >= today) |
             (m.Tickets.time_closed >= today) |
             (m.Tickets.status.in_((None, m.Status.Open, m.Status.Claimed)))
-        )
-    #print(tickets)
-    #from sqlalchemy.dialects import postgresql
-    #print(str(tickets.statement.compile(dialect=postgresql.dialect())))
-    tickets = tickets.all()
+        ).\
+        all()
 
     open = []
     claimed = []
@@ -468,7 +480,7 @@ def save_close_ticket():
         form['status'] = m.Status.Claimed
     elif request.form.get('submit') == 'close':
         form['status'] = m.Status.Closed
-        form['time_closed'] = datetime.datetime.now()
+        form['time_closed'] = now()
     else:
         raise ValueError('Invalid submit type: {}'.format(form.get('submit')))
 

@@ -1,4 +1,5 @@
 # install with: pip install -r requirements.txt
+pytz ~= 2017.2
 flask ~= 0.12.1
 sqlalchemy ~= 1.1.5
 flask_sqlalchemy ~= 2.1
