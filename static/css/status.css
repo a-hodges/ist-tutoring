@@ -11,6 +11,11 @@
     text-align: center;
 }
 
+td, tr {
+    border: 1px solid black;
+    padding: 3px;
+}
+
 .course-tickets {
     display: none;
 }
