@@ -7,4 +7,5 @@ oauthlib ~= 2.0.2
 flask_oauthlib ~= 0.9.3
 psycopg2 ~= 2.7.1
 google-api-python-client ~= 1.6.2
+bleach ~= 1.5.0
 markdown2 ~= 2.3.1

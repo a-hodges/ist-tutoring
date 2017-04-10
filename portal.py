@@ -27,6 +27,7 @@ from flask_oauthlib.client import OAuth
 import oauth2client
 from oauth2client.client import GoogleCredentials
 from apiclient.discovery import build
+import bleach
 import markdown2
 
 import model as m
@@ -59,6 +60,45 @@ google = oauth.remote_app(
     access_token_url='https://accounts.google.com/o/oauth2/token',
     authorize_url='https://accounts.google.com/o/oauth2/auth',
 )
+
+# bleach config
+BLEACH_ALLOWED_TAGS = [
+    # default tags
+    'a',
+    'abbr',
+    'acronym',
+    'b',
+    'blockquote',
+    'code',
+    'pre',
+    'em',
+    'i',
+    'li',
+    'ol',
+    'strong',
+    'ul',
+    # markdown tags
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+    'p',
+    'table',
+    'thead',
+    'tbody',
+    'tr',
+    'th',
+    'td',
+    'img',
+    'hr',
+    'br',
+    'div',
+    'section',
+    'article',
+    'span',
+]
 
 
 def create_app(args):
@@ -94,6 +134,35 @@ def create_app(args):
         config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(
             minutes=int(config['PERMANENT_SESSION_LIFETIME']))
         app.config.update(config)
+
+
+def make_safe(html):
+    r"""
+    Uses the bleach module to clean an HTML string
+    Helps prevent javascript injection
+    """
+    return bleach.clean(
+        html,
+        tags=BLEACH_ALLOWED_TAGS,
+        styles=['text-align'],
+        strip_comments=False,
+    )
+
+
+def markdown(md):
+    r"""
+    Outputs safe markdown using the markdown2 and bleach modules
+    """
+    html = markdown2.markdown(md, html4tags=True, extras=[
+        'cuddled-lists',
+        'fenced-code-blocks',
+        'footnotes',
+        'markdown-in-html',
+        'tables',
+        'tag-friendly',
+        'target-blank-links',
+    ])
+    return make_safe(html)
 
 
 def now():
@@ -148,7 +217,7 @@ def context():
         int=get_int,
         date=date,
         len=len,
-        md=markdown2,
+        markdown=markdown,
     )
 
 

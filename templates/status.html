@@ -15,15 +15,7 @@
     <ul id="messages" class="list-group">
         {% for message in messages %}
         <li class="list-group-item row">
-            {{ md.markdown(message.message, html4tags=True, extras=[
-                'cuddled-lists',
-                'fenced-code-blocks',
-                'footnotes',
-                'markdown-in-html',
-                'tables',
-                'tag-friendly',
-                'target-blank-links',
-            ])|safe }}
+            {{ markdown(message.message)|safe }}
         </li>
         {% endfor %}
     </ul>
