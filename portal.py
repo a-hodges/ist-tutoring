@@ -14,6 +14,7 @@ from flask import (
     redirect,
     render_template,
     request,
+    Response,
     send_from_directory,
     session,
     url_for,
@@ -564,7 +565,7 @@ def reports():
     return html
 
 
-@app.route('/report/file/')
+@app.route('/report/file/cslc_report.csv')
 def report_download():
     r"""
     Downloads a report as a CSV
@@ -601,8 +602,9 @@ def report_download():
     ]
     report = [headers]
     for ticket in tickets:
+        ticket_url = url_for('ticket_details', id=ticket.id, _external=True)
         elem = [
-            os.path.join('', url_for('ticket_details', id=ticket.id)),
+            ticket_url,
             ticket.student_email,
             ticket.student_fname,
             ticket.student_lname,
@@ -622,11 +624,17 @@ def report_download():
         ]
         report.append(elem)
 
-    html = io.StringIO()
-    writer = csv.writer(html)
+    file = io.StringIO()
+    writer = csv.writer(file)
     for line in report:
         writer.writerow(line)
-    return html.getvalue()
+    return Response(
+        file.getvalue(),
+        mimetype='text/csv',
+        headers={
+            'Content-disposition': 'attatchment; filename=cslc_report.csv',
+        },
+    )
 
 
 @app.route('/reports/ticket/<int:id>')
