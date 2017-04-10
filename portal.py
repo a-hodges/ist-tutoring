@@ -947,7 +947,8 @@ def login():
     if app.config['DEBUG']:
         session['username'] = 'test@unomaha.edu'
         session['google_token'] = (None, None)
-        flash('&#10004; Successfully logged in as {}'.format(session.get('username')))
+        flash('&#10004; Successfully logged in as {}'.format(
+            session.get('username')))
         html = redirect(next or url_for('index'))
     else:
         html = google.authorize(
@@ -989,7 +990,8 @@ def oauth_authorized():
         session.clear()
         flash('&#10006; Invalid email used to login')
     else:
-        flash('&#10004; Successfully logged in as {}'.format(session.get('username')))
+        flash('&#10004; Successfully logged in as {}'.format(
+            session.get('username')))
 
     return redirect(next_url)
 
