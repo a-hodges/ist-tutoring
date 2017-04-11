@@ -12,16 +12,16 @@
     <h1>Welcome to the Computer Science Learning Center</h1>
 
     {% if messages %}
+    <hr class="temporary">
     <div class="row flashes temporary">
-        <hr class="col-xs-12">
         {% for message in messages %}
         <p class="alert col-xs-12 {{ 'alert-success' if message.startswith('&#10004;') else 'alert-danger' if message.startswith('&#10006;') else 'alert-info' }}">{{ message|safe }}</p>
         {% endfor %}
     </div>
     {% endif %}
 
+    <hr>
     <div class="row">
-        <hr class="col-xs-12">
         <a type="button" id="open-ticket" class="btn btn-lg btn-default col-xs-12 col-sm-6" href="{{ url_for('open_ticket') }}">Open Ticket</a>
         <a type="button" id="view-tickets" class="btn btn-lg btn-default col-xs-12 col-sm-6" href="{{ url_for('view_tickets') }}">View Tickets</a>
     </div>
