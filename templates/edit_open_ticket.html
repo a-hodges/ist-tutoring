@@ -3,9 +3,17 @@
 {% set title = 'Open Ticket' %}
 {% set formurl = url_for('save_open_ticket') %}
 
-{% block form %}
+{% block editmeta %}
 <script src="{{ url_for('static', filename='js/course_picker.js') }}"></script>
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<script>
+function onSubmit(token){
+    document.getElementById("form").submit();
+}
+</script>
+{% endblock %}
 
+{% block form %}
 {{ input('student_email', title='Email', type='email') }}
 {{ input('student_fname', title='First Name') }}
 {{ input('student_lname', title='Last Name') }}
@@ -31,5 +39,14 @@
 {{ input('assignment', title='Assignment Description (eg. "Assignment 1")', minlength='10') }}
 {{ textarea('question', title='Specific Question (eg. "I can\'t figure out how to print numbers")', minlength='25') }}
 {{ select('problem_type_id', problems, title='Problem Type') }}
+{% endblock %}
 
+{% block submit %}
+<button
+    class="g-recaptcha btn btn-primary btn-block"
+    data-sitekey="{{ config['GOOGLE_CAPTCHA_KEY'] }}"
+    data-callback="onSubmit"
+>
+    Submit
+</button>
 {% endblock %}

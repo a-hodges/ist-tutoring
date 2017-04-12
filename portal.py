@@ -5,6 +5,8 @@ import datetime
 import argparse
 import csv
 import io
+import json
+from urllib.request import urlopen, Request
 
 import pytz
 from flask import (
@@ -120,6 +122,8 @@ def create_app(args):
             'PERMANENT_SESSION_LIFETIME': '30',
             'GOOGLE_CONSUMER_KEY': None,
             'GOOGLE_CONSUMER_SECRET': None,
+            'GOOGLE_CAPTCHA_KEY': None,
+            'GOOGLE_CAPTCHA_SECRET': None,
         }
         # get Config values from database
         for name in config:
@@ -427,6 +431,23 @@ def save_open_ticket():
     r"""
     Creates a new ticket and stores it in the database
     """
+    captcha = Request(
+        'https://www.google.com/recaptcha/api/siteverify',
+        data={
+            'secret': app.config['GOOGLE_CAPTCHA_SECRET'],
+            'response': request.form.get('g-recaptcha-response'),
+        },
+        unverifiable=True,
+        method='POST',
+    )
+    with urlopen(captcha) as https:
+        verification = json.loads(https.read())
+    print(verification)
+
+    if not verification.get('success'):
+        flash('&#10006; Invalid form submission')
+        return redirect(url_for('index'))
+
     ticket_form = {
         'student_email': get_str,
         'student_fname': get_str,
@@ -448,9 +469,8 @@ def save_open_ticket():
     db.session.add(ticket)
     db.session.commit()
 
-    html = redirect(url_for('index'))
     flash('&#10004; Ticket successfully opened')
-    return html
+    return redirect(url_for('index'))
 
 
 @app.route('/tickets/')

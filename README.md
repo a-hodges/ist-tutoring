@@ -4,19 +4,26 @@ A web based interface to handle student help requests in the University of Nebra
 
 ## Setup
 
-1. Setup a Google API for the login system.
+1. Setup a Google API for the login system
     1. <https://console.developers.google.com/apis/credentials>
     2. Under credentials, create credentials for an OAuth Client ID
     3. Select Web application
-    4. Provide the domain followed by '/oauth-authorized' (eg. 'www.example.com/oauth-authorized') as the authorized redirect URI.
-    5. Save the client ID and secret for later.
-2. Run the portal in debug mode to create the appropriate database tables.
-3. Access the database manually to add configuration information.
-    1. In the configuration table the client ID from earlier goes in the setting column of the row with the name 'GOOGLE_CONSUMER_KEY'.
-    2. Also in configuration, the client secret goes in the setting column of the row with the name 'GOOGLE_CONSUMER_SECRET'.
-    3. In the tutors table create a tutor with an email you can log into Google with. Set the tutor_is_active and tutor_is_superuser columns to true.
-4. Restart the application to finish configuration.
-5. By logging in as a superuser account other objects can be created.
+    4. Provide the domain followed by '/oauth-authorized' (eg. 'www.example.com/oauth-authorized') as the authorized redirect URI
+    5. Save the client ID and secret for later
+2. Setup a Google reCAPTCHA key/secret
+    1. <https://www.google.com/recaptcha/admin>
+    2. Select "invisible reCAPTCHA"
+    3. Provide the domain (no subpage this time)
+    4. Save the site key and secret key for later
+3. Run the portal in debug mode to create the appropriate database tables
+4. Access the database manually to add configuration information
+    1. In the configuration table the Google API client ID from earlier goes in the setting column of the row with the name 'GOOGLE_CONSUMER_KEY'
+    2. Also in configuration, the Google API client secret goes in the setting column of the row with the name 'GOOGLE_CONSUMER_SECRET'
+    3. Add the reCAPTCHA site key to the configuration in the 'GOOGLE_CAPTCHA_KEY' row
+    4. Add the reCAPTCHA secret key to the configuration in the 'GOOGLE_CAPTCHA_SECRET' row
+    5. In the tutors table create a tutor with an email you can log into Google with. Set the tutor_is_active and tutor_is_superuser columns to true
+5. Restart the application to finish configuration
+6. By logging in as a superuser account other objects can be created
 
 ## Use
 

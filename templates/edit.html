@@ -5,6 +5,8 @@
 let deleteurl = "{{ formurl }}";
 </script>
 <script src="{{ url_for('static', filename='js/safe_delete.js') }}"></script>
+{% block editmeta %}
+{% endblock %}
 {% endblock %}
 
 {% macro input(name, title=None, value='', type='text', required=True) %}
@@ -58,7 +60,7 @@ let deleteurl = "{{ formurl }}";
 
 {% block content %}
 <div class="container">
-    <form action="{{ formurl }}" method="post">
+    <form id="form" action="{{ formurl }}" method="post">
         {% block form %}
         {% endblock %}
         <br>
