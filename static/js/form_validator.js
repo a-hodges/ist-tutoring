@@ -11,5 +11,6 @@ function onSubmit(token){
             .click(function(){onSubmit(token);})
             .attr('name', 'g-recaptcha-response')
             .attr('value', token);
+        $(form).find('form-error').removeClass('hidden');
     }
 }
