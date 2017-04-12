@@ -370,7 +370,7 @@ def status():
             (m.Messages.end_date >= today) |
             (m.Messages.end_date.is_(None))
         )
-    )
+    ).order_by(m.Messages.order_by)
 
     for course in courses:
         course.current_sections = []
@@ -416,7 +416,7 @@ def open_ticket():
     user = get_user()
 
     courses = get_open_courses()
-    problems = m.ProblemTypes.query.order_by(m.ProblemTypes.description).all()
+    problems = m.ProblemTypes.query.order_by(m.ProblemTypes.order_by).all()
 
     html = render_template(
         'edit_open_ticket.html',
@@ -532,7 +532,7 @@ def close_ticket(id):
 
     ticket = m.Tickets.query.filter_by(id=id).one()
     courses = get_open_courses()
-    problems = m.ProblemTypes.query.order_by(m.ProblemTypes.description).all()
+    problems = m.ProblemTypes.query.order_by(m.ProblemTypes.order_by).all()
     tutors = m.Tutors.query.\
         filter_by(is_active=True).\
         order_by(m.Tutors.last_first).\
@@ -961,7 +961,7 @@ def edit_tutors(email=None):
         user=user,
         type=m.Tutors,
         obj=tutor,
-        courses=m.Courses.query.order_by(m.Courses.number).all(),
+        courses=m.Courses.query.order_by(m.Courses.order_by).all(),
     )
     return html
 
