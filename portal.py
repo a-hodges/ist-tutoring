@@ -436,10 +436,9 @@ def save_open_ticket():
         'secret': app.config['GOOGLE_CAPTCHA_SECRET'],
         'response': request.form.get('g-recaptcha-response'),
     }
-    data = urlencode(data)
     captcha = Request(
         'https://www.google.com/recaptcha/api/siteverify',
-        data=data,
+        data=urlencode(data).encode('UTF-8'),
         headers={
             'Content-type': 'application/x-www-form-urlencoded',
             'User-agent': 'reCAPTCHA Python',
