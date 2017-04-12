@@ -5,24 +5,8 @@
 
 {% block editmeta %}
 <script src="{{ url_for('static', filename='js/course_picker.js') }}"></script>
+<script src="{{ url_for('static', filename='js/form_validator.js') }}"></script>
 <script src="https://www.google.com/recaptcha/api.js"></script>
-<script>
-function onSubmit(token){
-    let form = document.getElementById("form");
-    $(':valid').parent('.formgroup').removeClass('has-error');
-    $(':invalid').parent('.formgroup').addClass('has-error');
-    if (form.checkValidity()){
-        form.submit();
-    }
-    else {
-        $('.g-recaptcha')
-            .off('**')
-            .click(function(){onSubmit(token);})
-            .attr('name', 'g-recaptcha-response')
-            .attr('value', token);
-    }
-}
-</script>
 {% endblock %}
 
 {% block form %}
