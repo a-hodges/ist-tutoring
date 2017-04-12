@@ -431,12 +431,11 @@ def save_open_ticket():
     r"""
     Creates a new ticket and stores it in the database
     """
+    secret = app.config['GOOGLE_CAPTCHA_SECRET'].encode('UTF-8')
+    response = request.form.get('g-recaptcha-response').encode('utf-8')
     with urlopen(
         'https://www.google.com/recaptcha/api/siteverify',
-        data={
-            'secret': app.config['GOOGLE_CAPTCHA_SECRET'],
-            'response': request.form.get('g-recaptcha-response'),
-        },
+        data={'secret': secret, 'response': response},
     ) as https:
         verification = json.loads(https.read())
     print(verification)
