@@ -447,7 +447,6 @@ def save_open_ticket():
     )
     with urlopen(captcha) as https:
         verification = json.loads(https.read())
-    print(verification)
 
     if not verification.get('success'):
         flash('&#10006; Invalid form submission')
