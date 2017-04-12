@@ -6,7 +6,8 @@ import argparse
 import csv
 import io
 import json
-from urllib.request import urlopen
+from urllib.request import urlopen, Request
+from urllib.parse import urlencode
 
 import pytz
 from flask import (
@@ -431,12 +432,21 @@ def save_open_ticket():
     r"""
     Creates a new ticket and stores it in the database
     """
-    secret = app.config['GOOGLE_CAPTCHA_SECRET'].encode('UTF-8')
-    response = request.form.get('g-recaptcha-response').encode('utf-8')
-    with urlopen(
+    data = {
+        'secret': app.config['GOOGLE_CAPTCHA_SECRET'],
+        'response': request.form.get('g-recaptcha-response'),
+    }
+    data = urlencode(data)
+    captcha = Request(
         'https://www.google.com/recaptcha/api/siteverify',
-        data={'secret': secret, 'response': response},
-    ) as https:
+        data=data,
+        headers={
+            'Content-type': 'application/x-www-form-urlencoded',
+            'User-agent': 'reCAPTCHA Python',
+        },
+        method='POST',
+    )
+    with urlopen(captcha) as https:
         verification = json.loads(https.read())
     print(verification)
 
