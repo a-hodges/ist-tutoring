@@ -14,6 +14,13 @@ function onSubmit(token){
     if (form.checkValidity()){
         form.submit();
     }
+    else {
+        $('.g-recaptcha')
+            .off('**')
+            .click(function(){onSubmit(token);})
+            .attr('name', 'g-recaptcha-response')
+            .attr('value', token);
+    }
 }
 </script>
 {% endblock %}
