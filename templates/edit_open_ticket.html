@@ -8,7 +8,12 @@
 <script src="https://www.google.com/recaptcha/api.js"></script>
 <script>
 function onSubmit(token){
-    document.getElementById("form").submit();
+    let form = document.getElementById("form");
+    $(':valid').parent('.formgroup').removeClass('has-error');
+    $(':invalid').parent('.formgroup').addClass('has-error');
+    if (form.checkValidity()){
+        form.submit();
+    }
 }
 </script>
 {% endblock %}
