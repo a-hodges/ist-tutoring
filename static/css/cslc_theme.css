@@ -40,17 +40,20 @@ textarea {
 
 #navbar-collapse {
 	background-color: #464446;
+	background-image: url(../images/bg_main-nav.gif);
+	background-position: center bottom;
+	background-repeat: repeat-x;
 }
 
-@media (max-width: 575px) {
+@media (max-width: 767px) {
 	#navbar-collapse {
 		background-image: none;
 	}
+
 	.navbar-inverse .navbar-nav > .open > a:hover,
 	.navbar-inverse .navbar-nav > .open > a,
 	.navbar-inverse .navbar-nav > .open {
 		background-color: #242224;
-	   	background-image: none;
 	}
 }
 
