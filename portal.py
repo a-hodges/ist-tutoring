@@ -558,8 +558,6 @@ def save_close_ticket():
     if not user:
         return abort(403)
 
-    print('Closing ticket for:', user.email)
-
     close_ticket_form = {
         'assignment': get_str,
         'question': get_str,
@@ -574,8 +572,6 @@ def save_close_ticket():
     for key, value in close_ticket_form.items():
         form[key] = value(request.form.get(key))
 
-    print('Closing ticket:', form)
-
     if request.form.get('submit') == 'claim':
         form['status'] = m.Status.Claimed
     elif request.form.get('submit') == 'close':
@@ -587,14 +583,10 @@ def save_close_ticket():
     id = get_int(request.form.get('id'))
     ticket = m.Tickets.query.filter_by(id=id).one()
 
-    print('Closing ticket:', ticket)
-
     for key, value in form.items():
         if getattr(ticket, key) != value:
             setattr(ticket, key, value)
     db.session.commit()
-
-    print('Closed ticket:', ticket)
 
     html = redirect(url_for('view_tickets'))
     return html
