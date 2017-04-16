@@ -1057,7 +1057,6 @@ def oauth_authorized():
             'fields': 'emails',
         },
     )
-    print(https.text)
     userinfo = https.json()
 
     for email in userinfo.get('emails', []):
