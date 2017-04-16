@@ -1053,7 +1053,7 @@ def oauth_authorized():
     https = requests.get(
         'https://www.googleapis.com/plus/v1/people/me',
         params={
-            'key': session['google_token'][0],
+            'access_token': session['google_token'][0],
             'fields': 'emails',
         },
     )
