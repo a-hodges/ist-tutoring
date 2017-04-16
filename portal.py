@@ -1065,11 +1065,11 @@ def oauth_authorized():
             break
 
     if not m.Tutors.query.filter_by(email=session.get('username', '')).count():
-        flash('&#10006; Invalid email used to login: {}'.format(
-            session.get('username')))
+        email = session.get('username')
         session.clear()
+        flash('&#10006; Invalid email used to login: {}.'.format(email))
     else:
-        flash('&#10004; Successfully logged in as {}'.format(
+        flash('&#10004; Successfully logged in as {}.'.format(
             session.get('username')))
 
     return redirect(next_url)
