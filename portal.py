@@ -1057,6 +1057,7 @@ def oauth_authorized():
             'fields': 'emails',
         },
     )
+    print(https.text)
     userinfo = https.json()
 
     for email in userinfo.get('emails', []):
@@ -1065,8 +1066,9 @@ def oauth_authorized():
             break
 
     if not m.Tutors.query.filter_by(email=session.get('username', '')).count():
+        flash('&#10006; Invalid email used to login: {}'.format(
+            session.get('username')))
         session.clear()
-        flash('&#10006; Invalid email used to login')
     else:
         flash('&#10004; Successfully logged in as {}'.format(
             session.get('username')))
