@@ -6,8 +6,6 @@ import argparse
 import csv
 import io
 import json
-from urllib.request import urlopen, Request
-from urllib.parse import urlencode
 
 import pytz
 from flask import (
@@ -27,9 +25,7 @@ from sqlalchemy.orm import joinedload, subqueryload
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from flask_sqlalchemy import SQLAlchemy, _QueryProperty
 from flask_oauthlib.client import OAuth
-import oauth2client
-from oauth2client.client import GoogleCredentials
-from apiclient.discovery import build
+import requests
 import bleach
 import markdown2
 
@@ -432,21 +428,14 @@ def save_open_ticket():
     r"""
     Creates a new ticket and stores it in the database
     """
-    data = {
-        'secret': app.config['GOOGLE_CAPTCHA_SECRET'],
-        'response': request.form.get('g-recaptcha-response'),
-    }
-    captcha = Request(
+    https = requests.post(
         'https://www.google.com/recaptcha/api/siteverify',
-        data=urlencode(data).encode('UTF-8'),
-        headers={
-            'Content-type': 'application/x-www-form-urlencoded',
-            'User-agent': 'reCAPTCHA Python',
+        data={
+            'secret': app.config['GOOGLE_CAPTCHA_SECRET'],
+            'response': request.form.get('g-recaptcha-response'),
         },
-        method='POST',
     )
-    with urlopen(captcha) as https:
-        verification = json.loads(https.read())
+    verification = json.loads(https.text)
 
     if not verification.get('success'):
         flash('&#10006; Invalid form submission')
@@ -1062,17 +1051,14 @@ def oauth_authorized():
 
     session['google_token'] = (resp['access_token'], '')
 
-    credentials = GoogleCredentials(
-        access_token=session['google_token'][0],
-        client_id=app.config['GOOGLE_CONSUMER_KEY'],
-        client_secret=app.config['GOOGLE_CONSUMER_SECRET'],
-        refresh_token=session['google_token'][1],
-        token_expiry=None,
-        token_uri=oauth2client.GOOGLE_TOKEN_URI,
-        user_agent=None,
+    https = requests.get(
+        'https://www.googleapis.com/plus/v1/people/me',
+        data={
+            'key': session['google_token'][0],
+            'fields': 'emails',
+        },
     )
-    service = build('plus', 'v1', credentials=credentials).people()
-    userinfo = service.get(userId='me').execute()
+    userinfo = json.loads(https.text)
 
     for email in userinfo.get('emails', []):
         if email['type'] == 'account':
