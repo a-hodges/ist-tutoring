@@ -5,7 +5,6 @@ import datetime
 import argparse
 import csv
 import io
-import json
 
 import pytz
 from flask import (
@@ -435,7 +434,7 @@ def save_open_ticket():
             'response': request.form.get('g-recaptcha-response'),
         },
     )
-    verification = json.loads(https.text)
+    verification = https.json()
 
     if not verification.get('success'):
         flash('&#10006; Invalid form submission')
@@ -1053,12 +1052,12 @@ def oauth_authorized():
 
     https = requests.get(
         'https://www.googleapis.com/plus/v1/people/me',
-        data={
+        params={
             'key': session['google_token'][0],
             'fields': 'emails',
         },
     )
-    userinfo = json.loads(https.text)
+    userinfo = https.json()
 
     for email in userinfo.get('emails', []):
         if email['type'] == 'account':
