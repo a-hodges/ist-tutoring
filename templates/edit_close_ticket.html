@@ -33,7 +33,7 @@
     </select>
 </div>
 
-{{ input('assignment', title='Assignment Description', minlength='10', value=ticket.assignment) }}
+{{ input('assignment', title='Assignment Name', minlength='10', value=ticket.assignment) }}
 {{ textarea('question', title='Specific Question', minlength='30', value=ticket.question) }}
 {{ select('problem_type_id', problems, title='Problem Type', value=ticket.problem_type_id) }}
 

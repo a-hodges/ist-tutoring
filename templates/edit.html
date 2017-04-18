@@ -12,14 +12,14 @@ let deleteurl = "{{ formurl }}";
 {% macro input(name, title=None, value='', type='text', required=True) %}
 <div class="formgroup">
     <label for="{{ name }}">{{ title if title else name.title() }}</label>
-    <input type="{{ type }}" id="{{ name }}" name="{{ name }}" class="form-control" value="{{ value }}" {% for arg in kwargs %} {{ arg }}={{ kwargs[arg] }} {% endfor %} {% if required %}required{% endif %}>
+    <input type="{{ type }}" id="{{ name }}" name="{{ name }}" class="form-control" value="{{ value }}" {% for arg in kwargs %} {{ arg }}="{{ kwargs[arg] }}" {% endfor %} {% if required %}required{% endif %}>
 </div>
 {% endmacro %}
 
 {% macro textarea(name, title=None, value='', required=True) %}
 <div class="formgroup">
     <label for="{{ name }}">{{ title if title else name.title() }}</label>
-    <textarea id="{{ name }}" name="{{ name }}" class="form-control" {% for arg in kwargs %} {{ arg }}={{ kwargs[arg] }} {% endfor %} {% if required %}required{% endif %}>{{ value }}</textarea>
+    <textarea id="{{ name }}" name="{{ name }}" class="form-control" {% for arg in kwargs %} {{ arg }}="{{ kwargs[arg] }}" {% endfor %} {% if required %}required{% endif %}>{{ value }}</textarea>
 </div>
 {% endmacro %}
 
