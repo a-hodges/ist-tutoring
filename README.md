@@ -19,11 +19,12 @@ A web based interface to handle student help requests in the University of Nebra
     1. Run with the `-h` option to view the command line interface for the application
     2. Run with the `-p` option to specify a port and run the application as public (`0.0.0.0`)
         * The application runs privately otherwise (`127.0.0.1`)
-    3. Run with the `-d` option to sepcify the database URI for the application's database
+    3. Run with the `-d` option to specify the database URI for the application's database
         * Runs with an in-memory sqlite database if not spcified
         * If the database is not a sqlite database, a SQLAlchemy dialect and DBAPI module may be required
         * See [this page](http://docs.sqlalchemy.org/en/latest/dialects/) for details about SQLAlchemy dialects and DBAPIs
         * The database URI must include the database dialect (eg. `postgresql://user:pass@localhost/test` would be a postgres database)
+    4. Run with the `--debug` or `--reload` option to run in debug mode
 4. Access the database manually to add configuration information
     1. In the configuration table the Google API client ID from earlier goes in the setting column of the row with the name `GOOGLE_CONSUMER_KEY`
     2. Also in configuration, the Google API client secret goes in the setting column of the row with the name `GOOGLE_CONSUMER_SECRET`
