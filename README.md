@@ -8,7 +8,7 @@ A web based interface to handle student help requests in the University of Nebra
     1. <https://console.developers.google.com/apis/credentials>
     2. Under credentials, create credentials for an OAuth Client ID
     3. Select Web application
-    4. Provide the domain followed by '/oauth-authorized' (eg. 'www.example.com/oauth-authorized') as the authorized redirect URI
+    4. Provide the domain followed by '/oauth-authorized' (eg. '`www.example.com/oauth-authorized`') as the authorized redirect URI
     5. Save the client ID and secret for later
 2. Setup a Google reCAPTCHA key/secret
     1. <https://www.google.com/recaptcha/admin>
