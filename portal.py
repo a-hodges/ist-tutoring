@@ -272,14 +272,14 @@ def get_user():
     Gets the user data from the current session
     Returns the Tutor object of the current user
     """
-    id = session.get('username')
+    email = session.get('username')
     user = None
-    if id:
+    if email:
         if app.config['DEBUG']:
-            user = m.Tutors(email=id, is_active=True, is_superuser=True)
+            user = m.Tutors(email=email, is_active=True, is_superuser=True)
         else:
             try:
-                user = m.Tutors.query.filter_by(email=id).one()
+                user = m.Tutors.query.filter_by(email=email).one()
             except NoResultFound:
                 session.clear()
 
