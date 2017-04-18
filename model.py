@@ -47,7 +47,7 @@ class Config (Base):
     __tablename__ = 'configuration'
 
     name = Column(
-        String,
+        String(64),
         primary_key=True,
         doc="The setting's name")
     value = Column(
@@ -230,7 +230,7 @@ class Tutors (Base):
     __tablename__ = 'tutors'
 
     email = Column(
-        'tutor_email', String,
+        'tutor_email', String(256),
         primary_key=True,
         doc="The tutor's UNO email")
     id = synonym('email')  # allows generic use of id property on tables
