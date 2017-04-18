@@ -284,7 +284,7 @@ class Courses (Base):
         doc='An autonumber id')
     number = Column(
         'course_number', String,
-        nullable=False, unique=True,
+        nullable=False,
         doc='The course number eg. CIST 1400')
     name = Column(
         'course_name', String,
