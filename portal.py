@@ -334,7 +334,7 @@ def status():
     tomorrow = today + datetime.timedelta(days=1)
 
     sections = m.Sections.query.\
-        join(m.Courses).filter(m.Courses.on_display.is_(True)).\
+        join(m.Courses).filter(m.Courses.on_display == True).\
         join(m.Semesters).filter(
             (m.Semesters.start_date <= tomorrow) &
             (m.Semesters.end_date >= today)
@@ -346,7 +346,7 @@ def status():
 
     courses = m.Courses.query.\
         order_by(m.Courses.order_by).\
-        filter(m.Courses.on_display.is_(True)).\
+        filter(m.Courses.on_display == True).\
         options(subqueryload(m.Courses.tutors)).\
         all()
 
