@@ -7,7 +7,7 @@ from sqlalchemy import (
     String,
     Integer,
     Boolean,
-    TIMESTAMP,
+    DateTime,
     Date,
     Enum,
     ForeignKey,
@@ -16,19 +16,22 @@ from sqlalchemy.schema import Table
 from sqlalchemy.orm import relationship, column_property, synonym
 from sqlalchemy.ext.declarative import declarative_base
 
+EMAIL = String(256)
+
 Base = declarative_base()
 
-onupdate = "CASCADE"
-ondelete = "SET NULL"
 cascade = "CASCADE"
 null = "SET NULL"
+noact = "NO ACTION"
+onupdate = cascade
+ondelete = noact
 
 # Join table for the courses that tutors can help with
 can_tutor_table = Table(
     'can_tutor',
     Base.metadata,
     Column(
-        'tutor_email', String,
+        'tutor_email', EMAIL,
         ForeignKey('tutors.tutor_email', onupdate=onupdate, ondelete=cascade),
         primary_key=True,
         doc='The tutor for a course'),
@@ -103,7 +106,7 @@ class Tickets (Base):
     # to avoid having to create student accounts
     # (would be inefficient and impossible for non-UNO students)
     student_email = Column(
-        String,
+        EMAIL,
         nullable=False,
         doc='The email of the student requestig tutoring')
     student_fname = Column(
@@ -124,22 +127,22 @@ class Tickets (Base):
         'ticket_status', Enum(Status),
         doc='The ticket status')
     time_created = Column(
-        'ticket_time_created', TIMESTAMP(True),
+        'ticket_time_created', DateTime(True),
         nullable=False,
         doc='Time the student requested tutoring')
     time_closed = Column(
-        'ticket_time_closed', TIMESTAMP(True),
+        'ticket_time_closed', DateTime(True),
         doc='Time a tutor marked the ticket as closed')
     was_successful = Column(
         'ticket_was_successful', Boolean,
         doc='Whether the tutor thought the session was successful')
     tutor_id = Column(
-        'tutor_email', String,
-        ForeignKey('tutors.tutor_email', onupdate=onupdate, ondelete=ondelete),
+        'tutor_email', EMAIL,
+        ForeignKey('tutors.tutor_email', onupdate=noact, ondelete=ondelete),
         doc='The tutor that helped the student')
     assistant_tutor_id = Column(
-        'assistant_tutor_email', String,
-        ForeignKey('tutors.tutor_email', onupdate=onupdate, ondelete=ondelete),
+        'assistant_tutor_email', EMAIL,
+        ForeignKey('tutors.tutor_email', onupdate=noact, ondelete=ondelete),
         doc='The assisting tutor (if any)')
     section_id = Column(
         Integer,
@@ -230,7 +233,7 @@ class Tutors (Base):
     __tablename__ = 'tutors'
 
     email = Column(
-        'tutor_email', String(256),
+        'tutor_email', EMAIL,
         primary_key=True,
         doc="The tutor's UNO email")
     id = synonym('email')  # allows generic use of id property on tables
