@@ -333,6 +333,7 @@ def status():
     today = now().date()
     tomorrow = today + datetime.timedelta(days=1)
 
+    # ticket info for each display course
     sections = m.Sections.query.\
         join(m.Courses).filter(m.Courses.on_display == True).\
         join(m.Semesters).filter(
@@ -344,12 +345,14 @@ def status():
         ).\
         all()
 
+    # for selecting which courses to display
     courses = m.Courses.query.\
         order_by(m.Courses.order_by).\
         filter(m.Courses.on_display == True).\
         options(subqueryload(m.Courses.tutors)).\
         all()
 
+    # for the list of open tickets
     tickets = m.Tickets.query.filter(
         m.Tickets.status.in_((None, m.Status.Open))
     ).options(
