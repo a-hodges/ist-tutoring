@@ -30,7 +30,7 @@ import markdown2
 
 import model as m
 # Default ordering for admin types
-m.Semesters.order_by = m.Semesters.start_date
+m.Semesters.order_by = m.Semesters.start_date.desc()
 m.Professors.order_by = m.Professors.last_first
 m.Courses.order_by = m.Courses.number
 m.Sections.order_by = m.Sections.number
@@ -1084,7 +1084,7 @@ def logout():
     Logs the user out and returns them to the homepage
     """
     session.clear()
-    flash('&#10004; Successfully logged out')
+    flash('&#10004; Successfully logged out. You will need to log out of Google separately.')
     return redirect(url_for('index'))
 # ----#-   End App
 
