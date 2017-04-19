@@ -112,35 +112,49 @@ The Administration Console can be accessed when logged in as an administrator by
 
 On the Administration Console page there are links to menus for Messages, Courses, Course Sections, Semesters, Professors, Problem Types, and Tutors. By clicking each link, menus can be accessed that allow editing and viewing of objects of each type. Before adding a Course Section, the corresponding Course, Semester, and Professor must be added.
 
-Each menus is the same, with a `+ New` button to create a new object and `Edit` buttons to change the details of an existing object. The screen for editing is the same as for creating an object, but the existing details are already filled in.
+Each menus is the same, with a `+ New` button to create a new object and `Edit` buttons to change the details of an existing object. The screen for editing is the same as for creating an object, but the existing details are already filled in. The object is saved or created by clicking the submit button.
 
 ##### Messages
 
-...
+Messages display on the status screen. A message will not display before its Start Date or after its End Date. The message's Message is converted to HTML via using [Markdown](...) syntax.
+
+Messages are sorted by their end date.
 
 ##### Courses
 
-...
+Courses allow students to select sections and group tickets on the status page. The Course Number is the department and number listed in the course catalog (eg. CIST 1400). The Course Name is the name of the course in the catalog (eg. Introduction to Computer Programming). The Display on Status Page field will select the course to have its number of tickets and tutors shown on the status page if checked.
+
+Courses are always sorted by their number.
 
 ##### Course Sections
 
-...
+Course Sections are the individual classes taught for each course. The Semester is the university semester that the course is taught during. A section will only be available for students to open tickets for during the selected semester. The Course is the course that a section belongs to. The Number is the section number in the course catalog. The Time is a description of when the class is held. The Professor is who is teaching the class.
+
+Course Sections are sorted by their semester, and by their course number within each semester, and by their own number within each course.
 
 ##### Semesters
 
-...
+Semesters group course sections to a university semester. The Year is the year a semester is held during. The Season is the part of the year a semester is held during. The Start Date is the first day of the semester and the End Date is the last day of the semester. Course sections for a semester will not be available for opening tickets outside of these dates.
+
+Semesters are sorted by their start date.
 
 ##### Professors
 
-...
+Professors are the teachers for course sections. The First Name and Last Name set the first and last name for the professor.
+
+Professors are sorted by their last name.
 
 ##### Problem Types
 
-...
+Problem Types are the categories of issues students may be experiencing. The deacription is a short summery of the type of problem.
+
+Problem Types are sorted by their description.
 
 ##### Tutors
 
-...
+Tutors are the accounts for each tutor. Email is the gmail account the tutor uses to log in. The email is not editable once the tutor has been submited! First Name and Last Name are the first and last names of the tutors. Is Active indicated is the tutor is currently employed. A tutor not marked as Is Active cannot log in. Is Admin gives a tutor administrative rights. Currently Working marks a tutor as being present in the tutoring center right now. A currently working tutor is displayed on the course list under the classes they can tutor. The Can Tutor section is a checklist of the courses the tutor can tutor for.
+
+Tutors are sorted by last name.
 
 #### Reports
 
