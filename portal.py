@@ -20,7 +20,7 @@ from flask import (
     url_for,
 )
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import joinedload, subqueryload
+from sqlalchemy.orm import contains_eager, joinedload, subqueryload
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from flask_sqlalchemy import SQLAlchemy, _QueryProperty
 from flask_oauthlib.client import OAuth
@@ -342,7 +342,7 @@ def status():
         ).\
         join(m.Tickets).filter(
             m.Tickets.status.in_((None, m.Status.Open, m.Status.Claimed))
-        ).options(joinedload(m.Sections.tickets)).\
+        ).options(contains_eager(m.Sections.tickets)).\
         all()
 
     # for selecting which courses to display
