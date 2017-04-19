@@ -342,7 +342,7 @@ def status():
         ).\
         join(m.Tickets).filter(
             m.Tickets.status.in_((None, m.Status.Open, m.Status.Claimed))
-        ).\
+        ).options(joinedload(m.Sections.tickets)).\
         all()
 
     # for selecting which courses to display
