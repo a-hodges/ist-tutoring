@@ -225,7 +225,11 @@ def error(e, message):
     r"""
     Basic error template for all error pages
     """
-    user = get_user()
+    try:
+        user = get_user()
+    except:
+        user = None
+
     html = render_template(
         'error.html',
         title=str(e),
@@ -261,7 +265,9 @@ def five_hundred(e):
     elif isinstance(e, MultipleResultsFound):
         message = 'Found too many results for the requested resource.'
     elif isinstance(e, IntegrityError):
-        message = 'Invalid data entered. Go back and fill out all fields.'
+        message = 'Invalid data entered. '
+        message += 'Either a duplicate record was entered or '
+        message += 'not all fields were filled out.'
     else:
         message = 'Whoops, looks like something went wrong!'
     return error('500: '+type(e).__name__, message), 500
