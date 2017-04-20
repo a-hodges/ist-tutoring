@@ -1,6 +1,12 @@
-{% extends "edit.html" %}
+{% extends "base.html" %}
 
 {% set title = 'Ticket #{}'.format(ticket.id) %}
+
+{% block meta %}
+<script src="{{ url_for('static', filename='js/safe_delete.js') }}"></script>
+{% block editmeta %}
+{% endblock %}
+{% endblock %}
 
 {% block content %}
 <div class="content" style="padding: 5px">
