@@ -56,7 +56,7 @@ The Assignment Name is the name of the assignment the student is requesting help
 
 The Specific Question is the question the student is asking or a topic they need to know more about. Students should be instructed to be as specific as possible.
 
-The Problem Type is a selection of the categories of problems that students may encouter. This helps determine the stage of problem solving they are at.
+The Problem Type is a selection of the categories of problems that students may encounter. This helps determine the stage of problem solving they are at.
 
 Once all of the fields are filled out, the ticket is submitted with the `Submit` button. The page is protected by a CAPTCHA so students may be asked to respond to the CAPTCHA before the ticket is submitted.
 
@@ -72,9 +72,9 @@ The last section, `Open Tickets` only displays for logged in users. It shows the
 
 ### Logging In
 
-To perform any tutor or administrator actions the tutor or administrator must be logged in. To log in, click the `Tutor Login` button in the toolbar. This will redirect to a Google login page. Log in using the email for your account (usually an `@unomaha.edu` accout). If this is the account's first time logging in access must be granted for the application to view the account's email address. The tutor will then be logged in if the account they used to log in is a valid, active tutor account or rejected otherwise. Either way, they will be redirected back to the application's home page.
+To perform any tutor or administrator actions the tutor or administrator must be logged in. To log in, click the `Tutor Login` button in the toolbar. This will redirect to a Google login page. Log in using the email for your account (usually an `@unomaha.edu` account). If this is the account's first time logging in access must be granted for the application to view the account's email address. The tutor will then be logged in if the account they used to log in is a valid, active tutor account or rejected otherwise. Either way, they will be redirected back to the application's home page.
 
-To log out, a tutor can click the `logout` button in the toolbar. They will be logged out and redirected to the home page.
+To logout, a tutor can click the `logout` button in the toolbar. They will be logged out and redirected to the home page.
 
 ### Tutors
 
@@ -94,9 +94,9 @@ The view tickets page has three sections. `Open` is for tickets not yet claimed 
 
 Tickets in the `Open` section have a `Claim` button and tickets in the `Claimed` section have a `Close` button. Both of these lead to the Claim/Close page for the selected ticket.
 
-On the Claim/Close page tutors can edit the ticket's course and section, assignment name, question, problem type, claiming tutor, assisting tutor, and whether the session was successful. The Claiming Tutor is the tutor that helped the student during the session. The Assisting Tutor is for if another tutor provided input during the session. Was Successful indicates if the original question for the session was resolved. The purposes of the rest of the fields are described in the Open Ticket page description above. All of these fields are requred except the assisting tutor.
+On the Claim/Close page tutors can edit the ticket course and section, assignment name, question, problem type, claiming tutor, assisting tutor, and whether the session was successful. The Claiming Tutor is the tutor that helped the student during the session. The Assisting Tutor is for if another tutor provided input during the session. Was Successful indicates if the original question for the session was resolved. The purposes of the rest of the fields are described in the Open Ticket page description above. All of these fields are required except the assisting tutor.
 
-Once the neccessary fields are filled out the ticket can be assigned to the `Claimed` section by clicking the `Claim` button or the `Closed` section by clicking the `Close` button.
+Once the necessary fields are filled out the ticket can be assigned to the `Claimed` section by clicking the `Claim` button or the `Closed` section by clicking the `Close` button.
 
 ##### Reopen Ticket
 
@@ -116,7 +116,7 @@ Each menus is the same, with a `+ New` button to create a new object and `Edit` 
 
 ##### Messages
 
-Messages display on the status screen. A message will not display before its Start Date or after its End Date. The message's Message is converted to HTML via using [Markdown](...) syntax.
+Messages display on the status screen. A message will not display before its Start Date or after its End Date. The message's Message is converted to HTML using [Markdown](...) syntax.
 
 Messages are sorted by their end date.
 
@@ -146,13 +146,13 @@ Professors are sorted by their last name.
 
 ##### Problem Types
 
-Problem Types are the categories of issues students may be experiencing. The deacription is a short summery of the type of problem.
+Problem Types are the categories of issues students may be experiencing. The description is a short summary of the type of problem.
 
 Problem Types are sorted by their description.
 
 ##### Tutors
 
-Tutors are the accounts for each tutor. Email is the gmail account the tutor uses to log in. The email is not editable once the tutor has been submited! First Name and Last Name are the first and last names of the tutors. Is Active indicated is the tutor is currently employed. A tutor not marked as Is Active cannot log in. Is Admin gives a tutor administrative rights. Currently Working marks a tutor as being present in the tutoring center right now. A currently working tutor is displayed on the course list under the classes they can tutor. The Can Tutor section is a checklist of the courses the tutor can tutor for.
+Tutors are the accounts for each tutor. Email is the gmail account the tutor uses to log in. The email is not editable once the tutor has been submitted! First Name and Last Name are the first and last names of the tutors. Is Active indicated is the tutor is currently employed. A tutor not marked as Is Active cannot login. Is Admin gives a tutor administrative rights. Currently Working marks a tutor as being present in the tutoring center right now. A currently working tutor is displayed on the course list under the classes they can tutor. The Can Tutor section is a checklist of the courses the tutor can tutor for.
 
 Tutors are sorted by last name.
 
@@ -164,4 +164,4 @@ Various filters can be applied to the list. By entering a start date only ticket
 
 The current report can be downloaded in a CSV format (openable in Microsoft Excel) by clicking the `Download Report` button. The current list of tickets will be downloaded with the same filters applied. Filters are only applied to the download if they have been applied to the list using the `Filter` button.
 
-More information about a given ticket can be viewed by clicking the `Details` button on the ticket's row.
+More information about a given ticket can be viewed by clicking the `Details` button on that ticket's row.
