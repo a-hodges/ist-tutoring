@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import sys
 import os
 import datetime
 import argparse
@@ -120,6 +121,7 @@ def create_app(args):
             'GOOGLE_CONSUMER_SECRET': None,
             'GOOGLE_CAPTCHA_KEY': None,
             'GOOGLE_CAPTCHA_SECRET': None,
+            'TZ_NAME': 'America/Chicago',
         }
         # get Config values from database
         for name in config:
@@ -134,6 +136,12 @@ def create_app(args):
         config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(
             minutes=int(config['PERMANENT_SESSION_LIFETIME']))
         app.config.update(config)
+        try:
+            app.config['TZ'] = pytz.timezone(app.config['TZ_NAME'])
+        except pytz.exceptions.UnknownTimeZoneError:
+            print('Unknown timzeone: "{}". Using UTC instead.'.format(
+                app.config.get('TZ_NAME')
+            ), file=sys.stderr)
 
 
 def make_safe(html):
@@ -189,8 +197,9 @@ def correct_time(time):
     Takes a datetime object and returns that time
         corrected for the appropriate timezone
     """
-    central_time = pytz.timezone('America/Chicago')
-    time = central_time.fromutc(time)
+    timezone = app.config.get('TZ')
+    if timezone is not None:
+        time = central_time.fromutc(time)
     return time
 
 
@@ -1116,7 +1125,9 @@ def logout():
     Logs the user out and returns them to the homepage
     """
     session.clear()
-    flash('&#10004; Successfully logged out. You will need to log out of Google separately.')
+    flash(
+        '&#10004; Successfully logged out. ' +
+        'You will need to log out of Google separately.')
     return redirect(url_for('index'))
 # ----#-   End App
 
