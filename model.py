@@ -133,6 +133,9 @@ class Tickets (Base):
     time_closed = Column(
         'ticket_time_closed', DateTime(True),
         doc='Time a tutor marked the ticket as closed')
+    session_duration = Column(
+        'ticket_session_duration', Integer,
+        doc='The amount of time the tutors actually spent with the student')
     was_successful = Column(
         'ticket_was_successful', Boolean,
         doc='Whether the tutor thought the session was successful')

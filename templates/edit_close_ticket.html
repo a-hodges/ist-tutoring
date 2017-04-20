@@ -40,6 +40,7 @@
 {{ select('tutor_id', tutors, title='Primary Tutor', value=ticket.tutor_id) }}
 {{ select('assistant_tutor_id', tutors, title='Assistant Tutor', value=ticket.assistant_tutor_id, required=False) }}
 
+{{ input('session_duration', title='Session Duration (Actual time spent with student in minutes)', type='number', min=0, value=ticket.session_duration) }}
 {{ checkbox('was_successful', title='Was Successful', value=ticket.was_successful) }}
 
 {% endblock %}

@@ -552,6 +552,7 @@ def save_close_ticket():
     close_ticket_form = {
         'assignment': get_str,
         'question': get_str,
+        'session_duration': get_int,
         'was_successful': bool,
         'tutor_id': get_str,
         'assistant_tutor_id': get_str,

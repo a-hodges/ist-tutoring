@@ -94,7 +94,7 @@ The view tickets page has three sections. `Open` is for tickets not yet claimed 
 
 Tickets in the `Open` section have a `Claim` button and tickets in the `Claimed` section have a `Close` button. Both of these lead to the Claim/Close page for the selected ticket.
 
-On the Claim/Close page tutors can edit the ticket course and section, assignment name, question, problem type, claiming tutor, assisting tutor, and whether the session was successful. The Claiming Tutor is the tutor that helped the student during the session. The Assisting Tutor is for if another tutor provided input during the session. Was Successful indicates if the original question for the session was resolved. The purposes of the rest of the fields are described in the Open Ticket page description above. All of these fields are required except the assisting tutor.
+On the Claim/Close page tutors can edit the ticket course and section, assignment name, question, problem type, claiming tutor, assisting tutor, and whether the session was successful. The Claiming Tutor is the tutor that helped the student during the session. The Assisting Tutor is for if another tutor provided input during the session. Session Duration indicates the actual amount of time that the tutor spent with a student. Was Successful indicates if the original question for the session was resolved. The purposes of the rest of the fields are described in the Open Ticket page description above. All of these fields are required except the assisting tutor.
 
 Once the necessary fields are filled out the ticket can be assigned to the `Claimed` section by clicking the `Claim` button or the `Closed` section by clicking the `Close` button.
 
