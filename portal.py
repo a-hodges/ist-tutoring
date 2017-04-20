@@ -199,7 +199,7 @@ def correct_time(time):
     """
     timezone = app.config.get('TZ')
     if timezone is not None:
-        time = central_time.fromutc(time)
+        time = timezone.fromutc(time)
     return time
 
 
