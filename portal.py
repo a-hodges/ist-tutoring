@@ -741,6 +741,22 @@ def ticket_details(id):
     return html
 
 
+@app.route('/reports/ticket/<int:id>/delete')
+def delete_ticket(id):
+    r"""
+    Deletes a ticket from the database
+    """
+    user = get_user()
+    if not user or not user.is_superuser:
+        return abort(403)
+
+    obj = m.Tickets.query.filter_by(id=id).one()
+    db.session.delete(obj)
+    db.session.commit()
+
+    return redirect(url_for('reports'))
+
+
 @app.route('/admin/')
 def admin():
     r"""

@@ -56,5 +56,14 @@
     <dt class="col-xs-2">Was Successful</dt>
     <dd class="col-xs-10">{{ 'yes' if ticket.was_successful else 'no' }}</dd>
 </dl>
+{% if user.is_superuser %}
+<form id="form" action="{{ url_for('delete_ticket', id=ticket.id) }}" method="get">
+    <div class="row">
+        <div class="btn-group-submit col-xs-4 col-sm-3 col-md-2">
+            <button type="button" id="delete" class="btn btn-danger btn-block">Delete</button>
+        </div>
+    </div>
+</form>
+{% endif %}
 </div>
 {% endblock %}

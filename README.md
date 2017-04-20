@@ -164,4 +164,4 @@ Various filters can be applied to the list. By entering a start date only ticket
 
 The current report can be downloaded in a CSV format (openable in Microsoft Excel) by clicking the `Download Report` button. The current list of tickets will be downloaded with the same filters applied. Filters are only applied to the download if they have been applied to the list using the `Filter` button.
 
-More information about a given ticket can be viewed by clicking the `Details` button on that ticket's row.
+More information about a given ticket can be viewed by clicking the `Details` button on that ticket's row. Clicking the `Delete` button at the bottom of the details page will permanently delete the ticket.
