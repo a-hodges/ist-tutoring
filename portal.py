@@ -169,10 +169,8 @@ def now():
     r"""
     Gets the current time in the America/Chicago timezone
     """
-    central_time = pytz.timezone('America/Chicago')
     UTC = datetime.timezone.utc
     now = datetime.datetime.now(UTC)
-    now = now.astimezone(central_time)
     return now
 
 
@@ -184,6 +182,16 @@ def date(string):
         return None
     else:
         return datetime.datetime.strptime(string, '%Y-%m-%d').date()
+
+
+def correct_time(time):
+    r"""
+    Takes a datetime object and returns that time
+        corrected for the appropriate timezone
+    """
+    central_time = pytz.timezone('America/Chicago')
+    time = central_time.fromutc(time)
+    return time
 
 
 def get_int(string):
@@ -218,6 +226,7 @@ def context():
         date=date,
         len=len,
         markdown=markdown,
+        correct_time=correct_time,
     )
 
 
@@ -703,8 +712,8 @@ def report_download():
             ticket.question,
             ticket.problem_type.description,
             ticket.status,
-            ticket.time_created,
-            ticket.time_closed,
+            correct_time(ticket.time_created),
+            correct_time(ticket.time_closed),
             ticket.was_successful,
             ticket.tutor_id,
             ticket.assistant_tutor_id,

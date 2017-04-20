@@ -12,7 +12,7 @@
 <div class="content" style="padding: 5px">
 <dl class="row">
     <dt class="col-xs-2">Time Opened</dt>
-    <dd class="col-xs-10">{{ ticket.time_created }}</dd>
+    <dd class="col-xs-10">{{ correct_time(ticket.time_created) }}</dd>
     <hr class="col-xs-12">
     <dt class="col-xs-2">Name</dt>
     <dd class="col-xs-10">{{ ticket.student_last_first }}</dd>
@@ -50,7 +50,7 @@
     <hr class="col-xs-12">
     {% if ticket.status == m.Status.Closed %}
     <dt class="col-xs-2">Time Closed</dt>
-    <dd class="col-xs-10">{{ ticket.time_closed }}</dd>
+    <dd class="col-xs-10">{{ correct_time(ticket.time_closed) }}</dd>
     <hr class="col-xs-12">
     {% endif %}
     <dt class="col-xs-2">Primary Tutor</dt>

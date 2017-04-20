@@ -45,7 +45,7 @@
     <ul id="tickets" class="list-group">
         {% for ticket in tickets %}
         <li class="list-group-item row">
-            <div class="col-xs-10 col-sm-12 time">{{ item.time_created.strftime('%x %X %p') }}</div>
+            <div class="col-xs-10 col-sm-12 time">{{ correct_time(item.time_created).strftime('%x %I:%M:%S %p') }}</div>
             <div class="col-xs-4 col-sm-2 col-md-2 name">{{ ticket.student_fullname }}</div>
             <div class="col-xs-8 col-sm-4 col-md-3 course">{{ ticket.section.course }}</div>
             <div class="col-xs-10 col-sm-4 col-md-3 assignment">{{ ticket.assignment }}</div>

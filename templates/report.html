@@ -65,7 +65,7 @@
         </li>
         {% for ticket in tickets %}
         <li class="list-group-item row">
-            <div class="col-xs-10 col-sm-12 time">{{ ticket.time_created.strftime('%x %X %p') }}</div>
+            <div class="col-xs-10 col-sm-12 time">{{ correct_time(ticket.time_created).strftime('%x %I:%M:%S %p') }}</div>
             <div class="col-xs-4 col-sm-4 col-md-3 email">{{ ticket.student_email }}</div>
             <div class="col-xs-8 col-sm-3 col-md-2 course">{{ ticket.section.course.number }}</div>
             <div class="col-xs-10 col-sm-3 col-md-3 assignment">{{ ticket.assignment }}</div>
