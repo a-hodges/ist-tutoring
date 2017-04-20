@@ -197,9 +197,10 @@ def correct_time(time):
     Takes a datetime object and returns that time
         corrected for the appropriate timezone
     """
-    timezone = app.config.get('TZ')
-    if timezone is not None:
-        time = timezone.fromutc(time)
+    if time is not None:
+        timezone = app.config.get('TZ')
+        if timezone is not None:
+            time = timezone.fromutc(time)
     return time
 
 
