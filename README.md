@@ -35,6 +35,12 @@ This portal is a web based interface to handle student help requests in the Univ
 
 ### Home Page
 
+![Homepage](screenshots/homepage.png)
+Logged in
+
+![Homepage with Message](screenshots/homepage-message.png)
+Logged out with message
+
 The home page is the first page displayed to the user. In the final version of the system it will be located at <https://tutoring.ist.unomaha.edu/>. The home page includes links to the `Open Ticket` and `View Tickets` pages in the body. The toolbar also contains a link to the `Status` page and either `Tutor Login` or `Logout` based on whether the user is logged in. Additionally, the Computer Science Learning Center logo above the toolbar is a link to the homepage.
 
 If a tutor is logged in an extra `Tutor` dropdown will be in the toolbar with links for the `Edit User` and `View Tickets` pages. If an administrator is logged in, an `Admin` dropdown will be available in addition to the `Tutor` dropdown. The `Admin` console contains an `Admin Console` link to the administration console, and a `Reports` link to the reports page.
@@ -46,6 +52,8 @@ The toolbar and logo are displayed on all pages, but have been omitted from scre
 Students do not need to log in to the system. While not logged in, two features are accessible, opening tickets and the status page.
 
 #### Open Ticket
+
+![Open Ticket Page](screenshots/open-ticket.png)
 
 A ticket can be opened by clicking the `Open Ticket` button on the home page. This opens the Open Ticket form.
 
@@ -67,6 +75,8 @@ Once all of the fields are filled out, the ticket is submitted with the `Submit`
 
 #### Status
 
+![Status Page](screenshots/status.png)
+
 The status screen gives an overview of the situation in the tutoring center. It can be accessed by clicking the `Status` button in the toolbar. The status screen has three sections.
 
 The `Messages` section displays any current messages entered by an administrator.
@@ -87,17 +97,23 @@ To logout, a tutor can click the `Logout` button in the toolbar. They will be lo
 
 #### Edit User
 
+![Edit User Page](screenshots/edit-user.png)
+
 Tutors can edit a subset of the information about themself by clicking `Tutor` in the toolbar, then `Edit User`. Administrators will be redirected to the Edit Tutor page for themself, while normal tutors will be shown a subset of the fields accessible to administrators.
 
 Tutors can edit their First Name, Last Name, Currently Working status, and Can Tutor course proficiencies. For detailed instructions see the Tutors page description below.
 
 #### View Tickets
 
+![View Tickets Page](screenshots/view-tickets.png)
+
 Tutors can. The tickets list can be accessed by clicking `Tutor` in the toolbar, then `View Tickets` or by clicking `View Tickets` on the homepage.
 
 The view tickets page has three sections. `Open` is for tickets not yet claimed by a tutor. `Claimed` is for tickets that have been claimed, but the session is not yet finished. `Closed` is for tickets for which the session has been finished.
 
 ##### Claim/Close Ticket
+
+![Claim/Close Ticket Page](screenshots/close-ticket.png)
 
 Tickets in the `Open` section have a `Claim` button and tickets in the `Claimed` section have a `Close` button. Both of these lead to the Claim/Close page for the selected ticket.
 
@@ -113,15 +129,21 @@ Tickets in the `Closed` section have a `Reopen` button. Clicking this moves the 
 
 #### Administration Console
 
+![Admin Console Page](screenshots/admin-console.png)
+
 The administration console is where the administrator can set up tutor accounts, messages, problem types, and all of the information necessary for course sections.
 
 The Administration Console can be accessed when logged in as an administrator by clicking `Admin` in the toolbar, followed by `Admin Console`. If the `Admin` option does not exist you are not logged in as an administrator.
 
 On the Administration Console page there are links to menus for Messages, Courses, Course Sections, Semesters, Professors, Problem Types, and Tutors. By clicking each link, menus can be accessed that allow editing and viewing of objects of each type. Before adding a Course Section, the corresponding Course, Semester, and Professor must be added.
 
+![Admin List Page](screenshots/list.png)
+
 Each menus is the same, with a `+ New` button to create a new object and `Edit` buttons to change the details of an existing object. The screen for editing is the same as for creating an object, but the existing details are already filled in. The object is saved or created by clicking the submit button.
 
 ##### Messages
+
+![Edit Message Page](screenshots/message.png)
 
 Messages display on the status screen. A message will not display before its Start Date or after its End Date. The message's Message is converted to HTML using [Markdown](...) syntax.
 
@@ -129,11 +151,15 @@ Messages are sorted by their end date.
 
 ##### Courses
 
+![Edit Course Page](screenshots/course.png)
+
 Courses allow students to select sections and group tickets on the status page. The Course Number is the department and number listed in the course catalog (eg. CIST 1400). The Course Name is the name of the course in the catalog (eg. Introduction to Computer Programming). The Display on Status Page field will select the course to have its number of tickets and tutors shown on the status page if checked.
 
 Courses are always sorted by their number.
 
 ##### Course Sections
+
+![Edit Section Page](screenshots/section.png)
 
 Course Sections are the individual classes taught for each course. The Semester is the university semester that the course is taught during. A section will only be available for students to open tickets for during the selected semester. The Course is the course that a section belongs to. The Number is the section number in the course catalog. The Time is a description of when the class is held. The Professor is who is teaching the class.
 
@@ -141,11 +167,15 @@ Course Sections are sorted by their semester, and by their course number within 
 
 ##### Semesters
 
+![Edit Semester Page](screenshots/semester.png)
+
 Semesters group course sections to a university semester. The Year is the year a semester is held during. The Season is the part of the year a semester is held during. The Start Date is the first day of the semester and the End Date is the last day of the semester. Course sections for a semester will not be available for opening tickets outside of these dates.
 
 Semesters are sorted by their start date.
 
 ##### Professors
+
+![Edit Professor Page](screenshots/professor.png)
 
 Professors are the teachers for course sections. The First Name and Last Name set the first and last name for the professor.
 
@@ -153,17 +183,25 @@ Professors are sorted by their last name.
 
 ##### Problem Types
 
+![Edit Problem Page](screenshots/problem.png)
+
 Problem Types are the categories of issues students may be experiencing. The description is a short summary of the type of problem.
 
 Problem Types are sorted by their description.
 
 ##### Tutors
 
+![Edit Tutor Page](screenshots/tutor.png)
+
+![New Tutor Page](screenshots/tutor-new.png)
+
 Tutors are the accounts for each tutor. Email is the gmail account the tutor uses to log in. The email is not editable once the tutor has been submitted! First Name and Last Name are the first and last names of the tutors. Is Active indicated is the tutor is currently employed. A tutor not marked as Is Active cannot login. Is Admin gives a tutor administrative rights. Currently Working marks a tutor as being present in the tutoring center right now. A currently working tutor is displayed on the course list under the classes they can tutor. The Can Tutor section is a checklist of the courses the tutor can tutor for.
 
 Tutors are sorted by last name.
 
 #### Reports
+
+![Reports Page](screenshots/report.png)
 
 The reports page contains a summary of all of the tickets in the system. The reports can be accessed when logged in as an administrator by clicking `Admin` in the toolbar, followed by `Reports`. If the `Admin` option does not exist you are not logged in as an administrator.
 
@@ -174,6 +212,8 @@ Various filters can be applied to the list. By entering a start date only ticket
 The current report can be downloaded in a CSV format (openable in Microsoft Excel) by clicking the `Download Report` button. The current list of tickets will be downloaded with the same filters applied. Filters are only applied to the download if they have been applied to the list using the `Filter` button.
 
 ##### Ticket Details
+
+![Ticket Details Page](screenshots/ticket-details.png)
 
 More information about a given ticket can be viewed by clicking the `Details` button on that ticket's row. Clicking the `Delete` button at the bottom of the details page will permanently delete the ticket.
 
