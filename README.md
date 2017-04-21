@@ -35,11 +35,11 @@ This portal is a web based interface to handle student help requests in the Univ
 
 ### Home Page
 
+Logged in:
 ![Homepage](screenshots/homepage.png)
-Logged in
 
+Logged out with message:
 ![Homepage with Message](screenshots/homepage-message.png)
-Logged out with message
 
 The home page is the first page displayed to the user. In the final version of the system it will be located at <https://tutoring.ist.unomaha.edu/>. The home page includes links to the `Open Ticket` and `View Tickets` pages in the body. The toolbar also contains a link to the `Status` page and either `Tutor Login` or `Logout` based on whether the user is logged in. Additionally, the Computer Science Learning Center logo above the toolbar is a link to the homepage.
 
