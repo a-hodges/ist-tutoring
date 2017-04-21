@@ -15,7 +15,7 @@ A web based interface to handle student help requests in the University of Nebra
     2. Select "invisible reCAPTCHA"
     3. Provide the domain (no subpage this time)
     4. Save the site key and secret key for later
-3. Run the portal in debug mode to create the appropriate database tables
+3. Run the portal to create the appropriate database tables
     1. Run with the `-h` option to view the command line interface for the application
     2. Run with the `-p` option to specify a port and run the application as public (`0.0.0.0`)
         * The application runs privately otherwise (`127.0.0.1`)
