@@ -2,11 +2,43 @@
 
 This portal is a web based interface to handle student help requests in the University of Nebraska at Omaha Computer Science Learning Center.
 
+## Table of Contents
+
+* Use
+    * Home Page
+    * Students
+        * Open Ticket
+        * Status
+    * Tutor Login
+    * Logout
+    * Tutors
+        * Edit User
+        * View Tickets
+            * Claim/Close Ticket
+            * Reopen Ticket
+    * Administrators
+        * Administration Console
+            * Messages
+            * Courses
+            * Course Sections
+            * Semesters
+            * Professors
+            * Problem Types
+            * Tutors
+        * Reports
+            * Download Report
+            * Ticket Details
+* Appendix A. Setup and Installation
+
 ## Use
 
 ### Home Page
 
-The home page is the first page displayed to the user. In the final version of the system it will be located at <https://tutoring.ist.unomaha.edu/>. The home page includes links to the `Open Ticket` and `View Tickets` pages in the body, and `Status` and `Tutor Login` pages in the toolbar. If a tutor is logged in an extra `Tutor` dropdown will be in the toolbar with links for the `Edit User` and `View Tickets` pages. If an administrator is logged in, an `Admin` dropdown will be available in addition to the `Tutor` dropdown. The `Admin` console contains an `Admin Console` link to the administration console, and a `Reports` link to the reports page.
+The home page is the first page displayed to the user. In the final version of the system it will be located at <https://tutoring.ist.unomaha.edu/>. The home page includes links to the `Open Ticket` and `View Tickets` pages in the body, and `Status` and `Tutor Login` pages in the toolbar. Additionally, the Computer Science Learning Center logo above the toolbar is a link to the homepage.
+
+If a tutor is logged in an extra `Tutor` dropdown will be in the toolbar with links for the `Edit User` and `View Tickets` pages. If an administrator is logged in, an `Admin` dropdown will be available in addition to the `Tutor` dropdown. The `Admin` console contains an `Admin Console` link to the administration console, and a `Reports` link to the reports page.
+
+The toolbar and logo are displayed on all pages.
 
 ### Students
 
@@ -60,7 +92,7 @@ Tutors can edit their First Name, Last Name, Currently Working status, and Can T
 
 #### View Tickets
 
-Tutors can. The tickets list can be accessed by clicking `Tutor` in the toolbar, then `Tickets` or by clicking `View Tickets` on the homepage.
+Tutors can. The tickets list can be accessed by clicking `Tutor` in the toolbar, then `View Tickets` or by clicking `View Tickets` on the homepage.
 
 The view tickets page has three sections. `Open` is for tickets not yet claimed by a tutor. `Claimed` is for tickets that have been claimed, but the session is not yet finished. `Closed` is for tickets for which the session has been finished.
 
@@ -76,7 +108,7 @@ Once the necessary fields are filled out the ticket can be assigned to the `Clai
 
 Tickets in the `Closed` section have a `Reopen` button. Clicking this moves the ticket from the `Closed` section back to the `Claimed` section, altering its status accordingly. The rest of the tickets details remain the same.
 
-### Administrators Only
+### Administrators
 
 #### Administration Console
 
@@ -136,11 +168,15 @@ The reports page contains a summary of all of the tickets in the system. The rep
 
 Various filters can be applied to the list. By entering a start date only tickets opened on or after the date will be displayed. By entering an end date only tickets opened on or before the date will be displayed. By selecting a semester only tickets that belong to that semester will be displayed. By selecting a course only tickets that belong to that course will be displayed. Once he desired filters are entered clicking the `Filter` button will apply them to the list.
 
+##### Download Report
+
 The current report can be downloaded in a CSV format (openable in Microsoft Excel) by clicking the `Download Report` button. The current list of tickets will be downloaded with the same filters applied. Filters are only applied to the download if they have been applied to the list using the `Filter` button.
+
+##### Ticket Details
 
 More information about a given ticket can be viewed by clicking the `Details` button on that ticket's row. Clicking the `Delete` button at the bottom of the details page will permanently delete the ticket.
 
-## Appendix A. Setup
+## Appendix A. Setup and Installation
 
 1. Install [Python 3](https://www.python.org/)
     1. The application must be run using Python 3
