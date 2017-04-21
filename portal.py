@@ -307,9 +307,11 @@ def get_user():
                 user = m.Tutors.query.filter_by(email=email).one()
             except NoResultFound:
                 session.clear()
+                flash('&#10006; User does not exist: {}.'.format(email))
 
         if user and not user.is_active:
             session.clear()
+            flash('&#10006; User is not active: {}.'.format(email))
             user = None
     return user
 
