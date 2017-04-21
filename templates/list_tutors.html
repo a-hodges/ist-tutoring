@@ -10,7 +10,7 @@
         {% for item in items %}
         <li class="list-group-item">
             <span class="name">{{ item }}</span>
-            <a type="button" class="badge" href="{{ url_for('edit_tutors', email=item.email) }}">Edit</a>
+            <a type="button" class="badge" href="{{ url_for('edit_tutors', id=item.id) }}">Edit</a>
         </li>
         {% endfor %}
     </ul>

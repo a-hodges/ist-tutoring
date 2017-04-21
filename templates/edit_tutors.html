@@ -7,10 +7,11 @@
 
 {% if obj %}
 <h1>{{ obj.email }}</h1>
-<input type="hidden" id="email" name="email" value="{{ obj.email }}">
-{% else %}
-<input type="hidden" id="new" name="new" value="true">
-{{ input('email', type='email') }}
+<input type="hidden" id="id" name="id" value="{{ obj.id }}">
+{% endif %}
+
+{% if user.is_superuser %}
+{{ input('email', type='email', value=obj.email) }}
 {% endif %}
 
 {{ input('fname', title='First Name', value=obj.fname if obj else '') }}

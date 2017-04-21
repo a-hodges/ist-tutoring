@@ -31,8 +31,8 @@ can_tutor_table = Table(
     'can_tutor',
     Base.metadata,
     Column(
-        'tutor_email', EMAIL,
-        ForeignKey('tutors.tutor_email', onupdate=onupdate, ondelete=cascade),
+        'tutor_id', Integer,
+        ForeignKey('tutors.tutor_id', onupdate=onupdate, ondelete=cascade),
         primary_key=True,
         doc='The tutor for a course'),
     Column(
@@ -140,12 +140,12 @@ class Tickets (Base):
         'ticket_was_successful', Boolean,
         doc='Whether the tutor thought the session was successful')
     tutor_id = Column(
-        'tutor_email', EMAIL,
-        ForeignKey('tutors.tutor_email', onupdate=noact, ondelete=ondelete),
+        'tutor_id', Integer,
+        ForeignKey('tutors.tutor_id', onupdate=noact, ondelete=ondelete),
         doc='The tutor that helped the student')
     assistant_tutor_id = Column(
-        'assistant_tutor_email', EMAIL,
-        ForeignKey('tutors.tutor_email', onupdate=noact, ondelete=ondelete),
+        'assistant_tutor_id', Integer,
+        ForeignKey('tutors.tutor_id', onupdate=noact, ondelete=ondelete),
         doc='The assisting tutor (if any)')
     section_id = Column(
         Integer,
@@ -235,11 +235,14 @@ class Tutors (Base):
     """
     __tablename__ = 'tutors'
 
+    id = Column(
+        'tutor_id', Integer,
+        primary_key=True,
+        doc='An autonumber id')
     email = Column(
         'tutor_email', EMAIL,
-        primary_key=True,
+        unique=True,
         doc="The tutor's UNO email")
-    id = synonym('email')  # allows generic use of id property on tables
     fname = Column(
         'tutor_fname', String,
         doc="The tutor's first name")

@@ -977,19 +977,19 @@ def list_tutors():
 
 
 @app.route('/admin/tutors/new')
-@app.route('/admin/tutors/<email>')
-def edit_tutors(email=None):
+@app.route('/admin/tutors/<int:id>')
+def edit_tutors(id=None):
     r"""
     Allows editing and creation of tutor objects
     """
     user = get_user()
-    if not user or not (user.is_superuser or user.email == email):
+    if not user or not (user.is_superuser or user.id == id):
         return abort(403)
 
-    if email is None:
+    if id is None:
         tutor = None
     else:
-        tutor = m.Tutors.query.filter_by(email=email).one()
+        tutor = m.Tutors.query.filter_by(id=id).one()
 
     html = render_template(
         'edit_tutors.html',
@@ -1007,12 +1007,12 @@ def save_edit_tutors():
     Handles changes to tutor objects
     """
     user = get_user()
-    email = request.form.get('email')
-    if not user or not (user.is_superuser or user.email == email):
+    id = get_int(request.form.get('id'))
+    if not user or not (user.is_superuser or user.id == id):
         return abort(403)
 
     if request.form.get('action') == 'delete':
-        obj = type.query.filter_by(email=email).one()
+        obj = type.query.filter_by(id=id).one()
         db.session.delete(obj)
     else:
         form = {
@@ -1022,19 +1022,20 @@ def save_edit_tutors():
         }
         if user.is_superuser:
             form.update({
+                'email': get_str,
                 'is_active': bool,
                 'is_superuser': bool,
             })
         for key, value in form.items():
             form[key] = value(request.form.get(key))
 
-        if not request.form.get('new'):
-            obj = m.Tutors.query.filter_by(email=email).one()
+        if id is not None:
+            obj = m.Tutors.query.filter_by(id=id).one()
             for key, value in form.items():
                 if getattr(obj, key) != value:
                     setattr(obj, key, value)
         else:
-            obj = m.Tutors(email=email, **form)
+            obj = m.Tutors(**form)
             db.session.add(obj)
 
         for course in m.Courses.query.all():
