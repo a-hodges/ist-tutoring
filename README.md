@@ -240,7 +240,7 @@ More information about a given ticket can be viewed by clicking the `Details` bu
     2. Run with the `-p` option to specify a port and run the application as public (`0.0.0.0`)
         * The application runs privately otherwise (`127.0.0.1`)
     3. Run with the `-d` option to specify the database URI for the application's database
-        * Runs with an in-memory sqlite database if not spcified
+        * Runs with an in-memory sqlite database if not specified
         * If the database is not a sqlite database, a SQLAlchemy dialect and DBAPI module may be required
         * See [this page](http://docs.sqlalchemy.org/en/latest/dialects/) for details about SQLAlchemy dialects and DBAPIs
         * The database URI must include the database dialect (eg. `postgresql://user:pass@localhost/test` would be a postgres database)
