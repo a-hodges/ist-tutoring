@@ -467,7 +467,7 @@ def save_open_ticket():
     verification = https.json()
 
     if not verification.get('success'):
-        flash('&#10006; Invalid form submission')
+        flash('&#10006; Invalid CAPTCHA response')
         return redirect(url_for('index'))
 
     ticket_form = {
