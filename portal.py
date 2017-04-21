@@ -852,7 +852,7 @@ def list_admin(type):
 @app.route('/admin/courses/<int:id>', defaults={'type': m.Courses})
 @app.route('/admin/sections/<int:id>', defaults={'type': m.Sections})
 @app.route('/admin/problems/<int:id>', defaults={'type': m.ProblemTypes})
-@app.route('/admin/problems/<int:id>', defaults={'type': m.Messages})
+@app.route('/admin/messages/<int:id>', defaults={'type': m.Messages})
 def edit_admin(type, id=None):
     r"""
     Allows editing and creation of admin objects
