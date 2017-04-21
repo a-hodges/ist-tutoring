@@ -1,8 +1,12 @@
 # IST Tutoring Portal
 
-A web based interface to handle student help requests in the University of Nebraska at Omaha Computer Science Learning Center (UNO CSLC).
+This portal is a web based interface to handle student help requests in the University of Nebraska at Omaha Computer Science Learning Center.
 
 ## Use
+
+### Home Page
+
+The home page is the first page displayed to the user. In the final version of the system it will be located at <https://tutoring.ist.unomaha.edu/>. The home page includes links to the `Open Ticket` and `View Tickets` pages in the body, and `Status` and `Tutor Login` pages in the toolbar. If a tutor is logged in an extra `Tutor` dropdown will be in the toolbar with links for the `Edit User` and `View Tickets` pages. If an administrator is logged in, an `Admin` dropdown will be available in addition to the `Tutor` dropdown. The `Admin` console contains an `Admin Console` link to the administration console, and a `Reports` link to the reports page.
 
 ### Students
 
@@ -38,11 +42,13 @@ The `Course Availability` section gives the current number of tickets and tutors
 
 The last section, `Open Tickets` only displays for logged in users. It shows the current list of open tickets.
 
-### Logging In
+### Tutor Login
 
-To perform any tutor or administrator actions the tutor or administrator must be logged in. To log in, click the `Tutor Login` button in the toolbar. This will redirect to a Google login page. Log in using the email for your account (usually an `@unomaha.edu` account). If this is the account's first time logging in access must be granted for the application to view the account's email address. The tutor will then be logged in if the account they used to log in is a valid, active tutor account or rejected otherwise. Either way, they will be redirected back to the application's home page.
+To perform any tutor or administrator actions the tutor or administrator must be logged in. To log in, click the `Tutor Login` button in the toolbar. This will redirect to a Google login page. Log in using the email for your account (usually an `@unomaha.edu` account). If this is the account's first time logging in access must be granted for the application to view the account's email address. The tutor will then be logged in if the account they used to log in is a valid, active tutor account or rejected otherwise. Either way, they will be redirected back to the application's home page and a message will be displayed indicating whether login was successful.
 
-To logout, a tutor can click the `logout` button in the toolbar. They will be logged out and redirected to the home page.
+### Logout
+
+To logout, a tutor can click the `Logout` button in the toolbar. They will be logged out and redirected to the home page with a logout confirmation.
 
 ### Tutors
 
