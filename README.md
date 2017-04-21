@@ -2,43 +2,6 @@
 
 A web based interface to handle student help requests in the University of Nebraska at Omaha Computer Science Learning Center (UNO CSLC).
 
-## Setup
-
-1. Install [Python 3](https://www.python.org/).
-    1. The application must be run using Python 3.
-2. Run `pip install -r requirements.txt`.
-    1. If any modules fail to install they may have to be installed manually.
-    2. DBAPI modules for databases other than SQLite or PostgreSQL will have to be installed separately.
-3. Setup a Google API for the login system
-    1. <https://console.developers.google.com/apis/credentials>
-    2. Under credentials, create credentials for an OAuth Client ID
-    3. Select Web application
-    4. Provide the domain followed by `/oauth-authorized` (eg. `www.example.com/oauth-authorized`) as the authorized redirect URI
-    5. Save the client ID and secret for later
-4. Setup a Google reCAPTCHA key/secret
-    1. <https://www.google.com/recaptcha/admin>
-    2. Select "invisible reCAPTCHA"
-    3. Provide the domain (no subpage this time)
-    4. Save the site key and secret key for later
-5. Run the portal to create the appropriate database tables
-    1. Run with the `-h` option to view the command line interface for the application
-    2. Run with the `-p` option to specify a port and run the application as public (`0.0.0.0`)
-        * The application runs privately otherwise (`127.0.0.1`)
-    3. Run with the `-d` option to specify the database URI for the application's database
-        * Runs with an in-memory sqlite database if not spcified
-        * If the database is not a sqlite database, a SQLAlchemy dialect and DBAPI module may be required
-        * See [this page](http://docs.sqlalchemy.org/en/latest/dialects/) for details about SQLAlchemy dialects and DBAPIs
-        * The database URI must include the database dialect (eg. `postgresql://user:pass@localhost/test` would be a postgres database)
-    4. Run with the `--debug` or `--reload` option to run in debug mode
-6. Access the database manually to add configuration information
-    1. In the configuration table the Google API client ID from earlier goes in the setting column of the row with the name `GOOGLE_CONSUMER_KEY`
-    2. Also in configuration, the Google API client secret goes in the setting column of the row with the name `GOOGLE_CONSUMER_SECRET`
-    3. Add the reCAPTCHA site key to the configuration in the `GOOGLE_CAPTCHA_KEY` row
-    4. Add the reCAPTCHA secret key to the configuration in the `GOOGLE_CAPTCHA_SECRET` row
-    5. In the tutors table create a tutor with an email you can log into Google with. Set the `tutor_is_active` and `tutor_is_superuser` columns to true
-7. Rerun the application with the new configuration
-8. By logging in as a superuser account other objects can be created
-
 ## Use
 
 ### Students
@@ -170,3 +133,40 @@ Various filters can be applied to the list. By entering a start date only ticket
 The current report can be downloaded in a CSV format (openable in Microsoft Excel) by clicking the `Download Report` button. The current list of tickets will be downloaded with the same filters applied. Filters are only applied to the download if they have been applied to the list using the `Filter` button.
 
 More information about a given ticket can be viewed by clicking the `Details` button on that ticket's row. Clicking the `Delete` button at the bottom of the details page will permanently delete the ticket.
+
+## Appendix A. Setup
+
+1. Install [Python 3](https://www.python.org/).
+    1. The application must be run using Python 3.
+2. Run `pip install -r requirements.txt`.
+    1. If any modules fail to install they may have to be installed manually.
+    2. DBAPI modules for databases other than SQLite or PostgreSQL will have to be installed separately.
+3. Setup a Google API for the login system
+    1. <https://console.developers.google.com/apis/credentials>
+    2. Under credentials, create credentials for an OAuth Client ID
+    3. Select Web application
+    4. Provide the domain followed by `/oauth-authorized` (eg. `www.example.com/oauth-authorized`) as the authorized redirect URI
+    5. Save the client ID and secret for later
+4. Setup a Google reCAPTCHA key/secret
+    1. <https://www.google.com/recaptcha/admin>
+    2. Select "invisible reCAPTCHA"
+    3. Provide the domain (no subpage this time)
+    4. Save the site key and secret key for later
+5. Run the portal to create the appropriate database tables
+    1. Run with the `-h` option to view the command line interface for the application
+    2. Run with the `-p` option to specify a port and run the application as public (`0.0.0.0`)
+        * The application runs privately otherwise (`127.0.0.1`)
+    3. Run with the `-d` option to specify the database URI for the application's database
+        * Runs with an in-memory sqlite database if not spcified
+        * If the database is not a sqlite database, a SQLAlchemy dialect and DBAPI module may be required
+        * See [this page](http://docs.sqlalchemy.org/en/latest/dialects/) for details about SQLAlchemy dialects and DBAPIs
+        * The database URI must include the database dialect (eg. `postgresql://user:pass@localhost/test` would be a postgres database)
+    4. Run with the `--debug` or `--reload` option to run in debug mode
+6. Access the database manually to add configuration information
+    1. In the configuration table the Google API client ID from earlier goes in the setting column of the row with the name `GOOGLE_CONSUMER_KEY`
+    2. Also in configuration, the Google API client secret goes in the setting column of the row with the name `GOOGLE_CONSUMER_SECRET`
+    3. Add the reCAPTCHA site key to the configuration in the `GOOGLE_CAPTCHA_KEY` row
+    4. Add the reCAPTCHA secret key to the configuration in the `GOOGLE_CAPTCHA_SECRET` row
+    5. In the tutors table create a tutor with an email you can log into Google with. Set the `tutor_is_active` and `tutor_is_superuser` columns to true
+7. Rerun the application with the new configuration
+8. By logging in as a superuser account other objects can be created
