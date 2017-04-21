@@ -4,18 +4,23 @@ A web based interface to handle student help requests in the University of Nebra
 
 ## Setup
 
-1. Setup a Google API for the login system
+1. Install [Python 3](https://www.python.org/).
+    1. The application must be run using Python 3.
+2. Run `pip install -r requirements.txt`.
+    1. If any modules fail to install they may have to be installed manually.
+    2. DBAPI modules for databases other than SQLite or PostgreSQL will have to be installed separately.
+3. Setup a Google API for the login system
     1. <https://console.developers.google.com/apis/credentials>
     2. Under credentials, create credentials for an OAuth Client ID
     3. Select Web application
     4. Provide the domain followed by `/oauth-authorized` (eg. `www.example.com/oauth-authorized`) as the authorized redirect URI
     5. Save the client ID and secret for later
-2. Setup a Google reCAPTCHA key/secret
+4. Setup a Google reCAPTCHA key/secret
     1. <https://www.google.com/recaptcha/admin>
     2. Select "invisible reCAPTCHA"
     3. Provide the domain (no subpage this time)
     4. Save the site key and secret key for later
-3. Run the portal to create the appropriate database tables
+5. Run the portal to create the appropriate database tables
     1. Run with the `-h` option to view the command line interface for the application
     2. Run with the `-p` option to specify a port and run the application as public (`0.0.0.0`)
         * The application runs privately otherwise (`127.0.0.1`)
@@ -25,14 +30,14 @@ A web based interface to handle student help requests in the University of Nebra
         * See [this page](http://docs.sqlalchemy.org/en/latest/dialects/) for details about SQLAlchemy dialects and DBAPIs
         * The database URI must include the database dialect (eg. `postgresql://user:pass@localhost/test` would be a postgres database)
     4. Run with the `--debug` or `--reload` option to run in debug mode
-4. Access the database manually to add configuration information
+6. Access the database manually to add configuration information
     1. In the configuration table the Google API client ID from earlier goes in the setting column of the row with the name `GOOGLE_CONSUMER_KEY`
     2. Also in configuration, the Google API client secret goes in the setting column of the row with the name `GOOGLE_CONSUMER_SECRET`
     3. Add the reCAPTCHA site key to the configuration in the `GOOGLE_CAPTCHA_KEY` row
     4. Add the reCAPTCHA secret key to the configuration in the `GOOGLE_CAPTCHA_SECRET` row
     5. In the tutors table create a tutor with an email you can log into Google with. Set the `tutor_is_active` and `tutor_is_superuser` columns to true
-5. Restart the application to finish configuration
-6. By logging in as a superuser account other objects can be created
+7. Rerun the application with the new configuration
+8. By logging in as a superuser account other objects can be created
 
 ## Use
 
