@@ -136,16 +136,16 @@ More information about a given ticket can be viewed by clicking the `Details` bu
 
 ## Appendix A. Setup
 
-1. Install [Python 3](https://www.python.org/).
-    1. The application must be run using Python 3.
-2. Run `pip install -r requirements.txt`.
-    1. If any modules fail to install they may have to be installed manually.
-    2. DBAPI modules for databases other than SQLite or PostgreSQL will have to be installed separately.
+1. Install [Python 3](https://www.python.org/)
+    1. The application must be run using Python 3
+2. Run `pip install -r requirements.txt`
+    1. If any modules fail to install they may have to be installed manually
+    2. DBAPI modules for databases other than SQLite or PostgreSQL will have to be installed separately
 3. Setup a Google API for the login system
     1. <https://console.developers.google.com/apis/credentials>
     2. Under credentials, create credentials for an OAuth Client ID
     3. Select Web application
-    4. Provide the domain followed by `/oauth-authorized` (eg. `www.example.com/oauth-authorized`) as the authorized redirect URI
+    4. Provide the domain the application will run at, followed by `/oauth-authorized` (eg. `www.example.com/oauth-authorized`) as the authorized redirect URI
     5. Save the client ID and secret for later
 4. Setup a Google reCAPTCHA key/secret
     1. <https://www.google.com/recaptcha/admin>
