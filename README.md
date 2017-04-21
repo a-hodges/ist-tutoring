@@ -39,7 +39,7 @@ The home page is the first page displayed to the user. In the final version of t
 
 If a tutor is logged in an extra `Tutor` dropdown will be in the toolbar with links for the `Edit User` and `View Tickets` pages. If an administrator is logged in, an `Admin` dropdown will be available in addition to the `Tutor` dropdown. The `Admin` console contains an `Admin Console` link to the administration console, and a `Reports` link to the reports page.
 
-The toolbar and logo are displayed on all pages.
+The toolbar and logo are displayed on all pages, but have been omitted from screenshots to save space.
 
 ### Students
 
