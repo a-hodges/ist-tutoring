@@ -4,6 +4,7 @@ This portal is a web based interface to handle student help requests in the Univ
 
 ## Table of Contents
 
+* Table of Contents
 * Use
     * Home Page
     * Students
@@ -34,7 +35,7 @@ This portal is a web based interface to handle student help requests in the Univ
 
 ### Home Page
 
-The home page is the first page displayed to the user. In the final version of the system it will be located at <https://tutoring.ist.unomaha.edu/>. The home page includes links to the `Open Ticket` and `View Tickets` pages in the body, and `Status` and `Tutor Login` pages in the toolbar. Additionally, the Computer Science Learning Center logo above the toolbar is a link to the homepage.
+The home page is the first page displayed to the user. In the final version of the system it will be located at <https://tutoring.ist.unomaha.edu/>. The home page includes links to the `Open Ticket` and `View Tickets` pages in the body. The toolbar also contains a link to the `Status` page and either `Tutor Login` or `Logout` based on whether the user is logged in. Additionally, the Computer Science Learning Center logo above the toolbar is a link to the homepage.
 
 If a tutor is logged in an extra `Tutor` dropdown will be in the toolbar with links for the `Edit User` and `View Tickets` pages. If an administrator is logged in, an `Admin` dropdown will be available in addition to the `Tutor` dropdown. The `Admin` console contains an `Admin Console` link to the administration console, and a `Reports` link to the reports page.
 
