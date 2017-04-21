@@ -211,4 +211,4 @@ More information about a given ticket can be viewed by clicking the `Details` bu
     4. Add the reCAPTCHA secret key to the configuration in the `GOOGLE_CAPTCHA_SECRET` row
     5. In the tutors table create a tutor with an email you can log into Google with. Set the `tutor_is_active` and `tutor_is_superuser` columns to true
 7. Rerun the application with the new configuration
-8. By logging in as a superuser account other objects can be created
+8. By logging in as an administrator account other objects can be created
