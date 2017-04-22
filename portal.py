@@ -98,6 +98,17 @@ BLEACH_ALLOWED_TAGS = [
     'article',
     'span',
 ]
+BLEACH_ALLOWED_ATTRIBUTES = {
+    '*': ['class'],
+    'a': ['href', 'title'],
+    'abbr': ['title'],
+    'acronym': ['title'],
+    'img': ['src', 'alt', 'title'],
+}
+BLEACH_ALLOWED_STYLES = [
+    'color',
+    'text-align',
+]
 
 
 def create_app(args):
@@ -152,7 +163,8 @@ def make_safe(html):
     return bleach.clean(
         html,
         tags=BLEACH_ALLOWED_TAGS,
-        styles=['text-align'],
+        attributes=BLEACH_ALLOWED_ATTRIBUTES,
+        styles=BLEACH_ALLOWED_STYLES,
         strip_comments=False,
     )
 
