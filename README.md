@@ -135,7 +135,9 @@ The administration console is where the administrator can set up tutor accounts,
 
 The Administration Console can be accessed when logged in as an administrator by clicking `Admin` in the toolbar, followed by `Admin Console`. If the `Admin` option does not exist you are not logged in as an administrator.
 
-On the Administration Console page there are links to menus for Messages, Courses, Course Sections, Semesters, Professors, Problem Types, and Tutors. By clicking each link, menus can be accessed that allow editing and viewing of objects of each type. Before adding a Course Section, the corresponding Course, Semester, and Professor must be added.
+On the Administration Console page there are links to menus for Messages, Courses, Course Sections, Semesters, Professors, Problem Types, and Tutors. By clicking each link, menus can be accessed that allow editing and viewing of objects of each type.
+
+**Before adding a Course Section, the corresponding Course, Semester, and Professor must be added. Before students can open tickets, there must be a Course Section for the current Semester and at least one Problem Type.**
 
 ![Admin List Page](screenshots/list.png)
 
@@ -235,7 +237,7 @@ More information about a given ticket can be viewed by clicking the `Details` bu
     2. Select "invisible reCAPTCHA"
     3. Provide the domain (no subpage this time)
     4. Save the site key and secret key for later
-5. Run the portal to create the appropriate database tables
+5. Run portal.py to create the appropriate database tables
     1. Run with the `-h` option to view the command line interface for the application
     2. Run with the `-p` option to specify a port and run the application as public (`0.0.0.0`)
         * The application runs privately otherwise (`127.0.0.1`)
@@ -251,5 +253,5 @@ More information about a given ticket can be viewed by clicking the `Details` bu
     3. Add the reCAPTCHA site key to the configuration in the `GOOGLE_CAPTCHA_KEY` row
     4. Add the reCAPTCHA secret key to the configuration in the `GOOGLE_CAPTCHA_SECRET` row
     5. In the tutors table create a tutor with an email you can log into Google with. Set the `tutor_is_active` and `tutor_is_superuser` columns to true
-7. Rerun the application with the new configuration
+7. Run portal.py again with the new configuration to start the site
 8. By logging in as an administrator account other objects can be created
