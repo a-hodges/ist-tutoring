@@ -407,7 +407,7 @@ def status():
             (m.Messages.end_date >= today) |
             (m.Messages.end_date.is_(None))
         )
-    ).order_by(m.Messages.order_by)
+    ).order_by(m.Messages.order_by).all()
 
     for course in courses:
         course.current_sections = []
