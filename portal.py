@@ -205,6 +205,12 @@ def now():
     now = datetime.datetime.now(UTC)
     return now
 
+def now_today():
+    r"""
+    Returns a date corrected for the selected timezone
+    """
+    return correct_time(now()).date()
+
 
 def date(string):
     r"""
@@ -369,7 +375,7 @@ def status():
     """
     user = get_user()
 
-    today = now().date()
+    today = now_today()
     tomorrow = today + datetime.timedelta(days=1)
 
     # ticket info for each display course
@@ -435,7 +441,7 @@ def get_open_courses():
     r"""
     Gets a list of courses and sections for the current semester
     """
-    today = now().date()
+    today = now_today()
     tomorrow = today + datetime.timedelta(days=1)
     return m.Courses.query.join(m.Sections).join(m.Semesters).\
         order_by(m.Courses.number).\
@@ -516,7 +522,7 @@ def view_tickets():
     if not user:
         return redirect(url_for('login', next=url_for('view_tickets')))
 
-    today = now().date()
+    today = now_today()
     tickets = m.Tickets.query.order_by(m.Tickets.time_created).\
         join(m.Sections).\
         join(m.Semesters).\
