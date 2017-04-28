@@ -185,6 +185,18 @@ def markdown(md):
     return make_safe(html)
 
 
+def correct_time(time):
+    r"""
+    Takes a datetime object and returns that time
+        corrected for the appropriate timezone
+    """
+    if time is not None:
+        timezone = app.config.get('TZ')
+        if timezone is not None:
+            time = time.astimezone(timezone)
+    return time
+
+
 def now():
     r"""
     Gets the current time in the America/Chicago timezone
@@ -202,18 +214,6 @@ def date(string):
         return None
     else:
         return datetime.datetime.strptime(string, '%Y-%m-%d').date()
-
-
-def correct_time(time):
-    r"""
-    Takes a datetime object and returns that time
-        corrected for the appropriate timezone
-    """
-    if time is not None:
-        timezone = app.config.get('TZ')
-        if timezone is not None:
-            time = timezone.fromutc(time)
-    return time
 
 
 def get_int(string):
