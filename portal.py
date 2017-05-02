@@ -681,9 +681,25 @@ def reports():
     if not user or not user.is_superuser:
         return abort(403)
 
-    tickets = filter_report(request.args).all()
+    limit = 100
+    page = get_int(request.args.get('page'))
+    if page is None:
+        page = 1
+    offset = (page - 1) * limit
+
+    tickets = filter_report(request.args)
+    numTickets = tickets.count()
+    tickets = tickets.limit(limit).offset(offset).all()
     semesters = m.Semesters.query.order_by(m.Semesters.order_by).all()
     courses = m.Courses.query.order_by(m.Courses.order_by).all()
+
+    maxPage = ((numTickets - 1) // limit) + 1
+    if maxPage < 1:
+        maxPage = 1
+
+    args = dict(request.args)
+    if 'page' in args:
+        args.pop('page')
 
     html = render_template(
         'report.html',
@@ -691,6 +707,13 @@ def reports():
         tickets=tickets,
         semesters=semesters,
         courses=courses,
+
+        numTickets=numTickets,
+        page=page,
+        limit=limit,
+        offset=offset,
+        maxPage=maxPage,
+        args=args,
     )
     return html
 
