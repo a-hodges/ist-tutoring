@@ -205,6 +205,7 @@ def now():
     now = datetime.datetime.now(UTC)
     return now
 
+
 def now_today():
     r"""
     Returns a date corrected for the selected timezone
@@ -448,6 +449,7 @@ def get_open_courses():
         order_by(m.Sections.number).\
         filter(m.Semesters.start_date <= tomorrow).\
         filter(m.Semesters.end_date >= today).\
+        options(contains_eager(m.Courses.sections)).\
         all()
 
 
