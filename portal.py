@@ -1124,7 +1124,9 @@ def login():
         html = redirect(next or url_for('index'))
     else:
         html = google.authorize(
-            callback=url_for('oauth_authorized', _external=True))
+            callback=url_for('oauth_authorized', _external=True),
+            state=next,
+        )
     return html
 
 
@@ -1133,7 +1135,7 @@ def oauth_authorized():
     r"""
     Logs the user in using the OAuth API
     """
-    next_url = request.args.get('next') or url_for('index')
+    next_url = request.args.get('state') or url_for('index')
 
     resp = google.authorized_response()
     if resp is None:
