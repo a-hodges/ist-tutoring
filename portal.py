@@ -125,14 +125,38 @@ def create_app(args):
 
     # setup config values
     with app.app_context():
+        # these settings are stored in the configuration table
+        # values here are defaults (and should all be strings or null)
+        # defaults will autopopulate the database when first initialized
+        # when run subsequently, they will be populated from the database
+        # only populated on startup, changes not applied until restart
         config = {
+            # key used to encrypt cookies
             'SECRET_KEY': os.urandom(24),
+
+            # cookie lifetime in minutes, unused
             'PERMANENT_SESSION_LIFETIME': '30',
+
+            # Google OAth client ID
             'GOOGLE_CONSUMER_KEY': None,
+
+            # Google OAuth client secret
             'GOOGLE_CONSUMER_SECRET': None,
+
+            # Google CAPTCHA site key
             'GOOGLE_CAPTCHA_KEY': None,
+
+            # Google CAPTCHA secret key
             'GOOGLE_CAPTCHA_SECRET': None,
+
+            # Timezone configuration,
+            # determines how times are displayed to users
+            # timestamps are always stored in UTC
+            # uses pytz timezone names
             'TZ_NAME': 'America/Chicago',
+
+            # number of items on each page for reports
+            'PAGE_LENGTH': '100',
         }
         # get Config values from database
         for name in config:
@@ -146,6 +170,7 @@ def create_app(args):
 
         config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(
             minutes=int(config['PERMANENT_SESSION_LIFETIME']))
+        config['PAGE_LENGTH'] = int(config['PAGE_LENGTH'])
         app.config.update(config)
         try:
             app.config['TZ'] = pytz.timezone(app.config['TZ_NAME'])
@@ -683,7 +708,7 @@ def reports():
     if not user or not user.is_superuser:
         return abort(403)
 
-    limit = 100
+    limit = app.config['PAGE_LENGTH']
     page = get_int(request.args.get('page'))
     if page is None:
         page = 1
