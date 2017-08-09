@@ -714,13 +714,13 @@ def reports():
         page = 1
     offset = (page - 1) * limit
 
-    tickets = filter_report(request.args)
-    numTickets = tickets.count()
-    tickets = tickets.limit(limit).offset(offset).all()
+    items = filter_report(request.args)
+    numItems = items.count()
+    items = items.limit(limit).offset(offset).all()
     semesters = m.Semesters.query.order_by(m.Semesters.order_by).all()
     courses = m.Courses.query.order_by(m.Courses.order_by).all()
 
-    maxPage = ((numTickets - 1) // limit) + 1
+    maxPage = ((numItems - 1) // limit) + 1
     if maxPage < 1:
         maxPage = 1
 
@@ -731,11 +731,11 @@ def reports():
     html = render_template(
         'report.html',
         user=user,
-        tickets=tickets,
+        items=items,
         semesters=semesters,
         courses=courses,
 
-        numTickets=numTickets,
+        numItems=numItems,
         page=page,
         limit=limit,
         offset=offset,
@@ -892,14 +892,29 @@ def list_admin(type):
         m.Messages: 'Messages',
     }.get(type)
 
-    items = type.query.order_by(type.order_by)
+    limit = app.config['PAGE_LENGTH']
+    page = get_int(request.args.get('page'))
+    if page is None:
+        page = 1
+    offset = (page - 1) * limit
+
+    items = type.query
     if type == m.Sections:
-        items = items.join(m.Semesters).all()
-        items = sorted(items, key=lambda a: a.course.number)
-        items = sorted(
-            items, key=lambda a: a.semester.start_date, reverse=True)
-    else:
-        items = items.all()
+        items = items.join(m.Semesters)
+        items = items.join(m.Courses)
+        items = items.order_by(m.Semesters.order_by)
+        items = items.order_by(m.Courses.order_by)
+    items = items.order_by(type.order_by)
+    numItems = items.count()
+    items = items.limit(limit).offset(offset).all()
+
+    maxPage = ((numItems - 1) // limit) + 1
+    if maxPage < 1:
+        maxPage = 1
+
+    args = dict(request.args)
+    if 'page' in args:
+        args.pop('page')
 
     html = render_template(
         'list_admin.html',
@@ -907,6 +922,12 @@ def list_admin(type):
         title=title,
         type=type,
         items=items,
+        numItems=numItems,
+        limit=limit,
+        page=page,
+        offset=offset,
+        maxPage=maxPage,
+        args=args,
     )
     return html
 
@@ -1036,10 +1057,34 @@ def list_tutors():
     if not user or not user.is_superuser:
         return abort(403)
 
+    limit = app.config['PAGE_LENGTH']
+    page = get_int(request.args.get('page'))
+    if page is None:
+        page = 1
+    offset = (page - 1) * limit
+
+    items = m.Tutors.query.order_by(m.Tutors.last_first)
+    numItems = items.count()
+    items = items.limit(limit).offset(offset).all()
+
+    maxPage = ((numItems - 1) // limit) + 1
+    if maxPage < 1:
+        maxPage = 1
+
+    args = dict(request.args)
+    if 'page' in args:
+        args.pop('page')
+
     html = render_template(
         'list_tutors.html',
         user=user,
-        items=m.Tutors.query.order_by(m.Tutors.last_first).all(),
+        items=items,
+        numItems=numItems,
+        limit=limit,
+        page=page,
+        offset=offset,
+        maxPage=maxPage,
+        args=args,
     )
     return html
 

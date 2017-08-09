@@ -60,12 +60,13 @@
     </div>
     <br>
     <ul class="list-group">
+        <!--Paging tool-->
         <li class="list-group-item row">
             <nav aria-label="Report pages">
                 <ul class="pagination pagination-sm col-xs-10">
                     {% if page > 1 %}
                     <li aria-label="Previous">
-                        <a href="{{ url_for('reports', page=page-1, **args) }}">
+                        <a href="{{ url_for(request.endpoint, page=page-1, **args) }}">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
@@ -77,17 +78,17 @@
 
                     {% if page - 2 > 1 %}
                     <li aria-label="First">
-                        <a href="{{ url_for('reports', page=0, **args) }}">...</a>
+                        <a href="{{ url_for(request.endpoint, page=0, **args) }}">...</a>
                     </li>
                     {% endif %}
                     {% if page - 1 > 1 %}
                     <li aria-label="Page">
-                        <a href="{{ url_for('reports', page=page-2, **args) }}">{{ page - 2 }}</a>
+                        <a href="{{ url_for(request.endpoint, page=page-2, **args) }}">{{ page - 2 }}</a>
                     </li>
                     {% endif %}
                     {% if page > 1 %}
                     <li aria-label="Page">
-                        <a href="{{ url_for('reports', page=page-1, **args) }}">{{ page - 1 }}</a>
+                        <a href="{{ url_for(request.endpoint, page=page-1, **args) }}">{{ page - 1 }}</a>
                     </li>
                     {% endif %}
 
@@ -97,23 +98,23 @@
 
                     {% if page < maxPage %}
                     <li aria-label="Page">
-                        <a href="{{ url_for('reports', page=page+1, **args) }}">{{ page + 1 }}</a>
+                        <a href="{{ url_for(request.endpoint, page=page+1, **args) }}">{{ page + 1 }}</a>
                     </li>
                     {% endif %}
                     {% if page + 1 < maxPage %}
                     <li aria-label="Page">
-                        <a href="{{ url_for('reports', page=page+2, **args) }}">{{ page + 2 }}</a>
+                        <a href="{{ url_for(request.endpoint, page=page+2, **args) }}">{{ page + 2 }}</a>
                     </li>
                     {% endif %}
                     {% if page + 2 < maxPage %}
                     <li aria-label="Last">
-                        <a href="{{ url_for('reports', page=maxPage, **args) }}">...</a>
+                        <a href="{{ url_for(request.endpoint, page=maxPage, **args) }}">...</a>
                     </li>
                     {% endif %}
 
                     {% if page < maxPage %}
                     <li aria-label="Next">
-                        <a href="{{ url_for('reports', page=page+1, **args) }}">
+                        <a href="{{ url_for(request.endpoint, page=page+1, **args) }}">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
@@ -125,10 +126,11 @@
                 </ul>
             </nav>
             <output class="badge">
-                Tickets: {{ offset + 1 }} - {{ offset + len(tickets) }} of {{ numTickets }}
+                Tickets: {{ offset + 1 }} - {{ offset + len(items) }} of {{ numItems }}
             </output>
         </li>
-        {% for ticket in tickets %}
+        <!--end Paging tool-->
+        {% for ticket in items %}
         <li class="list-group-item row">
             <div class="col-xs-10 col-sm-12 time">{{ correct_time(ticket.time_created).strftime('%x %I:%M:%S %p') }}</div>
             <div class="col-xs-4 col-sm-4 col-md-3 email">{{ ticket.student_email }}</div>
