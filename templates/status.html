@@ -6,6 +6,11 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/status.css') }}">
 <meta http-equiv="refresh" content="{{ config.get('STATUS_REFRESH_SECONDS') }}">
+<style>
+.centered {
+    text-align: center;
+}
+</style>
 {% endblock %}
 
 {% block content %}
@@ -33,8 +38,8 @@
                 {% for course in courses %}
                 <tr>
                     <td>{{ course }}</td>
-                    <td>{{ course.current_tickets }}</td>
-                    <td>{{ len(course.current_tutors) }}</td>
+                    <td class="centered">{{ course.current_tickets }}</td>
+                    <td class="centered">{{ len(course.current_tutors) }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
