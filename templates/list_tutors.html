@@ -1,6 +1,22 @@
 {% extends "base.html" %}
 
+{% block meta %}
+<style>
+h2.list-group-item {
+    margin: 0;
+    color: white;
+    background-color: black;
+}
+.admin {
+    padding: 1px 3px;
+    color: white;
+    background-color: black;
+}
+</style>
+{% endblock %}
+
 {% set title = 'Tutors' %}
+{% set headers = {'working': False, 'active': False, 'inactive': False} %}
 
 {% block content %}
 <div class="container">
@@ -78,9 +94,29 @@
         <!--end Paging tool-->
         <a type="button" class="list-group-item" href="{{ url_for('deactivate_tutors') }}">-Clear workers-</a>
         <a type="button" class="list-group-item" href="{{ url_for('edit_tutors') }}">+ New</a>
+
         {% for item in items %}
+
+        {% if not headers['working'] %}
+        <h2 class="list-group-item">Working</h2>
+        <!--{{ headers.__setitem__('working', True) }}-->
+        {% endif %}
+
+        {% if not headers['active'] and not item.is_working %}
+        <h2 class="list-group-item">Employed</h2>
+        <!--{{ headers.__setitem__('active', True) }}-->
+        {% endif %}
+
+        {% if not headers['inactive'] and not item.is_active %}
+        <h2 class="list-group-item">Not Employed</h2>
+        <!--{{ headers.__setitem__('inactive', True) }}-->
+        {% endif %}
+
         <li class="list-group-item">
             <span class="name">{{ item }}</span>
+            {% if item.is_superuser %}
+            <span class="admin">- Admin</span>
+            {% endif %}
             <a type="button" class="badge" href="{{ url_for('edit_tutors', id=item.id) }}">Edit</a>
         </li>
         {% endfor %}

@@ -1066,7 +1066,11 @@ def list_tutors():
         page = 1
     offset = (page - 1) * limit
 
-    items = m.Tutors.query.order_by(m.Tutors.last_first)
+    items = m.Tutors.query.\
+        order_by(m.Tutors.is_active.desc()).\
+        order_by(m.Tutors.is_working.desc()).\
+        order_by(m.Tutors.is_superuser.desc()).\
+        order_by(m.Tutors.last_first)
     numItems = items.count()
     items = items.limit(limit).offset(offset).all()
 
@@ -1081,6 +1085,7 @@ def list_tutors():
     html = render_template(
         'list_tutors.html',
         user=user,
+        header="Tutors",
         items=items,
         numItems=numItems,
         limit=limit,
