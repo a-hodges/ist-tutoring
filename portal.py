@@ -1171,6 +1171,22 @@ def save_edit_tutors():
     return html
 
 
+@app.route('/admin/tutors/deactivate')
+def deactivate_tutors():
+    r"""
+    Sets all tutors to inactive and redirects to the tutor list
+    """
+    user = get_user()
+    if not user or not user.is_superuser:
+        return abort(403)
+
+    m.Tutors.query.update({m.Tutors.is_working: False})
+    db.session.commit()
+
+    html = redirect(url_for('list_tutors'))
+    return html
+
+
 # ----#-   Login/Logout
 @google.tokengetter
 def get_google_token(token=None):

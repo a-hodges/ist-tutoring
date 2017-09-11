@@ -76,6 +76,7 @@
             </output>
         </li>
         <!--end Paging tool-->
+        <a type="button" class="list-group-item" href="{{ url_for('deactivate_tutors') }}">-Clear workers-</a>
         <a type="button" class="list-group-item" href="{{ url_for('edit_tutors') }}">+ New</a>
         {% for item in items %}
         <li class="list-group-item">
