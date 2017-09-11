@@ -157,6 +157,9 @@ def create_app(args):
 
             # number of items on each page for reports
             'PAGE_LENGTH': '100',
+
+            # seconds before the status page auto-refreshes
+            'STATUS_REFRESH_SECONDS': '180',
         }
         # get Config values from database
         for name in config:
