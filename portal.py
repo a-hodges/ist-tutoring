@@ -407,32 +407,7 @@ def status():
     today = now_today()
     tomorrow = today + datetime.timedelta(days=1)
 
-    # ticket info for each display course
-    sections = m.Sections.query.\
-        join(m.Courses).filter(m.Courses.on_display == True).\
-        join(m.Semesters).filter(
-            (m.Semesters.start_date <= tomorrow) &
-            (m.Semesters.end_date >= today)
-        ).\
-        join(m.Tickets).filter(
-            m.Tickets.status.in_((None, m.Status.Open, m.Status.Claimed))
-        ).options(contains_eager(m.Sections.tickets)).\
-        all()
-
-    # for selecting which courses to display
-    courses = m.Courses.query.\
-        order_by(m.Courses.order_by).\
-        filter(m.Courses.on_display == True).\
-        options(subqueryload(m.Courses.tutors)).\
-        all()
-
-    # for the list of open tickets
-    tickets = m.Tickets.query.filter(
-        m.Tickets.status.in_((None, m.Status.Open))
-    ).options(
-        joinedload(m.Tickets.section),
-    ).order_by(m.Tickets.time_created).all()
-
+    # Get Messages to display
     messages = m.Messages.query.filter(
         (
             (m.Messages.start_date <= tomorrow) |
@@ -444,17 +419,28 @@ def status():
         )
     ).order_by(m.Messages.order_by).all()
 
+    # Course table setup
+    courses = m.Courses.query.\
+        order_by(m.Courses.order_by).\
+        filter(m.Courses.on_display == True).\
+        all()
+
     for course in courses:
-        course.current_sections = []
-        for section in sections:
-            if course == section.course:
-                course.current_sections.append(section)
-        course.current_tickets = sum(
-            len(section.tickets) for section in course.current_sections)
-        course.current_tutors = []
-        for tutor in course.tutors:
-            if tutor.is_working:
-                course.current_tutors.append(tutor)
+        course.current_tickets = m.Tickets.query.filter(
+            m.Tickets.status.in_((None, m.Status.Open, m.Status.Claimed))
+        ).join(m.Sections).filter_by(course=course).count()
+
+        course.current_tutors = m.Tutors.query.\
+            filter_by(is_working=True).\
+            join(m.can_tutor_table).\
+            filter(course.id == m.can_tutor_table.columns['course_id']).count()
+
+    # Get list of open Tickets
+    tickets = m.Tickets.query.filter(
+        m.Tickets.status.in_((None, m.Status.Open))
+    ).options(
+        joinedload(m.Tickets.section),
+    ).order_by(m.Tickets.time_created).all()
 
     html = render_template(
         'status.html',
