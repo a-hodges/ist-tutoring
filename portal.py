@@ -1112,12 +1112,16 @@ def edit_tutors(id=None):
     else:
         tutor = m.Tutors.query.filter_by(id=id).one()
 
+    courses = m.Courses.query.\
+        order_by(m.Courses.order_by).\
+        filter(m.Courses.on_display == True).all()
+
     html = render_template(
         'edit_tutors.html',
         user=user,
         type=m.Tutors,
         obj=tutor,
-        courses=m.Courses.query.order_by(m.Courses.order_by).all(),
+        courses=courses,
     )
     return html
 
