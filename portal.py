@@ -6,6 +6,7 @@ import datetime
 import argparse
 import csv
 import io
+from operator import attrgetter
 
 import pytz
 from flask import (
@@ -435,6 +436,16 @@ def status():
             join(m.can_tutor_table).\
             filter(course.id == m.can_tutor_table.columns['course_id']).count()
 
+    other_tickets = m.Tickets.query.\
+        filter(m.Tickets.status.in_((None, m.Status.Open, m.Status.Claimed))).\
+        join(m.Sections).\
+        filter(~m.Sections.course_id.in_(map(attrgetter('id'), courses))).\
+        count()
+
+    total_tickets = sum(c.current_tickets for c in courses) + other_tickets
+
+    total_tutors = m.Tutors.query.filter_by(is_working=True).count()
+
     # Get list of open Tickets
     tickets = m.Tickets.query.filter(
         m.Tickets.status.in_((None, m.Status.Open))
@@ -448,6 +459,9 @@ def status():
         messages=messages,
         courses=courses,
         tickets=tickets,
+        other_tickets=other_tickets,
+        total_tickets=total_tickets,
+        total_tutors=total_tutors,
     )
     return html
 
