@@ -22,7 +22,7 @@ from flask import (
     url_for,
 )
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import contains_eager, joinedload
+from sqlalchemy.orm import contains_eager, joinedload, selectinload
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from flask_sqlalchemy import SQLAlchemy, _QueryProperty
 from flask_oauthlib.client import OAuth
@@ -773,6 +773,9 @@ def report_download():
         join(m.Courses).\
         join(m.Semesters).\
         join(m.Professors).\
+        options(
+            selectinload(m.Tickets.tutor),
+            selectinload(m.Tickets.assistant_tutor)).\
         all()
 
     headers = [
