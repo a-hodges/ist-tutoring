@@ -22,7 +22,7 @@ from flask import (
     url_for,
 )
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import contains_eager, joinedload, subqueryload
+from sqlalchemy.orm import contains_eager, joinedload
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from flask_sqlalchemy import SQLAlchemy, _QueryProperty
 from flask_oauthlib.client import OAuth
@@ -337,7 +337,7 @@ def five_hundred(e):
         message += 'not all fields were filled out.'
     else:
         message = 'Whoops, looks like something went wrong!'
-    return error('500: '+type(e).__name__, message), 500
+    return error('500: ' + type(e).__name__, message), 500
 
 
 def get_user():
@@ -560,8 +560,7 @@ def view_tickets():
         filter(
             (m.Tickets.time_created >= today) |
             (m.Tickets.time_closed >= today) |
-            (m.Tickets.status.in_((None, m.Status.Open, m.Status.Claimed)))
-        ).\
+            (m.Tickets.status.in_((None, m.Status.Open, m.Status.Claimed)))).\
         all()
 
     open = []

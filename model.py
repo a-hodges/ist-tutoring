@@ -13,7 +13,7 @@ from sqlalchemy import (
     ForeignKey,
 )
 from sqlalchemy.schema import Table
-from sqlalchemy.orm import relationship, column_property, synonym
+from sqlalchemy.orm import relationship, column_property
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql.expression import cast
 
