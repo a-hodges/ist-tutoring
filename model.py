@@ -15,6 +15,7 @@ from sqlalchemy import (
 from sqlalchemy.schema import Table
 from sqlalchemy.orm import relationship, column_property, synonym
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.sql.expression import cast
 
 EMAIL = String(256)
 
@@ -456,7 +457,7 @@ class Semesters (Base):
         'semester_end_date', Date,
         nullable=False,
         doc='The last day of the semester')
-    title = column_property(str(year) + ' ' + season)
+    title = column_property(cast(year, String) + ' ' + season)
 
     sections = relationship(
         'Sections',
