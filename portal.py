@@ -748,6 +748,18 @@ def reports():
     return html
 
 
+def fix_dde(cell):
+    '''
+    Handles a vulnerability with embedded formulae in csv files
+    '''
+    if cell is not None:
+        cell = str(cell)
+        if cell.startswith(('=', '+', '-', '@')):
+            cell = "' " + cell
+        cell = cell.rstrip()
+    return cell
+
+
 @app.route('/report/file/cslc_report.csv')
 def report_download():
     r"""
@@ -805,6 +817,8 @@ def report_download():
             ticket.section.number,
             ticket.section.professor.last_first,
         ]
+        elem = map(fix_dde, elem)
+        elem = list(elem)
         report.append(elem)
 
     file = io.StringIO()
