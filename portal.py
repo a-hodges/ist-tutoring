@@ -674,6 +674,25 @@ def reopen_ticket(id):
     return redirect(url_for('view_tickets'))
 
 
+@app.route('/admin/tutors/deactivate')
+def deactivate_tutors():
+    r"""
+    Sets all tutors to inactive and redirects to the tutor list
+    """
+    user = get_user()
+    if not user:
+        return abort(403)
+
+    m.Tutors.query.update({m.Tutors.is_working: False})
+    db.session.commit()
+
+    if user.is_superuser:
+        html = redirect(url_for('list_tutors'))
+    else:
+        html = redirect(url_for('index'))
+    return html
+
+
 # ----#-   Administration tools
 def filter_report(args):
     r"""
@@ -1187,25 +1206,6 @@ def save_edit_tutors():
                 if course in obj.courses:
                     obj.courses.remove(course)
 
-    db.session.commit()
-
-    if user.is_superuser:
-        html = redirect(url_for('list_tutors'))
-    else:
-        html = redirect(url_for('index'))
-    return html
-
-
-@app.route('/admin/tutors/deactivate')
-def deactivate_tutors():
-    r"""
-    Sets all tutors to inactive and redirects to the tutor list
-    """
-    user = get_user()
-    if not user:
-        return abort(403)
-
-    m.Tutors.query.update({m.Tutors.is_working: False})
     db.session.commit()
 
     if user.is_superuser:
