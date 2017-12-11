@@ -42,6 +42,7 @@ m.Messages.order_by = m.Messages.end_date.desc()
 # Create App
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
 # Attach Database
 db = SQLAlchemy(app)
 db.Model = m.Base
