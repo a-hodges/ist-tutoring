@@ -675,6 +675,49 @@ def reopen_ticket(id):
     return redirect(url_for('view_tickets'))
 
 
+@app.route('/workinglist')
+def working_list():
+    r"""
+    Displays and allows editing of the working status of tutors
+    """
+    user = get_user()
+    if not user:
+        return abort(403)
+
+    items = m.Tutors.query.\
+        filter_by(is_active=True).\
+        order_by(m.Tutors.is_working.desc()).\
+        order_by(m.Tutors.last_first).\
+        all()
+
+    html = render_template(
+        'working.html',
+        user=user,
+        items=items,
+    )
+    return html
+
+
+@app.route('/workinglist', methods=['POST'])
+def submit_working():
+    r"""
+    Sets the list of tutors that are and are not working
+    """
+    user = get_user()
+    if not user:
+        return abort(403)
+
+    tutors = m.Tutors.query.filter_by(is_active=True).all()
+
+    for tutor in tutors:
+        tutor.is_working = bool(request.form.get(str(tutor.id), False))
+
+    db.session.commit()
+
+    html = redirect(url_for('working_list'))
+    return html
+
+
 @app.route('/tutors/deactivate')
 def deactivate_tutors():
     r"""
