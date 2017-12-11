@@ -674,7 +674,7 @@ def reopen_ticket(id):
     return redirect(url_for('view_tickets'))
 
 
-@app.route('/admin/tutors/deactivate')
+@app.route('/tutors/deactivate')
 def deactivate_tutors():
     r"""
     Sets all tutors to inactive and redirects to the tutor list
