@@ -1202,13 +1202,16 @@ def deactivate_tutors():
     Sets all tutors to inactive and redirects to the tutor list
     """
     user = get_user()
-    if not user or not user.is_superuser:
+    if not user:
         return abort(403)
 
     m.Tutors.query.update({m.Tutors.is_working: False})
     db.session.commit()
 
-    html = redirect(url_for('list_tutors'))
+    if user.is_superuser:
+        html = redirect(url_for('list_tutors'))
+    else:
+        html = redirect(url_for('index'))
     return html
 
 
