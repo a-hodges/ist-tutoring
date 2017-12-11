@@ -718,7 +718,7 @@ def submit_working():
     return html
 
 
-@app.route('/tutors/deactivate')
+@app.route('/deactivatetutors')
 def deactivate_tutors():
     r"""
     Sets all tutors to inactive and redirects to the tutor list
@@ -730,10 +730,7 @@ def deactivate_tutors():
     m.Tutors.query.update({m.Tutors.is_working: False})
     db.session.commit()
 
-    if user.is_superuser:
-        html = redirect(url_for('list_tutors'))
-    else:
-        html = redirect(url_for('index'))
+    html = redirect(url_for('working_list'))
     return html
 
 
