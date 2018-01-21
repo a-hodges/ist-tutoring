@@ -112,7 +112,6 @@ BLEACH_ALLOWED_STYLES = [
 ]
 
 
-@app.before_first_request
 def create_app():
     r"""
     Sets up app for use
@@ -1338,3 +1337,4 @@ def logout():
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///:memory:')
+create_app()
