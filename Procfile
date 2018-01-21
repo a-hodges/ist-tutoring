@@ -1,1 +1,1 @@
-web: flask run -p $PORT --eager-loading
+web: flask run -h 0.0.0.0 -p $PORT --eager-loading
