@@ -1,1 +1,1 @@
-web: python portal -d "flask run -p "$PORT"
+web: flask run -p $PORT
