@@ -3,7 +3,6 @@
 import sys
 import os
 import datetime
-import argparse
 import csv
 import io
 from operator import attrgetter
@@ -113,7 +112,8 @@ BLEACH_ALLOWED_STYLES = [
 ]
 
 
-def create_app(args):
+@app.before_first_request
+def create_app():
     r"""
     Sets up app for use
     Adds database configuration and the secret key
@@ -121,12 +121,10 @@ def create_app(args):
     app.jinja_env.trim_blocks = True
     app.jinja_env.lstrip_blocks = True
 
-    # setup Database
-    app.config['SQLALCHEMY_DATABASE_URI'] = args.database
-    db.create_all()
-
     # setup config values
     with app.app_context():
+        # setup Database
+        db.create_all()
         # these settings are stored in the configuration table
         # values here are defaults (and should all be strings or null)
         # defaults will autopopulate the database when first initialized
@@ -1339,45 +1337,4 @@ def logout():
 # ----#-   End App
 
 
-def main():
-    port = 80  # default port
-    parser = argparse.ArgumentParser(
-        description='Tutoring Portal Server',
-        epilog='The server runs locally on port %d if PORT is not specified.'
-        % port)
-    parser.add_argument(
-        '-p, --port', dest='port', type=int,
-        help='The port where the server will run')
-    parser.add_argument(
-        '-d, --database', dest='database', default='sqlite:///:memory:',
-        help='The database url to be accessed')
-    parser.add_argument(
-        '--debug', dest='debug', action='store_true',
-        help='run the server in debug mode')
-    parser.add_argument(
-        '--reload', dest='reload', action='store_true',
-        help='reload on source update without restarting server (also debug)')
-    args = parser.parse_args()
-    if args.reload:
-        args.debug = True
-
-    if args.port is None:  # Private System
-        args.port = port
-        host = '127.0.0.1'
-    else:  # Public System
-        host = '0.0.0.0'
-
-    create_app(args)
-
-    if args.reload:
-        app.config['TEMPLATES_AUTO_RELOAD'] = True
-
-    app.run(
-        host=host,
-        port=args.port,
-        debug=args.debug,
-        use_reloader=args.reload,
-    )
-
-if __name__ == '__main__':
-    main()
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///:memory:')
