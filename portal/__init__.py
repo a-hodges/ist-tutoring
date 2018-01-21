@@ -122,7 +122,6 @@ def create_app():
 
     # setup config values
     with app.app_context():
-        print(app.config['SQLALCHEMY_DATABASE_URI'])
         # setup Database
         db.create_all()
         # these settings are stored in the configuration table
@@ -163,7 +162,6 @@ def create_app():
         }
         # get Config values from database
         for name in config:
-            print(name)
             try:
                 key = m.Config.query.filter_by(name=name).one()
                 config[name] = key.value
@@ -182,7 +180,6 @@ def create_app():
             print('Unknown timzeone: "{}". Using UTC instead.'.format(
                 app.config.get('TZ_NAME')
             ), file=sys.stderr)
-    print('done')
 
 
 def make_safe(html):
