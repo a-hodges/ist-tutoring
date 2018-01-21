@@ -29,7 +29,7 @@ import requests
 import bleach
 import markdown2
 
-import model as m
+from . import model as m
 # Default ordering for admin types
 m.Semesters.order_by = m.Semesters.start_date.desc()
 m.Professors.order_by = m.Professors.last_first
