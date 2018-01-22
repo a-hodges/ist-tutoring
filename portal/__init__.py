@@ -409,16 +409,7 @@ def status():
     tomorrow = today + datetime.timedelta(days=1)
 
     # Get Messages to display
-    messages = m.Messages.query.filter(
-        (
-            (m.Messages.start_date <= tomorrow) |
-            (m.Messages.start_date.is_(None))
-        ) &
-        (
-            (m.Messages.end_date >= today) |
-            (m.Messages.end_date.is_(None))
-        )
-    ).order_by(m.Messages.order_by).all()
+    messages = Messages().get()
 
     # Course table setup
     courses = m.Courses.query.\
@@ -456,6 +447,29 @@ def status():
         total_tutors=total_tutors,
     )
     return html
+
+
+@api.resource('/api/messages')
+class Messages (Resource):
+    def get(self):
+        today = now_today()
+        tomorrow = today + datetime.timedelta(days=1)
+
+        messages = m.Messages.query.filter(
+            (
+                (m.Messages.start_date <= tomorrow) |
+                (m.Messages.start_date.is_(None))
+            ) &
+            (
+                (m.Messages.end_date >= today) |
+                (m.Messages.end_date.is_(None))
+            )
+        ).order_by(m.Messages.order_by).all()
+
+        messages = list(map(lambda a: a.dict(), messages))
+        for message in messages:
+            message['message'] = markdown(message['message'])
+        return messages
 
 
 def get_open_courses():

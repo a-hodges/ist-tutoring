@@ -20,7 +20,7 @@
     <ul id="messages" class="list-group">
         {% for message in messages %}
         <li class="list-group-item row">
-            {{ markdown(message.message)|safe }}
+            {{ message['message']|safe }}
         </li>
         {% endfor %}
     </ul>
