@@ -2,6 +2,7 @@
 
 # flask server
 flask ~= 0.12
+flask_restful ~= 0.3
 oauthlib ~= 2.0
 flask_oauthlib ~= 0.9
 

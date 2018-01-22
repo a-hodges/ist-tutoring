@@ -20,6 +20,7 @@ from flask import (
     session,
     url_for,
 )
+from flask_restful import Api, Resource
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import contains_eager, joinedload, selectinload
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
@@ -40,6 +41,7 @@ m.Messages.order_by = m.Messages.end_date.desc()
 
 # Create App
 app = Flask(__name__)
+api = Api(app)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
 # Attach Database
