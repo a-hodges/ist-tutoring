@@ -445,19 +445,11 @@ def status():
 
     total_tutors = m.Tutors.query.filter_by(is_working=True).count()
 
-    # Get list of open Tickets
-    tickets = m.Tickets.query.filter(
-        m.Tickets.status.in_((None, m.Status.Open))
-    ).options(
-        joinedload(m.Tickets.section),
-    ).order_by(m.Tickets.time_created).all()
-
     html = render_template(
         'status.html',
         user=user,
         messages=messages,
         courses=courses,
-        tickets=tickets,
         other_tickets=other_tickets,
         total_tickets=total_tickets,
         total_tutors=total_tutors,
