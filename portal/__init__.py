@@ -409,39 +409,13 @@ def status():
     messages = Messages().get()
 
     # Course table setup
-    courses = m.Courses.query.\
-        order_by(m.Courses.order_by).\
-        filter(m.Courses.on_display == True).\
-        all()
-
-    for course in courses:
-        course.current_tickets = m.Tickets.query.filter(
-            m.Tickets.status.in_((None, m.Status.Open, m.Status.Claimed))
-        ).join(m.Sections).filter_by(course=course).count()
-
-        course.current_tutors = m.Tutors.query.\
-            filter_by(is_working=True).\
-            join(m.can_tutor_table).\
-            filter(course.id == m.can_tutor_table.columns['course_id']).count()
-
-    other_tickets = m.Tickets.query.\
-        filter(m.Tickets.status.in_((None, m.Status.Open, m.Status.Claimed))).\
-        join(m.Sections).\
-        filter(~m.Sections.course_id.in_(map(attrgetter('id'), courses))).\
-        count()
-
-    total_tickets = sum(c.current_tickets for c in courses) + other_tickets
-
-    total_tutors = m.Tutors.query.filter_by(is_working=True).count()
+    courses = Courses().get()
 
     html = render_template(
         'status.html',
         user=user,
         messages=messages,
         courses=courses,
-        other_tickets=other_tickets,
-        total_tickets=total_tickets,
-        total_tutors=total_tutors,
     )
     return html
 
@@ -467,6 +441,53 @@ class Messages (Resource):
         for message in messages:
             message['message'] = markdown(message['message'])
         return messages
+
+
+@api.resource('/api/courses')
+class Courses (Resource):
+    '''
+    Course table with name, current tickets, and current tutors for each course
+    '''
+    def get(self):
+        courses = m.Courses.query.\
+            order_by(m.Courses.order_by).\
+            filter(m.Courses.on_display == True).\
+            all()
+
+        for course in courses:
+            course.current_tickets = m.Tickets.query.filter(
+                m.Tickets.status.in_((None, m.Status.Open, m.Status.Claimed))
+            ).join(m.Sections).filter_by(course=course).count()
+
+            course.current_tutors = m.Tutors.query.\
+                filter_by(is_working=True).\
+                join(m.can_tutor_table).\
+                filter(course.id == m.can_tutor_table.columns['course_id']).count()
+
+        other_tickets = m.Tickets.query.\
+            filter(m.Tickets.status.in_((None, m.Status.Open, m.Status.Claimed))).\
+            join(m.Sections).\
+            filter(~m.Sections.course_id.in_(map(attrgetter('id'), courses))).\
+            count()
+
+        courses = list(map(lambda a: {
+            'name': str(a),
+            'current_tickets': a.current_tickets,
+            'current_tutors': a.current_tutors,
+        }, courses))
+        courses.extend([
+            {
+                'name': 'Other',
+                'current_tickets': other_tickets,
+                'current_tutors': '-',
+            },
+            {
+                'name': 'Total',
+                'current_tickets': sum(c['current_tickets'] for c in courses) + other_tickets,
+                'current_tutors': m.Tutors.query.filter_by(is_working=True).count(),
+            }
+        ])
+        return courses
 
 
 def get_open_courses():

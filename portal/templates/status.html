@@ -37,21 +37,11 @@
             <tbody>
                 {% for course in courses %}
                 <tr>
-                    <td>{{ course }}</td>
-                    <td class="centered">{{ course.current_tickets }}</td>
-                    <td class="centered">{{ course.current_tutors }}</td>
+                    <td>{{ course['name'] }}</td>
+                    <td class="centered">{{ course['current_tickets'] }}</td>
+                    <td class="centered">{{ course['current_tutors'] }}</td>
                 </tr>
                 {% endfor %}
-                <tr>
-                    <td>Other</td>
-                    <td class="centered">{{ other_tickets }}</td>
-                    <td class="centered">-</td>
-                </tr>
-                <tr>
-                    <td>Total</td>
-                    <td class="centered">{{ total_tickets }}</td>
-                    <td class="centered">{{ total_tutors }}</td>
-                </tr>
             </tbody>
         </table>
     </div>
