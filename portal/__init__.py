@@ -105,6 +105,8 @@ BLEACH_ALLOWED_ATTRIBUTES = {
     'abbr': ['title'],
     'acronym': ['title'],
     'img': ['src', 'alt', 'title'],
+    'td': ['align'],
+    'th': ['align'],
 }
 BLEACH_ALLOWED_STYLES = [
     'color',
