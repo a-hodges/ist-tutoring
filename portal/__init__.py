@@ -22,7 +22,7 @@ from flask import (
 )
 from flask_restful import Api, Resource
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import contains_eager, joinedload, selectinload
+from sqlalchemy.orm import contains_eager, selectinload
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from flask_sqlalchemy import SQLAlchemy, _QueryProperty
 from flask_oauthlib.client import OAuth
@@ -294,7 +294,7 @@ def error(e, message):
     """
     try:
         user = get_user()
-    except:
+    except:  # noqa: E722
         user = None
 
     html = render_template(
@@ -348,7 +348,7 @@ def get_user():
     email = session.get('username')
     user = None
     if email:
-        if app.config['DEBUG']:
+        if app.debug:
             user = m.Tutors(email=email, is_active=True, is_superuser=True)
         else:
             try:
@@ -404,9 +404,6 @@ def status():
         Open Tickets
     """
     user = get_user()
-
-    today = now_today()
-    tomorrow = today + datetime.timedelta(days=1)
 
     # Get Messages to display
     messages = Messages().get()

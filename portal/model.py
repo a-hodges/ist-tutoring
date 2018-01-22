@@ -19,13 +19,15 @@ from sqlalchemy.sql.expression import cast
 
 EMAIL = String(256)
 
+
 class Base:
     def dict(self):
         '''
         Returns a dict of the object
         Primarily for json serialization
         '''
-        return {c.key: getattr(self, c.key) for c in self.__mapper__.column_attrs}
+        return {c.key: getattr(self, c.key)
+                for c in self.__mapper__.column_attrs}
 
 
 Base = declarative_base(cls=Base)
