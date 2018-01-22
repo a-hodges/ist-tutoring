@@ -19,7 +19,16 @@ from sqlalchemy.sql.expression import cast
 
 EMAIL = String(256)
 
-Base = declarative_base()
+class Base:
+    def dict(self):
+        '''
+        Returns a dict of the object
+        Primarily for json serialization
+        '''
+        return {c.key: getattr(self, c.key) for c in self.__mapper__.column_attrs}
+
+
+Base = declarative_base(cls=Base)
 
 cascade = "CASCADE"
 null = "SET NULL"
