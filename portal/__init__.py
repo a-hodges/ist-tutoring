@@ -405,10 +405,7 @@ def status():
     """
     user = get_user()
 
-    # Get Messages to display
     messages = Messages().get()
-
-    # Course table setup
     courses = Courses().get()
 
     html = render_template(
@@ -422,6 +419,9 @@ def status():
 
 @api.resource('/api/messages')
 class Messages (Resource):
+    '''
+    List of messages to display on the status screen
+    '''
     def get(self):
         today = now_today()
         tomorrow = today + datetime.timedelta(days=1)
@@ -437,10 +437,7 @@ class Messages (Resource):
             )
         ).order_by(m.Messages.order_by).all()
 
-        messages = list(map(lambda a: a.dict(), messages))
-        for message in messages:
-            message['message'] = markdown(message['message'])
-        return messages
+        return list(map(lambda a: markdown(a.message), messages))
 
 
 @api.resource('/api/courses')
