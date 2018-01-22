@@ -408,8 +408,6 @@ def status():
     html = render_template(
         'status.html',
         user=user,
-        messages=Messages().get(),
-        courses=Courses().get(),
     )
     return html
 

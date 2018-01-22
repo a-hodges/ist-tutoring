@@ -11,39 +11,12 @@
     text-align: center;
 }
 </style>
+<script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+<script type="text/babel" src="{{ url_for('static', filename='jsx/status.js') }}"></script>
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1>Welcome to the Computer Science Learning Center</h1>
-    <h2>Messages</h2>
-    <ul id="messages" class="list-group">
-        {% for message in messages %}
-        <li class="list-group-item row">
-            {{ message|safe }}
-        </li>
-        {% endfor %}
-    </ul>
-    <h2>Course Availability</h2>
-    <div class="table-responsive">
-        <table id="course-availability" class="table-striped table-bordered table-condensed">
-            <thead>
-                <tr>
-                    <th>Course</th>
-                    <th># Tickets</th>
-                    <th># Tutors</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for course in courses %}
-                <tr>
-                    <td>{{ course['name'] }}</td>
-                    <td class="centered">{{ course['current_tickets'] }}</td>
-                    <td class="centered">{{ course['current_tutors'] }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
+<div id="root"></div>
 {% endblock %}
