@@ -405,14 +405,11 @@ def status():
     """
     user = get_user()
 
-    messages = Messages().get()
-    courses = Courses().get()
-
     html = render_template(
         'status.html',
         user=user,
-        messages=messages,
-        courses=courses,
+        messages=Messages().get(),
+        courses=Courses().get(),
     )
     return html
 
