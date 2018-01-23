@@ -12,6 +12,7 @@ class Messages extends React.Component {
     }
 
     update() {
+        this.setState({messages: undefined})
         this.request = $.ajax({
             url: '/api/messages',
             type: 'GET',
@@ -22,7 +23,6 @@ class Messages extends React.Component {
     }
 
     refresh(e) {
-        this.setState({messages: undefined})
         this.componentWillUnmount()
         this.componentDidMount()
     }
@@ -70,6 +70,7 @@ class Courses extends React.Component {
     }
 
     update() {
+        this.setState({courses: undefined})
         this.request = $.ajax({
             url: '/api/courses',
             type: 'GET',
@@ -80,7 +81,6 @@ class Courses extends React.Component {
     }
 
     refresh(e) {
-        this.setState({courses: undefined})
         this.componentWillUnmount()
         this.componentDidMount()
     }
