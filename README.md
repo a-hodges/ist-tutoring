@@ -223,7 +223,7 @@ More information about a given ticket can be viewed by clicking the `Details` bu
 
 1. Install [Python 3](https://www.python.org/)
     1. The application must be run using Python 3
-2. Run `pip install -r requirements.txt`
+2. Run `pip3 install -r requirements.txt` (make sure you are using the version of pip for python3)
     1. If any modules fail to install they may have to be installed manually
     2. DBAPI modules for databases other than SQLite or PostgreSQL will have to be installed separately
 3. Setup a Google API for the login system
@@ -237,16 +237,13 @@ More information about a given ticket can be viewed by clicking the `Details` bu
     2. Select "invisible reCAPTCHA"
     3. Provide the domain (no subpage this time)
     4. Save the site key and secret key for later
-5. Run portal.py to create the appropriate database tables
-    1. Run with the `-h` option to view the command line interface for the application
-    2. Run with the `-p` option to specify a port and run the application as public (`0.0.0.0`)
-        * The application runs privately otherwise (`127.0.0.1`)
-    3. Run with the `-d` option to specify the database URI for the application's database
-        * Runs with an in-memory sqlite database if not specified
+5. Run `flask run -h 0.0.0.0 -p $PORT` where `$PORT` is the port you wish to run the server on (defaults to 5000) to create the appropriate database tables
+    1. The `$FLASK_APP` environment variable must be set to `application.py`
+    2. The `FLASK_DEBUG` environment variable should be set to `0` unless you are testing the application (do not run in debug mode in a production environment)
+    3. The database is specified in the `DB` environment variable
         * If the database is not a sqlite database, a SQLAlchemy dialect and DBAPI module may be required
         * See [this page](http://docs.sqlalchemy.org/en/latest/dialects/) for details about SQLAlchemy dialects and DBAPIs
         * The database URI must include the database dialect (eg. `postgresql://user:pass@localhost/test` would be a postgres database)
-    4. Run with the `--debug` or `--reload` option to run in debug mode
 6. Access the database manually to add configuration information
     1. In the configuration table the Google API client ID from earlier goes in the setting column of the row with the name `GOOGLE_CONSUMER_KEY`
     2. Also in configuration, the Google API client secret goes in the setting column of the row with the name `GOOGLE_CONSUMER_SECRET`
