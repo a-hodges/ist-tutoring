@@ -238,7 +238,7 @@ More information about a given ticket can be viewed by clicking the `Details` bu
     3. Provide the domain (no subpage this time)
     4. Save the site key and secret key for later
 5. Run `flask run -h 0.0.0.0 -p $PORT` where `$PORT` is the port you wish to run the server on (defaults to 5000) to create the appropriate database tables
-    1. The `$FLASK_APP` environment variable must be set to `application.py`
+    1. The `FLASK_APP` environment variable must be set to `application.py`
     2. The `FLASK_DEBUG` environment variable should be set to `0` unless you are testing the application (do not run in debug mode in a production environment)
     3. The database is specified in the `DB` environment variable
         * If the database is not a sqlite database, a SQLAlchemy dialect and DBAPI module may be required
